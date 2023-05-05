@@ -1,0 +1,357 @@
+﻿
+@{
+    ViewBag.Title = "ViewUser";
+}
+
+<!--Modal-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("DeleteUser", "Admin")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this User?<br />
+                        This User is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="UserDeleteId" />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<!--Form Modal-->
+<!-- Basic modal -->
+<div class="modal" id="UpdateModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-content-demo">
+            <form>
+                <div class="modal-body">
+                    <button type="button" class="close pos-absolute t-15 r-20 tx-26" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="text-center mg-b-5">Update</h4>
+                    <p class="mg-b-20"></p>
+                    <div class="modal-body pd-20 pd-sm-40">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Firstname" name="Name">
+                        </div><!-- form-group -->
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Phone" name="Contact">
+                        </div><!-- form-group -->
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Email" name="Email">
+                        </div><!-- form-group -->
+                        <div class="form-group">
+                            <textarea id="AboutMe" name="Description"
+                                      class="form-control">Description</textarea>
+                        </div><!-- form-group -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn ripple btn-primary" type="button">Save changes</button>
+                    <button class="btn ripple btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Basic modal -->
+
+<!-- row -->
+<div class="row row-sm">
+    <div class="row">
+        <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+            @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+            {
+                <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+                </div>
+            }
+            @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+            {
+                <div class="alert alert-danger alert-styled-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-flat text-black">
+            <div class="panel-heading" style="background: #e8eced ">
+                <h2 class="text-center text-black">
+                    Search
+                </h2>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-action="collapse" class="rotate-180"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body pt-20 pb-20" style="display:none">
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Name:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchName">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Email:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchEmail">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Role:</strong></label>
+                            <select class="form-control" id="searchRole">
+                                <option value="">Choose an Option...</option>
+                                <option value="1">Admin</option>
+                                <option value="2">Dealer</option>
+                                <option value="3">Customer</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <a href="@Url.Action("ViewUser","Admin")" class="btn btn-danger btn-block">Reset</a><br />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12"></div>
+
+                    <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px; ">
+                        <div class="form-group text-right">
+                            <button onclick="SearchUser()" class="btn btn-success btn-block">Search</button><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--div-->
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header pb-0">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0"></h4>
+                    <i class="mdi mdi-dots-horizontal text-gray"></i>
+                </div>
+                <p class="tx-12 tx-gray-500 mb-2">
+
+                </p>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap table-striped table-bordered text-center" id="userTable">
+                        <thead class="bg-purple">
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Phone</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/div-->
+</div>
+<!-- row closed -->
+
+<script>
+    $('#userTable').DataTable(
+    {
+        "ajax":
+        {
+            "url": '@Url.Action("GetUserList", "Admin")',
+            "type": "POST",
+            "datatype": "json",
+        },
+        'columns':
+            [
+                { "data": "Name", "name": "Name" },
+                { "data": "Phone", "name": "Phone" },
+                { "data": "Email", "name": "Email" },
+                { "data": "Role", "name": "Role" },
+                { "data": "Action", "name": "" }
+            ],
+        'columnDefs':
+        [
+            {
+                "targets": 0,
+                'className': 'col-lg-2',
+                "render": function(data, type, full, meta) {
+                    return full.Name;
+                }
+            },
+            {
+                "targets": 1,
+                'className': 'col-lg-3',
+                "render": function (data, type, full, meta) {
+                    return full.Phone;
+                }
+            },
+            {
+                "targets": 2,
+                'className': 'col-lg-4',
+                "render": function (data, type, full, meta) {
+                    return full.Email;
+                }
+            },
+            {
+                "targets": 3,
+                'className': 'col-lg-2',
+                "render": function (data, type, full, meta) {
+                    return full.Role;
+                }
+            },
+            {
+                "targets": 4,
+                'className': 'col-lg-1',
+                'searchable': false,
+                'orderable': false,
+                "render": function (data, type, full, meta)
+                {
+                    return '<ul class="icons-list text-center">' +
+                                '<li class="dropdown"> ' +
+                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
+                                        '<i class="icon-menu9"></i >' +
+                                    '</a >' +
+                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                        '<li><a class="text-primary" href="../Admin/UpdateUser?UserId=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.Id + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                    '</ul>' +
+                                '</li>' +
+                            '</ul>';
+                }
+            }
+        ],
+       "serverSide": "true",
+        "processing": "true",
+        "language":
+        {
+            "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+            "search": "<span>Search :</span> _INPUT_",
+            "searchPlaceholder": "Type to Filter",
+            "lengthMenu": "<span>Show :</span> _MENU_",
+            "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+        },
+    });
+
+
+    function SearchUser()
+    {
+        $('#userTable').DataTable().clear();
+        $('#userTable').DataTable().destroy();
+        var name = $('#searchName').val();
+        var email = $('#searchEmail').val();
+        var role = $('#searchRole').val();
+        $('#userTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetUserList", "Admin")',
+                "type": "Post",
+                "datatype": "json",
+                "data": { name: name, email: email, AccessRole: role }
+            },
+            'columns':
+            [
+                { "data": "Name", "name": "Name" },
+                { "data": "Phone", "name": "Phone" },
+                { "data": "Email", "name": "Email" },
+                { "data": "Address", "name": "Address" },
+                { "data": "Action", "name": "" }
+            ],
+            'columnDefs':
+            [
+                {
+                    "targets": 0,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Name;
+                    }
+                },
+                {
+                    "targets": 1,
+                    'className': 'col-lg-3',
+                    "render": function (data, type, full, meta) {
+                        return full.Phone;
+                    }
+                },
+                {
+                    "targets": 2,
+                    'className': 'col-lg-4',
+                    "render": function (data, type, full, meta) {
+                        return full.Email;
+                    }
+                },
+                {
+                    "targets": 3,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Role;
+                    }
+                },
+                {
+                    "targets": 4,
+                    'className': 'col-lg-1',
+                    'searchable': false,
+                    'orderable': false,
+                    "render": function (data, type, full, meta) {
+                        return '<ul class="icons-list text-center">' +
+                                    '<li class="dropdown"> ' +
+                                        '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                            '<i class="icon-menu9"></i >' +
+                                        '</a >' +
+                                        '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                            '<li><a class="text-primary" onclick="updateFunction(' + full.Id + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                            '<li><a class="text-danger" onclick="deleteFunction(' + full.Id + ')" data-toggle="modal" data-target="#DeleteModal"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                        '</ul>' +
+                                    '</li>' +
+                                '</ul>';
+                    }
+                }
+            ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "filter Product Type",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            }
+        });
+    }
+
+    function deleteFunction(id) {
+        $("#UserDeleteId").val(id);
+        $("#DeleteModal").modal('show');
+    }
+
+</script>

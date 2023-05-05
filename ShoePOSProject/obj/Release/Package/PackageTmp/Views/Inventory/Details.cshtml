@@ -1,0 +1,264 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    double subtotal = Convert.ToDouble(ViewBag.Inventory.Price);
+}
+
+<div class="">
+
+    <!-- User profile -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="settings">
+
+                        <!-- Profile info -->
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h3 class="panel-title text-bold text-center">Inventory Details<a class="heading-elements-toggle"><i class="icon-more"></i></a></h3>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="panel-body">
+                                
+                                <style>
+                                    ul > li {
+                                        font-size: 15px;
+                                    }
+                                </style>
+                                <div class="row">
+                                    <div class="col-sm-6 content-group text-center" style="">
+                                        <div class="row">
+                                            <h2 class="text-bold text-black">Lonestar Shed Builders, LLC</h2>
+                                            <div class="col-sm-3 col-sm-offset-1">
+                                                <img src="~/Content/assets/assets/images/star.png" class="" alt="" style="width:100px; height:100px">
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <ul class="list-condensed list-unstyled text-semibold text-sm-center text-left">
+                                                    <li>5515 State Highway 11E</li>
+                                                    <li>Commerce, TX 75428</li>
+                                                    <li>Office: (903) 468-2370</li>
+                                                    <li>Cell: (903) 246-5023</li>
+                                                </ul>
+                                            </div>
+                                            <h4>lonestarshedbuildersllc@gmail.com</h4>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 content-group" style="">
+                                        <div class="invoice-details">
+                                            <h1 class="text-bold text-grey">Inventory</h1>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered border-dark text-left">
+                                                    <tr>
+                                                        <td class="text-grey-300">Inventory date</td>
+                                                        <td>@ViewBag.Inventory.InventoryDate</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            Serial #
+                                                        </td>
+                                                        <td>@ViewBag.Inventory.extra1</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 content-group" style="">
+                                        <h6 class="text-bold">Billing Address</h6>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered border-dark text-left">
+                                                <tr>
+                                                    <td class="text-grey-300">Name</td>
+                                                    <td>STOCK</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-grey-300">
+                                                        Address
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-grey-300">
+                                                        City, State, Zip
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-grey-300">
+                                                        Phone 1
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 content-group">
+                                        <h6 class="text-bold">Shipping Address</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered border-dark text-left">
+                                                <tr>
+                                                    <td class="text-grey-300">
+                                                        Address
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-grey-300">
+                                                        City, State, Zip
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-grey-300">
+                                                        Phone 2
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <h6 class="text-bold">Building</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered border-dark text-left">
+                                                <tr>
+                                                    <td class="text-bold">
+                                                        Brand
+                                                    </td>
+                                                    <td>@ViewBag.Inventory.Brand</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">
+                                                        Size
+                                                    </td>
+                                                    <td>@ViewBag.Inventory.Size</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">
+                                                        Style
+                                                    </td>
+                                                    <td>@ViewBag.Inventory.Style</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        @if (ViewBag.Inventory.extra8 != null && ViewBag.Inventory.extra8 != "")
+                                        {
+                                        <div class="row mt-20">
+                                                <div class="col-sm-8">
+                                                    <h3 class="text-bold">Barn Diagram</h3>
+                                                    <div class="card">
+                                                        <div class="thumbnail">
+                                                            <a href="@ViewBag.Url@ViewBag.Inventory.extra8" target="_blank">
+                                                                <img src="@ViewBag.Url@ViewBag.Inventory.extra8" id="" alt="@ViewBag.Url@ViewBag.Inventory.extra8" />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="col-sm-7">
+                                        <h6 class="text-bold">Itemization</h6>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered border-dark text-left">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td colspan="3">@ViewBag.Inventory.Size @ViewBag.Inventory.Type @ViewBag.Inventory.Style</td>
+                                                    @{
+                                                        string prices = Convert.ToDecimal(ViewBag.Inventory.SalePrice).ToString("N2");
+                                                        string b = Convert.ToDecimal(prices).ToString("N2");
+                                                        <td class="text-right">$@b</td>
+                                                        subtotal = Convert.ToDouble(b);
+                                                    }
+                                                </tr>
+                                                @if (ViewBag.Options.Count > 0)
+                                                {
+                                                    foreach (var x in ViewBag.Options)
+                                                    {
+                                                        string a = "";
+                                                        <tr>
+                                                            <td class="text-bold">
+                                                                @x.Items
+                                                            </td>
+                                                            <td colspan="2">@x.Name</td>
+                                                            @if (x.Price != null)
+                                                            {
+                                                                string price = Convert.ToDecimal(x.Price).ToString("N2");
+                                                                <td class="text-right">$@price</td>
+                                                            }
+                                                            @if (x.Items > 1)
+                                                            {
+                                                                double addedprice = Convert.ToDouble(x.Price) + Convert.ToDouble(x.Price);
+                                                                a = Convert.ToDecimal(addedprice).ToString("N2");
+                                                                <td class="text-right">$@a</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                a = Convert.ToDecimal(x.Price).ToString("N2");
+                                                                <td class="text-right">$@a</td>
+                                                            }
+                                                        </tr>
+                                                        subtotal = subtotal + Convert.ToDouble(a);
+                                                    }
+                                                }
+                                                <tr>
+                                                    <td class="text-bold" colspan="4">
+                                                        TOTAL PRETAX COST
+                                                    </td>
+                                                    @{
+
+                                                        string subtotalprice = Convert.ToDecimal(subtotal).ToString("N2");
+                                                        <td class="text-right">$@subtotalprice</td>
+                                                    }
+                                                </tr>
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-20">
+                                    @if (ViewBag.IImage.Count >= 1)
+                                    {
+                                        <h3 class="text-bold">Images</h3>
+                                        foreach (var i in ViewBag.IImage)
+                                        {
+                                            <div class="col-md-3">
+
+                                                <div class="panel panel-flat">
+                                                    <div class="panel-body">
+                                                        <a href="@i.ImagePath" data-popup="lightbox" target="_blank">
+                                                            <img src="@i.ImagePath" id="@i.ImagePath" style="height:150px; width:100%" alt="@i.ImageName" />
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /user profile -->
+
+        </div>
+

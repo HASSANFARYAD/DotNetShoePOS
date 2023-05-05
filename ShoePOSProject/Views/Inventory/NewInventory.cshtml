@@ -1,0 +1,458 @@
+﻿
+@{
+    ViewBag.Title = "Add New Inventory";
+}
+
+<!--Add New Category-->
+<div class="modal fade" id="AddNewModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Add New Category</h3>
+            </div>
+            <form method="post" action="@Url.Action("PostAddBsst", "Bsst")">
+                <div class="modal-body p-5">
+                    <div class="col-md-12  m-10">
+                        <input type="hidden" name="PageId" value="2" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Name <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="text" name="Name" class="form-control required" required="required" placeholder="Adidas">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Category <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <select name="Category" data-placeholder="Select Category..." class="form-control required" required="required">
+                                    <option value="">Select Category...</option>
+                                    <option value="Brand">Brand</option>
+                                    <option value="Size">Size</option>
+                                    <option value="Collection">Collection</option>
+                                    <option value="Color">Color</option>
+                                    <option value="Gender">Gender</option>
+                                    <option value="ShoeStyle">Shoe Style</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+        @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+        {
+            <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+            </div>
+        }
+        @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+        {
+            <div class="alert alert-danger alert-styled-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <button class="btn btn-primary btn-block" onclick="AddNew()">Add New Category</button>
+    </div>
+</div>
+
+
+<!-- Wizard with validation -->
+<div class="panel panel-white mt-20">
+    <div class="panel-heading">
+        <h6 class="panel-title">Add New Inventory</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-action="collapse"></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form class="p-20" action="@Url.Action("PostNewInventory","Inventory")" method="post" enctype="multipart/form-data">
+        <fieldset class="step" id="validation-step1">
+            <h6 class="form-wizard-title text-semibold">
+                <span class="form-wizard-count">1</span>
+                Basic info
+                <small class="display-block">Building Information</small>
+            </h6>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Serial #: <span class="text-danger">*</span></label>
+                        <input type="text" name="BarcodeNo" class="form-control required" required="required" placeholder="Serial Number">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Brand: <span class="text-danger">*</span>
+                            <i id="brandLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="BrandId" data-placeholder="Select Brand..." id="getBrandOptions" class="form-control required" required="">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Size <span class="text-danger">*</span>
+                            <i id="getSizeLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="SizeId" id="getSizeOptions" data-placeholder="Select Size..." class="form-control required" required="required">
+                            
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Collection <span class="text-danger">*</span>
+                            <i id="getCollectionLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="CollectionId" id="getCollectionOptions" data-placeholder="Select Collection..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Color <span class="text-danger">*</span>
+                            <i id="getColorLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="ColorId" id="getColorOptions" data-placeholder="Select Color..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Gender <span class="text-danger">*</span>
+                            <i id="getGenderLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="GenderId" id="getGenderOptions" data-placeholder="Select Gender..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Shoe Style <span class="text-danger">*</span>
+                            <i id="getShoeStyleLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="ShoeStyleId" id="getShoeStyleOptions" data-placeholder="Select Shoe Style..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Inventory Date: <span class="text-danger">*</span></label>
+                        <input type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="InventoryDate" class="form-control required" required="required" placeholder="Manufacturer">
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+
+                    <div class="form-group">
+                        <label class="control-label text-bold">Purchase Price: <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="btn btn-default input-group-addon">Rs.</span>
+                            <input type="number" step="0.01" class="form-control required" placeholder="0.00" min="1" name="Price">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Sale Price: <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="btn btn-default input-group-addon">Rs.</span>
+                            <input type="number" step="0.01" class="form-control required" placeholder="0.00" min="1" name="SalePrice">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label">Images</label>
+                        <input type="file" class="form-control" name="Images" multiple id="file" onchange="Filevalidation()" accept="image/png, image/gif, image/jpeg" />
+                        <span class="help-block text-danger">
+                            <i class="icon-alert"></i>Image Size must be less than 2MB<br />
+                        </span>
+                        <p id="size"></p>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <div class="form-wizard-actions">
+            <button class="btn btn-default" id="validation-back" type="reset">Back</button>
+            <button class="btn btn-info" id="submitBtn" type="submit">Submit Form</button>
+        </div>
+    </form>
+</div>
+
+<!-- /wizard with validation -->
+
+<script>
+    function AddNew() {
+        $("#AddNewModal").modal('show');
+    }
+</script>
+
+<script>
+    GetBrand();
+    function GetBrand()
+    {
+        $("#brandLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 1
+            },
+            success: function (data) {
+                var listAppend = "<option value=''>Select Brand...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getBrandOptions").append(listAppend);
+
+                $("#brandLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetSize();
+            }
+        });
+    }
+
+    function GetSize() {
+        $("#getSizeLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 2
+            },
+            success: function (data) {
+                $("#getSizeOptions").empty().append("");
+                var listAppend = "<option value=''>Select Size...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getSizeOptions").append(listAppend);
+
+                $("#getSizeLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetCollection();
+            }
+        });
+    }
+
+    function GetCollection() {
+        $("#getCollectionLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 3
+            },
+            success: function (data) {
+                $("#getCollectionOptions").empty().append(listAppend);
+                var listAppend = "<option value=''>Select Collection...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getCollectionOptions").append(listAppend);
+
+                $("#getCollectionLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetColor();
+            }
+        });
+    }
+
+    function GetColor() {
+        $("#getColorLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 4
+            },
+            success: function (data) {
+                $("#getColorOptions").empty().append("");
+                var listAppend = "<option value=''>Select Color...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getColorOptions").append(listAppend);
+
+                $("#getColorLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetGender();
+            }
+        });
+    }
+
+    function GetGender() {
+        $("#getGenderLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 5
+            },
+            success: function (data) {
+                $("#getGenderOptions").empty().append("");
+                var listAppend = "<option value=''>Select Gender...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getGenderOptions").append(listAppend);
+
+                $("#getGenderLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetShoeStyle();
+            }
+        });
+    }
+
+    function GetShoeStyle() {
+        $("#getShoeStyleLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 6
+            },
+            success: function (data) {
+                $("#getShoeStyleOptions").empty().append("");
+                var listAppend = "<option value=''>Select Shoe Style...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getShoeStyleOptions").append(listAppend);
+
+                $("#getShoeStyleLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+
+    var PCount = 1;
+    var headingCount = 2;
+
+    function AddNewOption() {
+
+        var objTo = document.getElementById('NewOptions');
+
+        var guestDiv = document.createElement("div");
+        guestDiv.setAttribute("class", "form-group removeclass" + PCount);
+
+        var removeGuestDiv = 'removeclass' + PCount;
+
+        var Heading = '<h3><strong>Option ' + headingCount + ':</strong></h3>';
+
+        var NewItems = '<div class="col-md-3">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Item <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="number" name="Items' + PCount + '" id="Item' + PCount + '" placeholder="1" value="1" min="1" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+        var NewOption = '<div class="col-md-6">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Option <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="text" name="Name' + PCount + '" id="Option' + PCount + '" placeholder="Windows" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+        var OptionPrice = '<div class="col-md-3">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Price (Per Item) <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="number" name="Price' + PCount + '" id="Price' + PCount + '" placeholder="Per Item" step="0.01" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+
+        var hiddenGuestId = '<input type="hidden" name="option_no' + headingCount + '" id="option_no' + headingCount + '" value=' + headingCount + ' />';
+
+        var deleteGuest = '<div class="col-md-12 mt-10" style="margin-bottom:-36px;"><div class="form-group pull-right"><button onclick="removeDetails(' + PCount + ');" type="button" class="btn btn-danger">Remove Details</button></div></div>';
+
+        guestDiv.innerHTML = Heading + NewItems + NewOption + OptionPrice
+            + hiddenGuestId + '<br />' + deleteGuest;
+
+        objTo.appendChild(guestDiv);
+
+        document.getElementById('count').value = PCount;
+
+        PCount++;
+        headingCount++;
+
+    }
+
+    function removeDetails(gid) {
+
+        $('.removeclass' + gid).remove();
+        PCount--;
+        headingCount--;
+        document.getElementById('count').value = PCount;
+    }
+
+</script>
+

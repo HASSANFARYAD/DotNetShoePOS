@@ -1,0 +1,756 @@
+﻿
+@{
+    ViewBag.Title = "View List";
+}
+
+<!--Add New Modal-->
+<div class="modal fade" id="AddNewModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Add New Category</h3>
+            </div>
+            <form method="post" action="@Url.Action("PostAddBsst", "Bsst")">
+                <div class="modal-body p-5">
+                    <div class="col-md-12  m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Name <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="text" name="Name" class="form-control required" required="required" placeholder="Adidas">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Category <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <select name="BsstCategoryId" data-placeholder="Select Category..." class="form-control required" required="required">
+                                    <option value="">Select Category...</option>
+                                    <option value="1">Brand</option>
+                                    <option value="2">Size</option>
+                                    <option value="3">Collection</option>
+                                    <option value="4">Color</option>
+                                    <option value="5">Gender</option>
+                                    <option value="6">Shoe Style</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("Delete", "Bsst")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this Category?<br />
+                        This Category is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="BsstDeleteId" />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Update Modal-->
+<div class="modal fade" id="UpdateModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-success">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Update</h3>
+            </div>
+            <form method="post" action="@Url.Action("PostUpdate", "Bsst")">
+                <div class="modal-body p-5">
+                    <div class="col-md-12  m-10">
+                        <input type="hidden" name="Id" id="updId" value="" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Name <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="text" name="Name" id="updName" class="form-control required" required="required" placeholder="Adidas">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Category <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <select name="BsstCategoryId" id="updCategory" data-placeholder="Select Category..." class="form-control required" required="required">
+                                    <option value="">Select Category...</option>
+                                    <option value="1">Brand</option>
+                                    <option value="2">Size</option>
+                                    <option value="3">Collection</option>
+                                    <option value="4">Color</option>
+                                    <option value="5">Gender</option>
+                                    <option value="6">Shoe Style</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-success">Submit Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Form Modal-->
+<!-- row -->
+<div class="row row-sm">
+    <div class="row">
+        <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+            @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+            {
+                <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+                </div>
+            }
+            @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+            {
+                <div class="alert alert-danger alert-styled-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!--div-->
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header pb-0">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0"></h4>
+                    <i class="mdi mdi-dots-horizontal text-gray"></i>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-sm-12">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2 col-sm-12 pull-right">
+                        <button class="btn btn-primary" onclick="AddNew()">Add New Category</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                        <li class="active"><a href="#justified-badges-tab1" data-toggle="tab" onclick="TabView(1)"> Brand</a></li>
+                        <li><a href="#justified-badges-tab2" data-toggle="tab" onclick="TabView(2)">Size </a></li>
+                        <li><a href="#justified-badges-tab3" data-toggle="tab" onclick="TabView(3)">Collection </a></li>
+                        <li><a href="#justified-badges-tab4" data-toggle="tab" onclick="TabView(4)">Color </a></li>
+                        <li><a href="#justified-badges-tab5" data-toggle="tab" onclick="TabView(5)">Gender </a></li>
+                        <li><a href="#justified-badges-tab6" data-toggle="tab" onclick="TabView(6)">Shoe Style </a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="justified-badges-tab1">
+                            <div class="table-responsive">
+                                <table class="table text-md-nowrap table-striped table-bordered text-center" id="BrandTable">
+                                    <thead class="bg-purple">
+                                        <tr>
+                                            <th class="text-center">Brand</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="justified-badges-tab2">
+                            <div class="table-responsive">
+                                <table class="table text-md-nowrap table-striped table-bordered text-center" id="SizeTable">
+                                    <thead class="bg-purple">
+                                        <tr>
+                                            <th class="text-center">Size</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="justified-badges-tab3">
+                            <div class="table-responsive">
+                                <table class="table text-md-nowrap table-striped table-bordered text-center" id="CollectionTable">
+                                    <thead class="bg-purple">
+                                        <tr>
+                                            <th class="text-center">Collection</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="justified-badges-tab4">
+                            <div class="table-responsive">
+                                <table class="table text-md-nowrap table-striped table-bordered text-center" id="ColorTable">
+                                    <thead class="bg-purple">
+                                        <tr>
+                                            <th class="text-center">Color</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="justified-badges-tab5">
+                            <div class="table-responsive">
+                                <table class="table text-md-nowrap table-striped table-bordered text-center" id="GenderTable">
+                                    <thead class="bg-purple">
+                                        <tr>
+                                            <th class="text-center">Gender</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="justified-badges-tab6">
+                            <div class="table-responsive">
+                                <table class="table text-md-nowrap table-striped table-bordered text-center" id="ShoeStyleTable">
+                                    <thead class="bg-purple">
+                                        <tr>
+                                            <th class="text-center">Shoe Style</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!--/div-->
+</div>
+<!-- row closed -->
+
+<script>
+    TabView(1);
+
+    function TabView(id) {
+        $('#SizeTable').DataTable().clear();
+        $('#SizeTable').DataTable().destroy();
+        $('#BrandTable').DataTable().clear();
+        $('#BrandTable').DataTable().destroy();
+        $('#ColorTable').DataTable().clear();
+        $('#ColorTable').DataTable().destroy();
+        $('#CollectionTable').DataTable().clear();
+        $('#CollectionTable').DataTable().destroy();
+        $('#GenderTable').DataTable().clear();
+        $('#GenderTable').DataTable().destroy();
+        $('#ShoeStyleTable').DataTable().clear();
+        $('#ShoeStyleTable').DataTable().destroy();
+        if (id == 1) {
+            $('#BrandTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '../Bsst/GetBSSTList',
+                    "type": "POST",
+                    "datatype": "json",
+                    data: {
+                        CategoryName: 1,
+                    }
+                },
+                'columns':
+                    [
+                        { "data": "BSSTName", "name": "Name" },
+                        { "data": "Action", "name": "" }
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-2',
+                            "render": function (data, type, full, meta) {
+                                return full.BSSTName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            'searchable': false,
+                            'orderable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.Role == 1) {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                                else {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                            }
+                        }
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Type to Filter",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+            });
+        }
+
+        if (id == 2) {
+            $('#SizeTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '../Bsst/GetBSSTList',
+                    "type": "POST",
+                    "datatype": "json",
+                    data: {
+                        CategoryName: 2,
+                    }
+                },
+                'columns':
+                    [
+                        { "data": "BSSTName", "name": "Name" },
+                        { "data": "Action", "name": "" }
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-4',
+                            "render": function (data, type, full, meta) {
+                                return full.BSSTName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            'searchable': false,
+                            'orderable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.Role == 1) {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                                else {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                            }
+                        }
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Type to Filter",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+            });
+        }
+
+        if (id == 3) {
+            $('#CollectionTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '../Bsst/GetBSSTList',
+                    "type": "POST",
+                    "datatype": "json",
+                    data: {
+                        CategoryName: 3,
+                    }
+                },
+                'columns':
+                    [
+                        { "data": "BSSTName", "name": "Name" },
+                        { "data": "Action", "name": "" }
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-4',
+                            "render": function (data, type, full, meta) {
+                                return full.BSSTName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            'searchable': false,
+                            'orderable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.Role == 1) {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                                else {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                            }
+                        }
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Type to Filter",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+            });
+        }
+
+        if (id == 4) {
+            $('#ColorTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '../Bsst/GetBSSTList',
+                    "type": "POST",
+                    "datatype": "json",
+                    data: {
+                        CategoryName: 4,
+                    }
+                },
+                'columns':
+                    [
+                        { "data": "BSSTName", "name": "Name" },
+                        { "data": "Action", "name": "" }
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-4',
+                            "render": function (data, type, full, meta) {
+                                return full.BSSTName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            'searchable': false,
+                            'orderable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.Role == 1) {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                                else {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                            }
+                        }
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Type to Filter",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+            });
+        }
+
+        if (id == 5) {
+            $('#GenderTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '../Bsst/GetBSSTList',
+                    "type": "POST",
+                    "datatype": "json",
+                    data: {
+                        CategoryName: 5,
+                    }
+                },
+                'columns':
+                    [
+                        { "data": "BSSTName", "name": "Name" },
+                        { "data": "Action", "name": "" }
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-4',
+                            "render": function (data, type, full, meta) {
+                                return full.BSSTName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            'searchable': false,
+                            'orderable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.Role == 1) {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                                else {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                            }
+                        }
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Type to Filter",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+            });
+        }
+
+        if (id == 6) {
+            $('#ShoeStyleTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '../Bsst/GetBSSTList',
+                    "type": "POST",
+                    "datatype": "json",
+                    data: {
+                        CategoryName: 6,
+                    }
+                },
+                'columns':
+                    [
+                        { "data": "BSSTName", "name": "Name" },
+                        { "data": "Action", "name": "" }
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            'className': 'col-lg-4',
+                            "render": function (data, type, full, meta) {
+                                return full.BSSTName;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': 'col-lg-1',
+                            'searchable': false,
+                            'orderable': false,
+                            "render": function (data, type, full, meta) {
+                                if (full.Role == 1) {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                                else {
+                                    return '<ul class="icons-list text-center">' +
+                                                '<li class="dropdown"> ' +
+                                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                        '<i class="icon-menu9"></i >' +
+                                                    '</a >' +
+                                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                        '<li><a class="text-success" onclick="EditFunction(' + full.BSSTId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.BSSTId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                                    '</ul>' +
+                                                '</li>' +
+                                            '</ul>';
+                                }
+                            }
+                        }
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Type to Filter",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                },
+            });
+        }
+    }
+
+    function deleteFunction(id) {
+        $("#BsstDeleteId").val(id);
+        $("#DeleteModal").modal('show');
+    }
+
+    function AddNew(id) {
+        $("#AddNewModal").modal('show');
+    }
+
+    function EditFunction(id) {
+        $.ajax({
+            type: 'POST',
+            url: "../Bsst/CategoryById",
+            dataType: "json",
+            data: {
+                Id: id
+            },
+            success: function (response) {
+                $("#updId").val(response.Id);
+                $("#updName").val(response.Name);
+                $("#updCategory").val(response.BsstCategoryId).change();
+                $("#UpdateModal").modal('show');
+            },
+            error: function () {
+                alert("ajax Failed");
+            }
+        });
+    }
+
+</script>

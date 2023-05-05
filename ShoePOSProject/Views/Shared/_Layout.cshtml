@@ -1,0 +1,501 @@
+﻿@using ShoePOSProject.Models
+@{
+    DatabaseEntities db = new DatabaseEntities();
+
+    var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
+    var userId = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault();
+
+    int id = Convert.ToInt32(userId);
+    User loggedInUser = db.Users.Where(x => x.Id == id).FirstOrDefault();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>POS - @ViewBag.Title</title>
+    <link rel="icon" href="~/Content/assets/assets/images/S-Fav.jpg" type="image/gif" sizes="32x32">
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <!-- Core JS files -->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/loaders/blockui.min.js"></script>
+    <!-- /core JS files -->
+    <!-- Theme JS files -->
+    <!--Validation Form-->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/validation/validate.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/touchspin.min.js"></script>
+
+    <!--Datatable-->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/tables/datatables/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/selects/select2.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/jquery_ui/core.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/wizards/form_wizard/form.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/wizards/form_wizard/form_wizard.min.js"></script>
+    <!--Validation From-->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/wizards/steps.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/styling/switch.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/styling/switchery.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/styling/uniform.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/jasny_bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/autosize.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/formatter.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/typeahead/typeahead.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/typeahead/handlebars.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/passy.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/inputs/maxlength.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/validation/validate.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/notifications/sweet_alert.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/extensions/cookie.js"></script>
+
+    <!--Form-->
+    @*<script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/styling/uniform.min.js"></script>*@
+
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/datatables_data_sources.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/form_layouts.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/form_validation.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/form_controls_extended.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/wizard_steps.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/wizard_form.js"></script>
+    <!-- /theme JS files -->
+    <!--Custome Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .navbar-brand {
+            /*height:60px !important;*/
+        }
+
+        @@media (max-width: 768px) {
+            .heading-elements:not(.not-collapsible), .breadcrumb-elements:not(.not-collapsible) {
+                display: block;
+                float: right;
+                position: absolute !important;
+                margin-top: -11px;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .dataTables_info, .dataTables_paginate {
+                padding-top: 25px;
+            }
+        }
+        .panel {
+            box-shadow: 5px 5px 20px #999;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Main navbar -->
+    <div class="navbar navbar-default header-highlight">
+        <div class="navbar-header">
+            @if (loggedInUser.Profile != null)
+            {
+                <a class="navbar-brand" href="@Url.Action("Index","Home")"><img src="@loggedInUser.Profile" alt="" style="width:150px; height:20px;"></a>
+            }
+            else
+            {
+                <a class="navbar-brand" href="@Url.Action("Index","Home")"><img src="" alt=""></a>
+            }
+
+            <ul class="nav navbar-nav visible-xs-block">
+                <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+                <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-collapse collapse" id="navbar-mobile">
+            <ul class="nav navbar-nav">
+                <li><a class="sidebar-control sidebar-main-toggle hidden-xs"><i class="icon-paragraph-justify3"></i></a></li>
+            </ul>
+
+            <p class="navbar-text">
+                <span class="label bg-success">Online</span>
+            </p>
+
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown dropdown-user">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <span>@loggedInUser.Name</span>
+                            <i class="caret"></i>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="@Url.Action("EditProfile","Auth")"><i class="icon-user-plus"></i> My profile</a></li>
+                            <li><a href="@Url.Action("UpdatePassword","Auth")"><i class="icon-lock2"></i> Change Password</a></li>
+                            <li class="divider"></li>
+                            <li><a href="@Url.Action("Logout","Auth")"><i class="icon-switch2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /main navbar -->
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Main sidebar -->
+            <div class="sidebar sidebar-main">
+                <div class="sidebar-content">
+
+                    <!-- User menu -->
+                    <div class="sidebar-user">
+                        <div class="category-content">
+                            <div class="media">
+                                <a href="#" class="media-left"><img src="~/Content/assets/assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
+                                <div class="media-body">
+                                    <span class="media-heading text-semibold">@loggedInUser.Name</span>
+                                    <div class="text-size-mini text-muted">
+                                        <i class="icon-pin text-size-small"></i> &nbsp;@loggedInUser.Address
+                                    </div>
+                                </div>
+
+                                <div class="media-right media-middle">
+                                    <ul class="icons-list">
+                                        <li>
+                                            @*<a href="#"><i class="icon-cog3"></i></a>*@
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /user menu -->
+                    <!-- Main navigation -->
+                    <div class="sidebar-category sidebar-category-visible">
+                        <div class="category-content no-padding">
+                            <ul class="navigation navigation-main navigation-accordion">
+
+                                <!-- Main -->
+                                <li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
+                                <li><a href="@Url.Action("Index","Home")"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
+                                @if (loggedInUser.Role == 1)
+                                {
+                                    <li>
+                                        <a href="#"><i class="icon-stack2"></i> <span>Manager Users</span></a>
+                                        <ul>
+                                            <li><a href="@Url.Action("AddUser", "Admin")">Add New User</a></li>
+                                            <li><a href="@Url.Action("ViewUser", "Admin")">View User</a></li>
+                                        </ul>
+                                    </li>
+                                }
+
+                                @*<li>
+                                    <a href="#"><i class="icon-people"></i> <span>Manage Customer</span></a>
+                                    <ul>
+                                        <li><a href="@Url.Action("NewCustomer","Customer")">Add New Customer</a></li>
+                                        <li><a href="@Url.Action("ViewCustomer","Customer")">View Customers</a></li>
+                                    </ul>
+                                </li>*@
+
+                                <li>
+                                    <a href="#"><i class="icon-copy"></i> <span>Inventory</span></a>
+                                    <ul>
+                                        <li><a href="@Url.Action("NewInventory","Inventory")" id="layout1">Add New Inventory</a></li>
+                                        <li><a href="@Url.Action("ViewInventory","Inventory")" id="layout2">View Inventories</a></li>
+                                    </ul>
+                                </li>
+                                @*<li>
+                                    <a href="#"><i class="icon-droplet2"></i> <span>Sales</span></a>
+                                    <ul>
+                                        <li><a href="@Url.Action("NewCustomerSales","CustomerSales")">Add New Sales</a></li>
+                                        <li><a href="@Url.Action("ViewCustomerSales","CustomerSales")">View Sales</a></li>
+                                    </ul>
+                                </li>*@
+                                <li>
+                                    <a href="@Url.Action("Index","Bsst")"><i class="icon-tree5"></i> <span>Category</span></a>
+                                </li>
+                                @*<li>
+                                    <a href="@Url.Action("Index","Option")"><i class="icon-opt"></i> <span>New Options</span></a>
+                                </li>*@
+                                @*<li>
+                                        <a href="#"><i class="icon-stack"></i> <span>Starter kit</span></a>
+                                        <ul>
+                                            <li><a href="starters/horizontal_nav.html">Horizontal navigation</a></li>
+                                            <li><a href="starters/1_col.html">1 column</a></li>
+                                            <li><a href="starters/2_col.html">2 columns</a></li>
+                                            <li>
+                                                <a href="#">3 columns</a>
+                                                <ul>
+                                                    <li><a href="starters/3_col_dual.html">Dual sidebars</a></li>
+                                                    <li><a href="starters/3_col_double.html">Double sidebars</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="starters/4_col.html">4 columns</a></li>
+                                            <li>
+                                                <a href="#">Detached layout</a>
+                                                <ul>
+                                                    <li><a href="starters/detached_left.html">Left sidebar</a></li>
+                                                    <li><a href="starters/detached_right.html">Right sidebar</a></li>
+                                                    <li><a href="starters/detached_sticky.html">Sticky sidebar</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="starters/layout_boxed.html">Boxed layout</a></li>
+                                            <li class="navigation-divider"></li>
+                                            <li><a href="starters/layout_navbar_fixed_main.html">Fixed main navbar</a></li>
+                                            <li><a href="starters/layout_navbar_fixed_secondary.html">Fixed secondary navbar</a></li>
+                                            <li><a href="starters/layout_navbar_fixed_both.html">Both navbars fixed</a></li>
+                                            <li><a href="starters/layout_fixed.html">Fixed layout</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="changelog.html"><i class="icon-list-unordered"></i> <span>Changelog <span class="label bg-blue-400">1.6</span></span></a></li>
+                                    <li><a href="../../RTL/default/index.html"><i class="icon-width"></i> <span>RTL version</span></a></li>*@
+                                <!-- /main -->
+
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /main navigation -->
+
+                </div>
+            </div>
+            <!-- /main sidebar -->
+            <!-- Main content -->
+            <div class="content-wrapper">
+                <!-- Content area -->
+                <div class="content">
+                    @RenderBody()
+                    <!-- Footer -->
+                    <div class="footer text-muted">
+                        &copy; 2021. <a href="#">Developed</a> by <a href="http://pulpkreative.com" target="_blank">PulpKreative</a>
+                    </div>
+                    <!-- /footer -->
+
+                </div>
+                <!-- /content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+
+    <script>
+
+        let passwordStrength = document.getElementById('passwordStrength');
+        let poor = document.querySelector('#passwordStrength #poor');
+        let weak = document.querySelector('#passwordStrength #weak');
+        let strong = document.querySelector('#passwordStrength #strong');
+        let passwordInfo = document.getElementById('passwordInfo');
+
+        let poorRegExp = /[a-z]/;
+        let weakRegExp = /(?=.*?[0-9])/;;
+        let strongRegExp = /(?=.*?[#?!@@$%^&*-])/;
+        let whitespaceRegExp = /^$|\s+/;
+
+
+        function CheckStrength(pw) {
+            $('#confirmPassword').val("");
+
+            let passwordValue = pw;
+            let passwordLength = passwordValue.length;
+
+            let poorPassword = passwordValue.match(poorRegExp);
+            let weakPassword = passwordValue.match(weakRegExp);
+            let strongPassword = passwordValue.match(strongRegExp);
+            let whitespace = passwordValue.match(whitespaceRegExp);
+
+            if (passwordValue != "") {
+                passwordStrength.style.display = "block";
+                passwordStrength.style.display = "flex";
+                passwordInfo.style.display = "block";
+                passwordInfo.style.color = "black";
+
+                if (whitespace) {
+                    passwordInfo.textContent = "whitespaces are not allowed";
+                    $('#userFormButton').prop("disabled", true);
+                }
+                else {
+                    poorPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword);
+                    weakPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword);
+                    strongPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword);
+                }
+            }
+            else {
+                passwordStrength.style.display = "none";
+                passwordInfo.style.display = "none";
+                $('#userFormButton').prop("disabled", false);
+            }
+        }
+
+        function poorPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword) {
+            if (passwordLength <= 5 && (poorPassword || weakPassword || strongPassword)) {
+                poor.classList.add("active");
+                passwordInfo.style.display = "block";
+                passwordInfo.style.color = "red";
+                passwordInfo.textContent = "Your password is too Poor";
+                $('#userFormButton').prop("disabled", true);
+            }
+            else {
+                if (passwordLength > 5) {
+                    $('#userFormButton').prop("disabled", false);
+                }
+                else {
+                    poor.classList.add("active");
+                    passwordInfo.style.display = "block";
+                    passwordInfo.style.color = "red";
+                    passwordInfo.textContent = "Your password is too Poor";
+                    $('#userFormButton').prop("disabled", true);
+                }
+            }
+        }
+
+        function weakPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword) {
+            if (passwordLength >= 8 && poorPassword && (weakPassword || strongPassword)) {
+                weak.classList.add("active");
+                passwordInfo.textContent = "Your password is Weak";
+                passwordInfo.style.color = "orange";
+            }
+            else {
+                weak.classList.remove("active");
+            }
+        }
+
+        function strongPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword) {
+            if (passwordLength >= 8 && (poorPassword && weakPassword) && strongPassword) {
+                poor.classList.add("active");
+                weak.classList.add("active");
+                strong.classList.add("active");
+                passwordInfo.textContent = "Your password is strong";
+                passwordInfo.style.color = "green";
+            }
+            else {
+                strong.classList.remove("active");
+            }
+        }
+
+        function matchPassword(confirmPw) {
+            var newPw = $('#password').val();
+            if (newPw != confirmPw) {
+                $('#pwErrMsg').text("New Password & Confirm Password did not match");
+                $('#userFormButton').attr("disabled", true);
+            }
+            else {
+                $('#pwErrMsg').text("");
+                $('#userFormButton').attr("disabled", false);
+            }
+        }
+
+        function ShowPasswords(id) {
+            if (id == 1) {
+                var x = document.getElementById("password");
+                var ShowPassword = document.getElementById("SignupShowPassword");
+                var HidePassword = document.getElementById("SignupHidePassword");
+                if (x.type === "password") {
+                    x.type = "text";
+                    ShowPassword.style.display = "none";
+                    HidePassword.style.display = "block";
+                } else {
+                    x.type = "password";
+                    ShowPassword.style.display = "block";
+                    HidePassword.style.display = "none";
+                }
+            }
+            if (id == 2) {
+                var y = document.getElementById("ConfirmPassword");
+                var ShowPassword = document.getElementById("LoginShowPassword");
+                var HidePassword = document.getElementById("LoginHidePassword");
+                if (y.type === "password") {
+                    y.type = "text";
+                    ShowPassword.style.display = "none";
+                    HidePassword.style.display = "block";
+                } else {
+                    y.type = "password";
+                    ShowPassword.style.display = "block";
+                    HidePassword.style.display = "none";
+                }
+            }
+
+        }
+
+    </script>
+
+    @if (ViewBag.msg != "")
+    {
+        <script>
+            function hideMessage() {
+                $('#ViewBagMessages').hide();
+            }
+            setTimeout(hideMessage, 3000);
+        </script>
+    }
+
+    <script>
+        Filevalidation = () => {
+            const fi = document.getElementById('file');
+            
+            // Check if any file is selected.
+            if (fi.files.length > 0) {
+                for (const i = 0; i <= fi.files.length - 1; i++) {
+
+                    const fsize = fi.files.item(i).size;
+                    const file = Math.round((fsize / 1024));
+                    // The size of the file.
+                    if (file >= 2048) {
+                        alert(
+                            "File too Big, please select a file less than 2mb");
+                        $('#validation-next').attr('disabled', true);
+                    } else {
+                        document.getElementById('size').innerHTML = '<b>'
+                            + file + '</b> KB';
+                        $('#validation-next').attr('disabled', false);
+                    }
+                }
+            }
+        }
+
+
+        UpdateInventory = () => {
+            const updateInventoryfi = document.getElementById('singlefile');
+            // Check if any file is selected.
+            if (updateInventoryfi.files.length > 0) {
+                for (const i = 0; i <= updateInventoryfi.files.length - 1; i++) {
+
+                    const fsize = updateInventoryfi.files.item(i).size;
+                    const file = Math.round((fsize / 1024));
+                    // The size of the file.
+                    if (file >= 2048) {
+                        alert(
+                            "File too Big, please select a file less than 2mb");
+                        $('#updateInventoryImage').attr('disabled', true);
+                    } else {
+                        document.getElementById('size').innerHTML = '<b>'
+                            + file + '</b> KB';
+                        $('#updateInventoryImage').attr('disabled', false);
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

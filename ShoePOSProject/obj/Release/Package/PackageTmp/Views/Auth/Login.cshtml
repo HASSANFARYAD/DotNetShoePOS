@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "Login/Register";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml"; ;
+}
+
+
+
+<!-- Content area -->
+<div class="content pb-20">
+
+    <!-- Tabbed form -->
+    <div class="tabbable panel login-form width-400">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#basic-tab1" data-toggle="tab"><h6>Sign in</h6></a></li>
+            @*<li><a href="#basic-tab2" data-toggle="tab"><h6>Register</h6></a></li>*@
+        </ul>
+
+        <div class="tab-content panel-body">
+            <div class="text-center">
+                <span style="color:@ViewBag.color">@ViewBag.message</span>
+            </div>
+            <div class="tab-pane fade in active" id="basic-tab1">
+                <form action="@Url.Action("PostLogin","Auth")" method="post" enctype="multipart/form-data">
+                    <div class="text-center">
+                        <div class="icon-object border-slate-300 text-slate-300"><i class="icon-reading"></i></div>
+                        <h5 class="content-group">Login to your account <small class="display-block">Your credentials</small></h5>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-icon" type="button"><i class="icon-user"></i></span>
+                            </span>
+                            <input type="email" class="form-control" placeholder="Email" name="Email" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-icon" type="button"><i class="icon-lock"></i></span>
+                            </span>
+                            <input type="password" class="form-control" placeholder="New Password" required name="Password" id="ConfirmPassword">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" onclick="ShowPasswords(2)" type="button" style="display:block" id="LoginShowPassword">Show</button>
+                                <button class="btn btn-default" onclick="ShowPasswords(2)" type="button" style="display:none" id="LoginHidePassword">Hide</button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group login-options">
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                <a href="@Url.Action("ForgotPassword","Auth")">Forgot password?</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn bg-blue btn-block">Login <i class="icon-arrow-right14 position-right"></i></button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="basic-tab2">
+                <form action="@Url.Action("Signup","Auth")" method="post" enctype="multipart/form-data">
+                    <div class="text-center">
+                        <div class="icon-object border-success text-success"><i class="icon-plus3"></i></div>
+                        <h5 class="content-group">Create new account <small class="display-block">All fields are required</small></h5>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-icon" type="button"><i class="icon-user-check"></i></span>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Your name" name="Name" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-icon" type="button"><i class="icon-lock"></i></span>
+                            </span>
+                            <input type="password" class="form-control" placeholder="New Password" required name="Password" id="password" onkeyup="CheckStrength(this.value)">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" onclick="ShowPasswords(1)" type="button" style="display:block" id="SignupShowPassword">Show</button>
+                                <button class="btn btn-default" onclick="ShowPasswords(1)" type="button" style="display:none" id="SignupHidePassword">Hide</button>
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="passwordStrength">
+                                    <span class="text-danger" id="poor"></span>
+                                    <span class="text-warning" id="weak"></span>
+                                    <span class="text-success" id="strong"></span>
+                                </div>
+                                <div class="text-semibold" id="passwordInfo"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-icon" type="button"><i class="icon-mention"></i></span>
+                            </span>
+                            <input type="email" class="form-control" placeholder="Your email" name="Email" required="required">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn bg-indigo-400 btn-block">Register <i class="icon-circle-right2 position-right"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /tabbed form -->
+
+</div>
+<!-- /content area -->
+
+            

@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<!--Add New Modal-->
+<div class="modal fade" id="AddNewModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Add New Option</h3>
+            </div>
+            <form method="post" action="@Url.Action("PostAddNewOption", "Option")">
+                <div class="modal-body p-5">
+                    <div class="col-md-12  m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Name <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="text" name="Name" class="form-control required" required="" placeholder="Windows">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Category <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="number" step="0.01" name="Price" class="form-control required" required="" placeholder="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("Delete", "Option")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this Option?<br />
+                        This Option is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="OptionDeleteId" />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Update Modal-->
+<div class="modal fade" id="UpdateModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-success">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Update</h3>
+            </div>
+            <form method="post" action="@Url.Action("PostUpdate", "Option")">
+                <div class="modal-body p-5">
+                    <div class="col-md-12  m-10">
+                        <input type="hidden" name="Id" id="updId" value="" />
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Name <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="text" name="Name" id="updName" class="form-control required" required="required" placeholder="Windows">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 m-10">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 text-bold">Category <span class="text-danger">*</span></label>
+                            <div class="col-md-9">
+                                <input type="number" step="0.01" name="Price" id="upPrice" class="form-control required" required="" placeholder="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-success">Submit Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Form Modal-->
+<!-- row -->
+<div class="row row-sm">
+    <div class="row">
+        <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+            @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+            {
+                <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+                </div>
+            }
+            @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+            {
+                <div class="alert alert-danger alert-styled-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!--div-->
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header pb-0">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0"></h4>
+                    <i class="mdi mdi-dots-horizontal text-gray"></i>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-sm-12">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2 col-sm-12 pull-right">
+                        <button class="btn btn-primary" onclick="AddNew()">Add New Option</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap table-striped table-bordered text-center" id="OptionTable">
+                        <thead class="bg-purple">
+                            <tr>
+                                <th class="text-center">Option</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!--/div-->
+</div>
+<!-- row closed -->
+
+<script>
+
+    $('#OptionTable').DataTable(
+    {
+        "ajax":
+        {
+            "url": '@Url.Action("GetOptionsList", "Option")',
+            "type": "POST",
+            "datatype": "json",
+        },
+        'columns':
+            [
+                { "data": "OptionName", "name": "Name" },
+                { "data": "OptionPrice", "name": "Price" },
+                { "data": "Action", "name": "" }
+            ],
+        'columnDefs':
+            [
+                {
+                    "targets": 0,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.OptionName;
+                    }
+                },
+                {
+                    "targets": 1,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.OptionPrice;
+                    }
+                },
+                {
+                    "targets": 2,
+                    'className': 'col-lg-1',
+                    'searchable': false,
+                    'orderable': false,
+                    "render": function (data, type, full, meta) {
+                        if (full.Role == 1) {
+                            return '<ul class="icons-list text-center">' +
+                                        '<li class="dropdown"> ' +
+                                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                '<i class="icon-menu9"></i >' +
+                                            '</a >' +
+                                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                '<li><a class="text-success" onclick="EditFunction(' + full.OptionId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                '<li><a class="text-danger" onclick="deleteFunction(' + full.OptionId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                            '</ul>' +
+                                        '</li>' +
+                                    '</ul>';
+                        }
+                        else {
+                            return '<ul class="icons-list text-center">' +
+                                        '<li class="dropdown"> ' +
+                                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                                '<i class="icon-menu9"></i >' +
+                                            '</a >' +
+                                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                '<li><a class="text-success" onclick="EditFunction(' + full.OptionId + ')"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                '<li><a class="text-danger" onclick="deleteFunction(' + full.OptionId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                            '</ul>' +
+                                        '</li>' +
+                                    '</ul>';
+                        }
+                    }
+                }
+            ],
+        "serverSide": "true",
+        "processing": "true",
+        "language":
+        {
+            "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+            "search": "<span>Search :</span> _INPUT_",
+            "searchPlaceholder": "Type to Filter",
+            "lengthMenu": "<span>Show :</span> _MENU_",
+            "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+        },
+    });
+
+    function deleteFunction(id) {
+        $("#OptionDeleteId").val(id);
+        $("#DeleteModal").modal('show');
+    }
+
+    function AddNew(id) {
+        $("#AddNewModal").modal('show');
+    }
+
+    function EditFunction(id) {
+        $.ajax({
+            type: 'POST',
+            url: "../Option/OptionById",
+            dataType: "json",
+            data: {
+                Id: id
+            },
+            success: function (response) {
+                $("#updId").val(response.Id);
+                $("#updName").val(response.Name);
+                $("#updPrice").val(response.Price);
+                $("#UpdateModal").modal('show');
+            },
+            error: function () {
+                alert("ajax Failed");
+            }
+        });
+    }
+
+</script>

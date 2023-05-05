@@ -1,0 +1,438 @@
+﻿
+@{
+    ViewBag.Title = "Calculator";
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style type="text/css">
+        body {
+            font-family: proxima-nova, sans-serif !important;
+        }
+
+        th {
+            padding: 20px;
+        }
+
+        td {
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 15px;
+        }
+    </style>
+
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="py-5">
+            <div class="row">
+                <div class="col-md-8 order-md-1 offset-md-2">
+                    <h4 class="mb-3">Billing address</h4>
+                    <form class="needs-validation" novalidate="">
+                        <div class="card pt-4 pb-4 pl-3 pr-3">
+                            <div class="row">
+                                <input type="hidden" id="cash_price_duplicate" />
+                                <input type="hidden" id="sales_tax_duplicate" />
+                                <input type="hidden" id="rental_ownership_terms_duplicate" />
+                                <input type="hidden" id="LDW_duplicate" />
+                                <input type="hidden" id="setdivision_duplicate" />
+
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="username">Cash Price</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" id="cash_price" name="cash_price" placeholder="Not including sales tax" required="" step="0.01">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="username">Sales Tax</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <input type="number" class="form-control" id="sales_tax" name="sales_tax" placeholder="Not including sales tax" required="" step="0.01">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="country">Rental OwnerShip Terms</label>
+                                    <select class="custom-select d-block w-100" id="rental_ownership_terms" required="" onchange="Funterms()">
+                                        <option value="24">24 Months</option>
+                                        <option value="36" selected>36 Months</option>
+                                        <option value="48">48 Months</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card pb-4 pl-3 pr-3">
+                            <div class="row">
+                                <div class="col-md-12 pt-4 pb-4 border-bottom p-2 pl-3 bg-light">
+                                    <h5>LIABILITY DAMAGE WAIVER “LDW” (OPTIONAL)</h5>
+                                </div>
+                                <div class="col-md-12 mt-2 p-2 pl-3">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label pr-3">Accept</label>
+                                        <input class="form-check-input" type="radio" name="liability_selected" id="ldw_accept" value="accept" onchange="AcceptLDW(this.value)">
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label pr-3">or Decline</label>
+                                        <input class="form-check-input" type="radio" name="liability_selected" id="ldw_accept" value="decline" onchange="AcceptLDW(this.value)">
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label pr-3">this coverage</label>
+                                        <input class="form-check-input" type="text" name="liability_amount" id="liability_total" disabled value="5.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="card pb-4 pl-3 pr-3">
+                            <div class="row">
+                                <div class="col-md-12 pt-4 pb-4 border-bottom p-2 pl-3 bg-light">
+                                    <h5>CUSTOMER RESERVE ACCOUNT (OPTIONAL)</h5>
+                                </div>
+                                <div class="col-md-12 mt-2 p-2 pl-3">
+                                    Use this calculator if the customer has a set amount of money that they would like to split between their initial payment and the CRA. Enter the total amount of the initial payment here: <input type="text" name="" readonly><br>
+                                    Enter <span class="text-green">0.00</span> into the CRA field $<span class=" "><input type="number" step="0.01" name="customer_reserve_amount" placeholder="$0.00" value="" maxlength="255" class="inline-input"></span> for the customers total initial payment to equal 0.00
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="card pb-4 pl-3 pr-3">
+                            <div class="row">
+                                <div class="col-md-12 pt-4 pb-4 border-bottom pl-3 bg-light">
+                                    <h5>RENTAL PAYMENTS</h5>
+                                </div>
+                                <div class="">
+                                    <table class="unstriped" style="text-align: right;">
+                                        <thead class="bg-light border-bottom">
+                                            <tr>
+                                                <th colspan="2" style="text-align: center;">Monthly Rental Payment</th>
+                                                <th style="text-align: center;">Plus LDW</th>
+                                                <th style="text-align: center;">Plus tax</th>
+                                                <th style="text-align: center;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Normal</td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="Normal_monthly_rental_payment">
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="Normal_LDW">
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="Normal_tax">
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="Normal_total">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>With optional reserve</td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="WOR_monthly_rental_payment">
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="WOR_LDW">
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="WOR_tax">
+                                                </td>
+                                                <td>
+                                                    <input type="text" readonly="readonly" class="form-control inline-input" id="WOR_total">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="card pb-4 pl-3 pr-3">
+                            <div class="row">
+                                <div class="col-md-12 pt-4 pb-4 border-bottom pl-3 bg-light">
+                                    <h5>BREAKDOWN OF INITIAL PAYMENT</h5>
+                                </div>
+
+                                <input type="hidden" id="UpdInitial_Rental_Payment" />
+                                <input type="hidden" id="UpdInitial_Sales_Tax" />
+                                <input type="hidden" id="UpdLiability_Damage_Waiver" />
+                                <input type="hidden" id="UpdCustomer_Reserve_Account" />
+                                <input type="hidden" id="UpdTotal_Initial_Payment" />
+
+
+
+                                <div class="col-md-12 pt-4">
+                                    <div class="row">
+                                        <div class="col-md-5 offset-md-1">a. Initial Rental Payment (2 Months)</div>
+                                        <div class="col-md-6">
+                                            <input type="text" readonly="readonly" class="form-control inline-input" id="Initial_Rental_Payment">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-5 offset-md-1">b. Initial Sales Tax</div>
+                                        <div class="col-md-6">
+                                            <input type="text" readonly="readonly" class="form-control inline-input" id="Initial_Sales_Tax">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-5 offset-md-1">c. Liability Damage Waiver</div>
+                                        <div class="col-md-6">
+                                            <input type="text" readonly="readonly" class="form-control inline-input" id="Liability_Damage_Waiver">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-5 offset-md-1">d. Customer Reserve Account</div>
+                                        <div class="col-md-6">
+                                            <input type="text" readonly="readonly" class="form-control inline-input" id="Customer_Reserve_Account">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-5 offset-md-1">e. Total Initial Payment</div>
+                                        <div class="col-md-6">
+                                            <input type="text" readonly="readonly" class="form-control inline-input" id="Total_Initial_Payment">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="card pb-4 pl-3 pr-3">
+                            <div class="row">
+                                <div class="col-md-12 pt-4 pb-4 border-bottom pl-3 bg-light">
+                                    <h5>RENTAL PURCHASE OWNERSHIP</h5>
+                                </div>
+                                <div class="col-md-12 mt-2 p-2 pl-3">
+                                    At <input type="text" id="At_Payment" readonly> monthly rental payments, we will apply any balance in the CRA, plus tax, and you will own the property. You will have paid a Total Cost of <input type="text" id="Total_Cost" readonly> not including LDW or tax. At any time you can do an early payoff by paying <input type="text" id="Payoff-By-Paying" readonly>of the remaining payments plus tax for ownership.
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <footer class="my-5 pt-5 text-muted text-center text-small">
+                <p class="mb-1">© 2017-2019 Company Name</p>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="#">Privacy</a></li>
+                    <li class="list-inline-item"><a href="#">Terms</a></li>
+                    <li class="list-inline-item"><a href="#">Support</a></li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.18/vue.min.js"></script>
+
+
+        <script>
+            $(document).ready(function () {
+                $('#cash_price').on('change keyup', function () {
+                    var vals = $('#cash_price').val();
+                    vals = parseFloat(vals);
+                    if (vals >= 10000)
+                        val = 15;
+                    else if (vals >= 3000)
+                        val = 8;
+                    else
+                        val = 5;
+                    val = val.toFixed(2);
+                    $('#liability_total').val(val);
+
+
+                    var termss = $('#rental_ownership_terms').val();
+                    $('#cash_price_duplicate').val(vals);
+                    $('#LDW_duplicate').val(val);
+                    $('#rental_ownership_terms_duplicate').val(termss);
+                    Funterms();
+                });
+
+                $('#sales_tax').on('change keyup', function () {
+                    var percentage = $('#sales_tax').val();
+                    $('#sales_tax_duplicate').val(percentage);
+                    Funterms();
+                });
+            });
+
+            function Funterms() {
+                var f = $('#rental_ownership_terms').val();
+                $('#rental_ownership_terms_duplicate').val(f);
+                var terms = $('#rental_ownership_terms_duplicate').val();
+                var cash = $('#cash_price_duplicate').val();
+                cash = parseFloat(cash).toFixed(2);
+                terms = parseFloat(terms);
+                if (terms == 24)
+                    val = 1 / 16.8;
+                else if (terms == 36)
+                    val = 1 / 21.6;
+                else if (terms == 48)
+                    val = 1 / 24;
+                var setdivision = val;
+                $('#At_Payment').val(terms);
+                if (terms == 24)
+                    vals = 70;
+                else if (terms == 36)
+                    vals = 60;
+                else if (terms = 48)
+                    vals = 50;
+                $('#Payoff-By-Paying').val(vals);
+                var total_cost = cash / vals;
+                total_cost = total_cost * 100;
+                total_cost = parseFloat(total_cost).toFixed(2);
+                $('#Total_Cost').val(total_cost);
+                $('#rental_ownership_terms_duplicate').val(terms);
+                $('#setdivision_duplicate').val(setdivision);
+
+                AcceptLDW();
+            }
+
+            function AcceptLDW() {
+                var xyx = $('#liability_total').val();
+                xyx = parseInt(xyx);
+                y = 0.00;
+                if ($('#ldw_accept').is(':checked') === true) {
+                    $('#Normal_LDW').val(xyx);
+                    $('#WOR_LDW').val(xyx);
+                    $('#LDW_duplicate').val(xyx);
+                }
+                else {
+                    $('#Normal_LDW').val(y);
+                    $('#WOR_LDW').val(y);
+                    $('#LDW_duplicate').val(y);
+                }
+                getMonthly();
+            }
+
+            function getMonthly() {
+                var GetValues = $('#cash_price_duplicate').val();
+                var setdivision = $('#setdivision_duplicate').val();
+                var a = $('#sales_tax_duplicate').val();
+                var c = $('#LDW_duplicate').val();
+                var monthly = GetValues * setdivision;
+                monthly = parseFloat(monthly.toFixed(2));
+
+                var getPercentage = Number.parseFloat(a).toFixed(2);
+                if (a != "") {
+                    getPercentage = getPercentage / 100;
+                    getPercentage = getPercentage * monthly;
+                    getPercentage = parseFloat(getPercentage.toFixed(2));
+                }
+                else {
+                    a = 0.00;
+                }
+                
+                if (getPercentage == "NaN") {
+                    getPercentage = 0.00;
+                }
+                if (c == "0") {
+                    c = 0.00;
+                }
+                var Nrp = monthly;
+                var NLDW = parseInt(c);
+                var NT = getPercentage;
+                $('#Normal_monthly_rental_payment').val(monthly);
+                $('#Normal_LDW').val(NLDW);
+                $('#Normal_tax').val(getPercentage);
+                var getNTotal = "";
+                if (Nrp != "") {
+                    getNTotal = Nrp;
+                }
+                if (NLDW != 0.00) {
+                    getNTotal = Nrp + NLDW;
+                }
+                if (NT != NaN) {
+                    getNTotal = Nrp + NLDW + NT;
+                }
+                getNTotal = parseFloat(getNTotal.toFixed(2));
+                $('#Normal_total').val(getNTotal);
+
+                //var Wrp = monthly;
+                //$('#WOR_monthly_rental_payment').val(monthly);
+
+                //var WLDW = parseInt(c);
+                //$('#WOR_LDW').val();
+
+                //var WT = "";
+                //$('#WOR_tax').val();
+
+                //var getWTotal = "";
+                //if (Wrp != "") {
+                //    getWTotal = Nrp;
+                //}
+                //if (WLDW != 0.00) {
+                //    getWTotal = Nrp + NLDW;
+                //}
+                //if (WT != "") {
+                //    getWTotal = Nrp + NLDW + NT;
+                //}
+
+                //getWTotal = Wrp + WLDW + WT;
+                //$('#WOR_total').val(getWTotal);
+                BreakDownInitialPayment();
+            }
+
+            function BreakDownInitialPayment() {
+
+                // Set Initial Rental Payment (2 Months)
+                var Monthly_Rental_Payment = $('#Normal_monthly_rental_payment').val();
+                Monthly_Rental_Payment = Monthly_Rental_Payment * 2;
+                Monthly_Rental_Payment = parseFloat(Monthly_Rental_Payment.toFixed(2));
+                
+                $('#Initial_Rental_Payment').val(Monthly_Rental_Payment);
+                $('#UpdInitial_Rental_Payment').val(Monthly_Rental_Payment);
+
+                // Set Initial Sales Tax
+                var Monthly_Tax = $('#Normal_tax').val();
+                Monthly_Tax = Monthly_Tax * 2;
+                Monthly_Tax = parseFloat(Monthly_Tax.toFixed(2));
+
+                $('#Initial_Sales_Tax').val(Monthly_Tax);
+                $('#UpdInitial_Sales_Tax').val(Monthly_Tax);
+
+                // Set Liability Damage Waiver
+                var Damage_Waiver = $('#Normal_LDW').val();
+                Damage_Waiver = Damage_Waiver * 2;
+                Damage_Waiver = parseFloat(Damage_Waiver.toFixed(2));
+
+                $('#Liability_Damage_Waiver').val(Damage_Waiver);
+                $('#UpdLiability_Damage_Waiver').val(Damage_Waiver);
+
+                // Set Total_Initial_Payment
+
+                var Total_Payment = Monthly_Rental_Payment + Monthly_Tax + Damage_Waiver;
+                $('#Total_Initial_Payment').val(parseFloat(Total_Payment.toFixed(2)));
+
+            }
+
+        </script>
+
+</body>
+</html>

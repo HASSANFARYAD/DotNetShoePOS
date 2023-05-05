@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="BSST">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Category" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="BsstCategoryId" Type="Int32" />
+    <NavigationProperty Name="Inventories" Relationship="Self.FK_Brand_Inventory" FromRole="BSST" ToRole="Inventory" />
+    <NavigationProperty Name="BsstCategory" Relationship="Self.FK_BsstCategory_Bsst" FromRole="BSST" ToRole="BsstCategory" />
+    <NavigationProperty Name="Inventories1" Relationship="Self.FK_Collection_Inventory" FromRole="BSST" ToRole="Inventory" />
+    <NavigationProperty Name="Inventories2" Relationship="Self.FK_Color_Inventory" FromRole="BSST" ToRole="Inventory" />
+    <NavigationProperty Name="User" Relationship="Self.FK_CreatedBy_BSST" FromRole="BSST" ToRole="User" />
+    <NavigationProperty Name="Inventories3" Relationship="Self.FK_Gender_Inventory" FromRole="BSST" ToRole="Inventory" />
+    <NavigationProperty Name="Inventories4" Relationship="Self.FK_ShoeStyle_Inventory" FromRole="BSST" ToRole="Inventory" />
+    <NavigationProperty Name="Inventories5" Relationship="Self.FK_Size_Inventory" FromRole="BSST" ToRole="Inventory" />
+  </EntityType>
+  <EntityType Name="BsstCategory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="CategoryName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="BSSTs" Relationship="Self.FK_BsstCategory_Bsst" FromRole="BsstCategory" ToRole="BSST" />
+    <NavigationProperty Name="User" Relationship="Self.FK_BsstCategory_CreatedBy" FromRole="BsstCategory" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Inventory">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BarcodeNo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="BrandId" Type="Int32" />
+    <Property Name="SizeId" Type="Int32" />
+    <Property Name="CollectionId" Type="Int32" />
+    <Property Name="ColorId" Type="Int32" />
+    <Property Name="GenderId" Type="Int32" />
+    <Property Name="ShoeStyleId" Type="Int32" />
+    <Property Name="Price" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="SalePrice" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Discount" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="AvailableAt" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="InventoryDate" Type="DateTime" Precision="3" />
+    <Property Name="extra1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="extra2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="extra3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="BSST" Relationship="Self.FK_Brand_Inventory" FromRole="Inventory" ToRole="BSST" />
+    <NavigationProperty Name="BSST1" Relationship="Self.FK_Collection_Inventory" FromRole="Inventory" ToRole="BSST" />
+    <NavigationProperty Name="BSST2" Relationship="Self.FK_Color_Inventory" FromRole="Inventory" ToRole="BSST" />
+    <NavigationProperty Name="BSST3" Relationship="Self.FK_Gender_Inventory" FromRole="Inventory" ToRole="BSST" />
+    <NavigationProperty Name="BSST4" Relationship="Self.FK_ShoeStyle_Inventory" FromRole="Inventory" ToRole="BSST" />
+    <NavigationProperty Name="BSST5" Relationship="Self.FK_Size_Inventory" FromRole="Inventory" ToRole="BSST" />
+    <NavigationProperty Name="User" Relationship="Self.FK_CreatedBy_Inventory" FromRole="Inventory" ToRole="User" />
+    <NavigationProperty Name="InventoryImages" Relationship="Self.FK_InventoryImages_Property" FromRole="Inventory" ToRole="InventoryImages" />
+  </EntityType>
+  <EntityType Name="InventoryImage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InventoryId" Type="Int32" />
+    <Property Name="ImagePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ImageName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Inventory" Relationship="Self.FK_InventoryImages_Property" FromRole="InventoryImages" ToRole="Inventory" />
+  </EntityType>
+  <EntityType Name="NewOption">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="InvId" Type="Int32" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="Items" Type="Int32" />
+    <NavigationProperty Name="User" Relationship="Self.FK_CreatedBy_NewOption" FromRole="NewOption" ToRole="User" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="UserName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Street" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="State" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PostalCode" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="Int32" />
+    <Property Name="Profile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="UserActivation" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="BSSTs" Relationship="Self.FK_CreatedBy_BSST" FromRole="User" ToRole="BSST" />
+    <NavigationProperty Name="BsstCategories" Relationship="Self.FK_BsstCategory_CreatedBy" FromRole="User" ToRole="BsstCategory" />
+    <NavigationProperty Name="Inventories" Relationship="Self.FK_CreatedBy_Inventory" FromRole="User" ToRole="Inventory" />
+    <NavigationProperty Name="NewOptions" Relationship="Self.FK_CreatedBy_NewOption" FromRole="User" ToRole="NewOption" />
+    <NavigationProperty Name="User1" Relationship="Self.FK_CreatedBy_User" FromRole="User" ToRole="User1" />
+    <NavigationProperty Name="User2" Relationship="Self.FK_CreatedBy_User" FromRole="User1" ToRole="User" />
+  </EntityType>
+  <Association Name="FK_Brand_Inventory">
+    <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BSST">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="BrandId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BsstCategory_Bsst">
+    <End Role="BsstCategory" Type="Self.BsstCategory" Multiplicity="0..1" />
+    <End Role="BSST" Type="Self.BSST" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BsstCategory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BSST">
+        <PropertyRef Name="BsstCategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Collection_Inventory">
+    <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BSST">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="CollectionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Color_Inventory">
+    <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BSST">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="ColorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreatedBy_BSST">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="BSST" Type="Self.BSST" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BSST">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Gender_Inventory">
+    <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BSST">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="GenderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ShoeStyle_Inventory">
+    <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BSST">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="ShoeStyleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Size_Inventory">
+    <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="BSST">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="SizeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BsstCategory_CreatedBy">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="BsstCategory" Type="Self.BsstCategory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="BsstCategory">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreatedBy_Inventory">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Inventory">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InventoryImages_Property">
+    <End Role="Inventory" Type="Self.Inventory" Multiplicity="0..1" />
+    <End Role="InventoryImages" Type="Self.InventoryImage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InventoryImages">
+        <PropertyRef Name="InventoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreatedBy_NewOption">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="NewOption" Type="Self.NewOption" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NewOption">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreatedBy_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="User1" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User1">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="BSSTs" EntityType="Self.BSST" />
+    <EntitySet Name="BsstCategories" EntityType="Self.BsstCategory" />
+    <EntitySet Name="Inventories" EntityType="Self.Inventory" />
+    <EntitySet Name="InventoryImages" EntityType="Self.InventoryImage" />
+    <EntitySet Name="NewOptions" EntityType="Self.NewOption" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Brand_Inventory" Association="Self.FK_Brand_Inventory">
+      <End Role="BSST" EntitySet="BSSTs" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BsstCategory_Bsst" Association="Self.FK_BsstCategory_Bsst">
+      <End Role="BsstCategory" EntitySet="BsstCategories" />
+      <End Role="BSST" EntitySet="BSSTs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Collection_Inventory" Association="Self.FK_Collection_Inventory">
+      <End Role="BSST" EntitySet="BSSTs" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Color_Inventory" Association="Self.FK_Color_Inventory">
+      <End Role="BSST" EntitySet="BSSTs" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreatedBy_BSST" Association="Self.FK_CreatedBy_BSST">
+      <End Role="User" EntitySet="Users" />
+      <End Role="BSST" EntitySet="BSSTs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Gender_Inventory" Association="Self.FK_Gender_Inventory">
+      <End Role="BSST" EntitySet="BSSTs" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ShoeStyle_Inventory" Association="Self.FK_ShoeStyle_Inventory">
+      <End Role="BSST" EntitySet="BSSTs" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Size_Inventory" Association="Self.FK_Size_Inventory">
+      <End Role="BSST" EntitySet="BSSTs" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BsstCategory_CreatedBy" Association="Self.FK_BsstCategory_CreatedBy">
+      <End Role="User" EntitySet="Users" />
+      <End Role="BsstCategory" EntitySet="BsstCategories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreatedBy_Inventory" Association="Self.FK_CreatedBy_Inventory">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Inventory" EntitySet="Inventories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InventoryImages_Property" Association="Self.FK_InventoryImages_Property">
+      <End Role="Inventory" EntitySet="Inventories" />
+      <End Role="InventoryImages" EntitySet="InventoryImages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreatedBy_NewOption" Association="Self.FK_CreatedBy_NewOption">
+      <End Role="User" EntitySet="Users" />
+      <End Role="NewOption" EntitySet="NewOptions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreatedBy_User" Association="Self.FK_CreatedBy_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="User1" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

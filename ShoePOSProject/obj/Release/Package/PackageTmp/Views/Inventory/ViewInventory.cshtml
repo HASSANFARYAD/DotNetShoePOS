@@ -1,0 +1,401 @@
+﻿
+@{
+    ViewBag.Title = "View Inventory";
+}
+
+<!--Modal-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("DeleteInventory", "Inventory")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this Inventory?<br />
+                        This Inventory is going to permanently delete from our System and its Attached Sales as well.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="InventoryDeleteId" />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+<!--Modal-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("Delete", "Option")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this Option?<br />
+                        This Option is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="OptionDeleteId" />
+                    <input type="hidden" name="PageId" value="2"  />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Form Modal-->
+<!-- row -->
+<div class="row row-sm">
+    <div class="row">
+        <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+            @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+            {
+                <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+                </div>
+            }
+            @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+            {
+                <div class="alert alert-danger alert-styled-left alert-bordered">
+                    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                    <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="panel panel-flat text-black">
+            <div class="panel-heading" style="background: #e8eced ">
+                <h2 class="text-center text-black">
+                    Search
+                </h2>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-action="collapse" class="rotate-180"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body pt-20 pb-20" style="display:none">
+                <div class="row">
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Serial #:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchSerial">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Style:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchStyle">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Brand:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchBrand">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Color:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchColor">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Size:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchSize">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Price:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchPrice">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Sale Price:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchSalePrice">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Inventory Date:</strong></label>
+                            <input type="date" placeholder="" class="form-control" id="searchDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <a href="@Url.Action("ViewInventory","Inventory")" class="btn btn-danger btn-block">Reset</a><br />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12"></div>
+
+                    <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px; ">
+                        <div class="form-group text-right">
+                            <button onclick="SearchInventory()" class="btn btn-success btn-block">Search</button><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--div-->
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header pb-0">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0"></h4>
+                    <i class="mdi mdi-dots-horizontal text-gray"></i>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 col-sm-12">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2 col-sm-12 pull-right">
+                        <a class="btn btn-primary" href="@Url.Action("NewInventory","Inventory")">Add New Inventory</a>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="">
+                    <span class="h5">Total Price Of Current Records are: Rs <span class="h3 text-bold" id="TotalPrice"></span></span><br />
+                    <span class="h5">Total Sale Price Of Current Records are: Rs <span class="h3 text-bold" id="TotalSalePrice"></span></span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap table-striped table-bordered text-center" id="InventoryTable">
+                        <thead class="bg-purple">
+                            <tr>
+                                <th class="text-center">Serial #</th>
+                                <th class="text-center">Brand</th>
+                                <th class="text-center">Style</th>
+                                <th class="text-center">Gender</th>
+                                <th class="text-center">Size</th>
+                                <th class="text-center">Color</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Sale Price</th>
+                                <th class="text-center">Inventory Date</th>
+                                <th class="text-center">Days on Lot</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/div-->
+</div>
+<!-- row closed -->
+
+<script>
+    LoadInventory();
+    function LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date) {
+        $('#InventoryTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetInventoryList", "Inventory")',
+                "type": "POST",
+                "datatype": "json",
+                "data": {
+                    Serial: Serial,
+                    Style: Style,
+                    Brand: Brand,
+                    Color: Color,
+                    Size: Size,
+                    Price: Price,
+                    SalePrice: SalePrice,
+                    Date: Date
+                }
+            },
+            'columns':
+                [
+                    { "data": "SerialNumber", "name": "BarcodeNo" },
+                    { "data": "Brand", "name": "Brand" },
+                    { "data": "ShoeStyle", "name": "ShoeStyle" },
+                    { "data": "Gender", "name": "Gender" },
+                    { "data": "Size", "name": "Size" },
+                    { "data": "Color", "name": "Color" },
+                    { "data": "Price", "name": "Price" },
+                    { "data": "SalePrice", "name": "SalePrice" },
+                    { "data": "InventoryDate", "name": "InventoryDate" },
+                    { "data": "DaysofLot", "name": "InventoryDate" },
+                    { "data": "Action", "name": "" }
+                ],
+            'columnDefs':
+            [
+                {
+                    "targets": 0,
+                    'className': 'col-lg-2',
+                    "render": function(data, type, full, meta) {
+                        return full.SerialNumber;
+                    }
+                },
+                {
+                    "targets": 1,
+                    'className': 'col-lg-3',
+                    "render": function (data, type, full, meta) {
+                        return full.Brand;
+                    }
+                },
+                {
+                    "targets": 2,
+                    'className': 'col-lg-4',
+                    "render": function (data, type, full, meta) {
+                        return full.ShoeStyle;
+                    }
+                },
+                {
+                    "targets": 3,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Gender;
+                    }
+                },
+                {
+                    "targets": 4,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Size;
+                    }
+                },
+                {
+                    "targets": 5,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Color;
+                    }
+                },
+                {
+                    "targets": 6,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Price;
+                    }
+                },
+                {
+                    "targets": 7,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.SalePrice;
+                    }
+                },
+                {
+                    "targets": 8,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.InventoryDate;
+                    }
+                },
+                {
+                    "targets": 9,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.DaysofLot;
+                    }
+                },
+                {
+                    "targets": 10,
+                    'className': 'col-lg-1',
+                    'searchable': false,
+                    'orderable': false,
+                    "render": function (data, type, full, meta)
+                    {
+                        if (full.Role == 1) {
+                            $("#TotalPrice").text(full.TotalPrice);
+                            $("#TotalSalePrice").text(full.TotalSalePrice);
+                            return '<ul class="icons-list text-center">' +
+                                        '<li class="dropdown"> ' +
+                                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
+                                                '<i class="icon-menu9"></i >' +
+                                            '</a >' +
+                                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                '<li><a class="text-primary" href="../Inventory/UpdateInventory?Id=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                //'<li><a class="text-success" href="../Inventory/Details?Id=' + full.EncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
+                                                '<li><a class="text-danger" onclick="deleteFunction(' + full.Id + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                            '</ul>' +
+                                        '</li>' +
+                                    '</ul>';
+                        }
+                        else {
+                            return '<ul class="icons-list text-center">' +
+                                        '<li class="dropdown"> ' +
+                                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
+                                                '<i class="icon-menu9"></i >' +
+                                            '</a >' +
+                                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                                '<li><a class="text-primary" href="../Inventory/UpdateInventory?Id=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                                //'<li><a class="text-success" href="../Inventory/Details?Id=' + full.EncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
+                                            '</ul>' +
+                                        '</li>' +
+                                    '</ul>';
+                        }
+                    }
+                }
+            ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "Type to Filter",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            },
+        });
+    }
+
+    function SearchInventory()
+    {
+        var Serial = $('#searchSerial').val();
+        var Style = $('#searchStyle').val();
+        var Brand = $('#searchBrand').val();
+        var Color = $('#searchColor').val();
+        var Size = $('#searchSize').val();
+        var Price = $('#searchPrice').val();
+        var SalePrice = $('#searchSalePrice').val();
+        var Date = $('#searchDate').val();
+
+        $('#InventoryTable').DataTable().clear();
+        $('#InventoryTable').DataTable().destroy();
+
+        LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date);
+
+    }
+
+    function deleteFunction(id) {
+        $("#InventoryDeleteId").val(id);
+        $("#DeleteModal").modal('show');
+    }
+
+
+</script>

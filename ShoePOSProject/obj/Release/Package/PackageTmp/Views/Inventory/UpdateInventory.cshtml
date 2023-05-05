@@ -1,0 +1,576 @@
+﻿
+@{
+    ViewBag.Title = "Update Inventory";
+}
+@using ShoePOSProject.Models
+@{
+    List<NewOption> newOptions = ViewBag.Options;
+}
+<!--Delete Image Modal-->
+<div id="DeleteImage_Modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title text-center text-semibold">Warning</h3>
+            </div>
+            <form action="@Url.Action("DeleteImages","Inventory")" method="post">
+                <div class="modal-body text-center">
+                    <input type="hidden" id="InventoryImageId" name="ImageId" />
+                    <p style="font-size:17px;">
+                        Do You Really Want to Delete this Image?<br />
+                        This Image is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Update Image-->
+<div id="UpdateImage_Modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title text-semibold">Update Image</h3>
+            </div>
+            <form action="@Url.Action("UpdateImage","Inventory")" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="UpdateInventoryImageId" name="UpdateImageId" />
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <input type="file" name="Image" class="file-styled" id="singlefile" required onchange="UpdateInventory()" accept="image/png, image/gif, image/jpeg">
+                            <span class="help-block text-danger">Accepted formats: jpg, png, jpeg. Max file size 2Mb</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="updateInventoryImage">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Delete Option-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("Delete", "Option")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this Option?<br />
+                        This Option is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="DeleteOptionId" />
+                    <input type="hidden" name="PageId" value="2" />
+                    <input type="hidden" name="InventoryId" value="@ViewBag.EncryptedId" />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+        @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+        {
+            <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+            </div>
+        }
+        @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+        {
+            <div class="alert alert-danger alert-styled-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Wizard with validation -->
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Update Inventory</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-action="collapse"></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form class="p-20" action="@Url.Action("PostUpdateInventory","Inventory")" method="post" enctype="multipart/form-data">
+        <fieldset class="step" id="validation-step1">
+            <h6 class="form-wizard-title text-semibold">
+                <span class="form-wizard-count">1</span>
+                Basic info
+                <small class="display-block">Building Information</small>
+            </h6>
+
+            <div class="row">
+                <input type="hidden" name="Id" value="@ViewBag.Inventory.Id" />
+                <input type="hidden" id="getBrandId" value="@ViewBag.Inventory.BrandId" />
+                <input type="hidden" id="getSizeId" value="@ViewBag.Inventory.SizeId" />
+                <input type="hidden" id="getCollectionId" value="@ViewBag.Inventory.CollectionId" />
+                <input type="hidden" id="getColorId" value="@ViewBag.Inventory.ColorId" />
+                <input type="hidden" id="getGenderId" value="@ViewBag.Inventory.GenderId" />
+                <input type="hidden" id="getShoeStyleId" value="@ViewBag.Inventory.ShoeStyleId" />
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Serial #: <span class="text-danger">*</span></label>
+                        <input type="text" name="BarcodeNo" class="form-control required" required="required" value="@ViewBag.Inventory.BarcodeNo" placeholder="Serial Number">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Brand: <span class="text-danger">*</span>
+                            <i id="brandLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="BrandId" data-placeholder="Select Brand..." id="getBrandOptions" class="form-control required" required="">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Size <span class="text-danger">*</span>
+                            <i id="getSizeLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="SizeId" id="getSizeOptions" data-placeholder="Select Size..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Collection <span class="text-danger">*</span>
+                            <i id="getCollectionLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="CollectionId" id="getCollectionOptions" data-placeholder="Select Collection..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Color <span class="text-danger">*</span>
+                            <i id="getColorLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="ColorId" id="getColorOptions" data-placeholder="Select Color..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Gender <span class="text-danger">*</span>
+                            <i id="getGenderLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="GenderId" id="getGenderOptions" data-placeholder="Select Gender..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">
+                            Shoe Style <span class="text-danger">*</span>
+                            <i id="getShoeStyleLoader" class="icon-circle" style="display:none"></i>
+                        </label>
+                        <select name="ShoeStyleId" id="getShoeStyleOptions" data-placeholder="Select Shoe Style..." class="form-control required" required="required">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Inventory Date: <span class="text-danger">*</span></label>
+                        <input type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" value="@ViewBag.Inventory.InventoryDate.ToString("yyyy-MM-dd")" name="InventoryDate" class="form-control required" required="required">
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Purchase Price: <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="btn btn-default input-group-addon">Rs.</span>
+                            <input type="number" step="0.01" class="form-control required" value="@ViewBag.Inventory.Price" min="1" name="Price">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Sale Price: <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="btn btn-default input-group-addon">Rs.</span>
+                            <input type="number" step="0.01" class="form-control required" value="@ViewBag.Inventory.SalePrice" min="1" name="SalePrice">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 pb-10">
+                    <h6 class="text-bold">Images <span class="text-danger">*</span></h6>
+                </div>
+                <div class="row">
+                    @if (ViewBag.IImage.Count >= 1)
+                    {
+                        foreach (InventoryImage i in ViewBag.IImage)
+                        {
+                            <div class="col-md-3">
+
+                                <div class="panel panel-flat">
+                                    <div class="panel-heading">
+                                        <div class="heading-elements">
+                                            <ul class="icons-list">
+                                                <li><a name="UpdateImageId" value="@i.Id" id="UpdateImageId" class="icon-upload" onclick="UpdateImage(@i.Id)" title="Update"></a></li>
+                                                <li><a name="ImageId" value="@i.Id" id="GetId" class="icon-close2" onclick="DeleteImage(@i.Id)" title="Delete"></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-body">
+                                        <input type="hidden" value="@i.Id" name="Id" id="Id" />
+                                        <div class="thumbnail">
+                                            <a href="@i.ImagePath" data-popup="lightbox">
+                                                <img src="@i.ImagePath" id="@i.ImagePath" style="height:150px; width:100%" alt="@i.ImageName" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="form-group">
+                    <input type="file" class="form-control" name="Images" multiple />
+                    <span class="help-block text-danger">
+                        <i class="icon-alert"></i>Image Size must be less than 2MB<br />
+                    </span>
+                </div>
+
+            </div>
+        </fieldset>
+
+
+        <div class="form-wizard-actions">
+            <button class="btn btn-default" id="validation-back" type="reset">Back</button>
+            <button class="btn btn-info" id="validation-next" type="submit">Update Form</button>
+        </div>
+    </form>
+</div>
+<!-- /wizard with validation -->
+
+
+
+@if (ViewBag.IImage != null)
+{
+    <script>
+        function DeleteImage(id) {
+            $('#InventoryImageId').val(id);
+            $('#DeleteImage_Modal').modal('show');
+        }
+
+        function UpdateImage(id) {
+            $('#UpdateInventoryImageId').val(id);
+            $('#UpdateImage_Modal').modal('show');
+        }
+    </script>
+}
+
+<script type="text/javascript">
+    var PCount = parseInt($("#count").val());
+
+    function AddNewOption() {
+        PCount = PCount + 1;
+        var headingCount = PCount;
+
+        var objTo = document.getElementById('NewOptions');
+
+        var guestDiv = document.createElement("div");
+        guestDiv.setAttribute("class", "form-group removeclass" + PCount);
+
+        var removeGuestDiv = 'removeclass' + PCount;
+
+        var Heading = '<h3><strong>Option ' + headingCount + ':</strong></h3>';
+
+        var NewItems = '<div class="col-md-3">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Item <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="number" name="Items' + PCount + '" id="Item' + PCount + '" placeholder="1" value="1" min="1" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+        var NewOption = '<div class="col-md-6">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Option <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="text" name="Name' + PCount + '" id="Option' + PCount + '" placeholder="Windows" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+        var OptionPrice = '<div class="col-md-3">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Price (Per Item) <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="number" name="Price' + PCount + '" id="Price' + PCount + '" placeholder="0.01" step="0.01" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+
+        var hiddenGuestId = '<input type="hidden" name="option_no' + headingCount + '" id="option_no' + headingCount + '" value=' + headingCount + ' />';
+
+        var deleteGuest = '<div class="col-md-12 mt-10" style="margin-bottom:-36px;"><div class="form-group pull-right"><button onclick="removeDetails(' + PCount + ');" type="button" class="btn btn-danger">Remove Details</button></div></div>';
+
+        guestDiv.innerHTML = Heading + NewItems + NewOption + OptionPrice
+            + hiddenGuestId + '<br />' + deleteGuest;
+
+        objTo.appendChild(guestDiv);
+
+        document.getElementById('count').value = PCount;
+
+        //PCount++;
+        //headingCount++;
+
+    }
+
+    function removeDetails(gid) {
+
+        $('.removeclass' + gid).remove();
+        PCount--;
+        headingCount--;
+        document.getElementById('count').value = PCount;
+    }
+
+    function DeleteOption(id) {
+        $("#DeleteOptionId").val(id);
+        $("#DeleteModal").modal('show');
+    }
+
+</script>
+
+<script>
+    var getBrandId = $("#getBrandId").val();
+    var getSizeId = $("#getSizeId").val();
+    var getCollectionId = $("#getCollectionId").val();
+    var getColorId = $("#getColorId").val();
+    var getGenderId = $("#getGenderId").val();
+    var getShoeStyleId = $("#getShoeStyleId").val();
+
+    GetBrand();
+    function GetBrand() {
+        $("#brandLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 1
+            },
+            success: function (data) {
+                var listAppend = "<option value=''>Select Brand...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getBrandId == data[i].BSSTCategoryId) {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                    }
+                }
+                $("#getBrandOptions").append(listAppend);
+
+                $("#brandLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetSize();
+            }
+        });
+    }
+
+    function GetSize() {
+        $("#getSizeLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 2
+            },
+            success: function (data) {
+                $("#getSizeOptions").empty().append("");
+                var listAppend = "<option value=''>Select Size...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getSizeId == data[i].BSSTCategoryId) {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                    }
+                }
+                $("#getSizeOptions").append(listAppend);
+
+                $("#getSizeLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetCollection();
+            }
+        });
+    }
+
+    function GetCollection() {
+        $("#getCollectionLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 3
+            },
+            success: function (data) {
+                $("#getCollectionOptions").empty().append(listAppend);
+                var listAppend = "<option value=''>Select Collection...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getCollectionId == data[i].BSSTCategoryId) {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                    }
+                }
+                $("#getCollectionOptions").append(listAppend);
+
+                $("#getCollectionLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetColor();
+            }
+        });
+    }
+
+    function GetColor() {
+        $("#getColorLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 4
+            },
+            success: function (data) {
+                $("#getColorOptions").empty().append("");
+                var listAppend = "<option value=''>Select Color...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getColorId == data[i].BSSTCategoryId) {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                    }
+                }
+                $("#getColorOptions").append(listAppend);
+
+                $("#getColorLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetGender();
+            }
+        });
+    }
+
+    function GetGender() {
+        $("#getGenderLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 5
+            },
+            success: function (data) {
+                $("#getGenderOptions").empty().append("");
+                var listAppend = "<option value=''>Select Gender...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getGenderId == data[i].BSSTCategoryId) {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                    }
+                }
+                $("#getGenderOptions").append(listAppend);
+
+                $("#getGenderLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetShoeStyle();
+            }
+        });
+    }
+
+    function GetShoeStyle() {
+        $("#getShoeStyleLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 6
+            },
+            success: function (data) {
+                $("#getShoeStyleOptions").empty().append("");
+                var listAppend = "<option value=''>Select Shoe Style...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getShoeStyleId == data[i].BSSTCategoryId) {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                    }
+                }
+                $("#getShoeStyleOptions").append(listAppend);
+
+                $("#getShoeStyleLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+
+            }
+        });
+    }
+</script>

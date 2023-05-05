@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "EditProfile";
+}
+
+@using ShoePOSProject.Models
+@{
+    DatabaseEntities db = new DatabaseEntities();
+
+    var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
+    var userId = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Sid).Select(c => c.Value).SingleOrDefault();
+
+    int id = Convert.ToInt32(userId);
+    User loggedInUser = db.Users.Where(x => x.Id == id).FirstOrDefault();
+}
+
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <form action="@Url.Action("PostEditProfile","Auth")" method="post" enctype="multipart/form-data">
+            <div class="panel panel-flat">
+                <div class="panel-heading text-center">
+                    @*<div class="border-black text-black icon-object"><i class="icon-user-lock icon-3x"></i></div>*@
+                    <h2 class="panel-title text-center text-bold">Update Profile</h2>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                            @*<li><a data-action="reload"></a></li>
+                                <li><a data-action="close"></a></li>*@
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-body">
+
+                    @if (ViewBag.User.Profile != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <div class="thumbnail">
+                                    <div class="thumb">
+                                        <img src="@ViewBag.User.Profile" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <input type="hidden" name="Id" value="@ViewBag.User.Id" />
+                    <div class="form-group">
+                        <label class="control-label ">Your Name: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="Name" value="@ViewBag.User.Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label ">Your Email <span class="text-danger">*</span></label>
+                        <input type="email" name="Email" class="form-control" id="email" required="required" value="@ViewBag.User.Email" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label ">Your Address:</label>
+                        <input type="text" class="form-control" placeholder="Address" name="Address" value="@ViewBag.User.Address">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone: </label>
+                        <input type="text" class="form-control" data-mask="(999) 999-9999" value="@ViewBag.User.Phone" name="Phone">
+                        <span class="help-block">(999) 999-9999</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Image/Logo</label>
+                        <input type="file" class="form-control" name="Profile" id="file" onchange="Filevalidation()" accept="image/png, image/gif, image/jpeg" />
+                        <span class="help-block text-danger">
+                            <i class="icon-alert"></i>Image/Logo Size must be less than 2MB<br />
+                            <i class="icon-alert"></i>Image/Logo Width and height Should be 200 x 70<br />
+                        </span>
+                    </div>
+
+                    <button type="submit" id="userFormButton" class="btn bg-teal-400 pull-right">Submit form <i class="icon-arrow-right14 position-right"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

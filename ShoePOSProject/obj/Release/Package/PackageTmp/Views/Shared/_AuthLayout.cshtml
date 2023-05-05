@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="icon" href="~/Content/assets/assets/images/S-Fav.jpg" type="image/gif" sizes="32x32">
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <!-- Core JS files -->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/loaders/blockui.min.js"></script>
+    <!-- /core JS files -->
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/forms/styling/uniform.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/login.js"></script>
+    <!-- /theme JS files -->
+
+</head>
+<body class="login-container login-cover">
+
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Main content -->
+            <div class="content-wrapper">
+                @RenderBody()
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+        <script>
+
+            let passwordStrength = document.getElementById('passwordStrength');
+            let poor = document.querySelector('#passwordStrength #poor');
+            let weak = document.querySelector('#passwordStrength #weak');
+            let strong = document.querySelector('#passwordStrength #strong');
+            let passwordInfo = document.getElementById('passwordInfo');
+
+            let poorRegExp = /[a-z]/;
+            let weakRegExp = /(?=.*?[0-9])/;;
+            let strongRegExp = /(?=.*?[#?!@@$%^&*-])/;
+            let whitespaceRegExp = /^$|\s+/;
+
+
+            function CheckStrength(pw) {
+                $('#confirmPassword').val("");
+
+                let passwordValue = pw;
+                let passwordLength = passwordValue.length;
+
+                let poorPassword = passwordValue.match(poorRegExp);
+                let weakPassword = passwordValue.match(weakRegExp);
+                let strongPassword = passwordValue.match(strongRegExp);
+                let whitespace = passwordValue.match(whitespaceRegExp);
+
+                if (passwordValue != "") {
+                    passwordStrength.style.display = "block";
+                    passwordStrength.style.display = "flex";
+                    passwordInfo.style.display = "block";
+                    passwordInfo.style.color = "black";
+
+                    if (whitespace) {
+                        passwordInfo.textContent = "whitespaces are not allowed";
+                        $('#userFormButton').prop("disabled", true);
+                    }
+                    else {
+                        poorPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword);
+                        weakPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword);
+                        strongPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword);
+                    }
+                }
+                else {
+                    passwordStrength.style.display = "none";
+                    passwordInfo.style.display = "none";
+                    $('#userFormButton').prop("disabled", false);
+                }
+            }
+
+            function poorPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword) {
+                if (passwordLength <= 5 && (poorPassword || weakPassword || strongPassword)) {
+                    poor.classList.add("active");
+                    passwordInfo.style.display = "block";
+                    passwordInfo.style.color = "red";
+                    passwordInfo.textContent = "Poor";
+                    $('#userFormButton').prop("disabled", true);
+                }
+                else {
+                    if (passwordLength > 5) {
+                        $('#userFormButton').prop("disabled", false);
+                    }
+                    else {
+                        poor.classList.add("active");
+                        passwordInfo.style.display = "block";
+                        passwordInfo.style.color = "red";
+                        passwordInfo.textContent = "Poor";
+                        $('#userFormButton').prop("disabled", true);
+                    }
+                }
+            }
+
+            function weakPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword) {
+                if (passwordLength >= 8 && poorPassword && (weakPassword || strongPassword)) {
+                    weak.classList.add("active");
+                    passwordInfo.textContent = "Weak";
+                    passwordInfo.style.color = "orange";
+                }
+                else {
+                    weak.classList.remove("active");
+                }
+            }
+
+            function strongPasswordStrength(passwordLength, poorPassword, weakPassword, strongPassword) {
+                if (passwordLength >= 8 && (poorPassword && weakPassword) && strongPassword) {
+                    poor.classList.add("active");
+                    weak.classList.add("active");
+                    strong.classList.add("active");
+                    passwordInfo.textContent = "Strong";
+                    passwordInfo.style.color = "green";
+                }
+                else {
+                    strong.classList.remove("active");
+                }
+            }
+
+            function matchPassword(confirmPw) {
+                var newPw = $('#password').val();
+                if (newPw != confirmPw) {
+                    $('#pwErrMsg').text("Password & Confirm Password did not match");
+                    $('#userFormButton').attr("disabled", true);
+                }
+                else {
+                    $('#pwErrMsg').text("");
+                    $('#userFormButton').attr("disabled", false);
+                }
+            }
+
+            function ShowPasswords(id) {
+                if (id == 1) {
+                    var x = document.getElementById("password");
+                    var ShowPassword = document.getElementById("SignupShowPassword");
+                    var HidePassword = document.getElementById("SignupHidePassword");
+                    if (x.type === "password") {
+                        x.type = "text";
+                        ShowPassword.style.display = "none";
+                        HidePassword.style.display = "block";
+                    } else {
+                        x.type = "password";
+                        ShowPassword.style.display = "block";
+                        HidePassword.style.display = "none";
+                    }
+                }
+                if (id == 2) {
+                    var y = document.getElementById("ConfirmPassword");
+                    var ShowPassword = document.getElementById("LoginShowPassword");
+                    var HidePassword = document.getElementById("LoginHidePassword");
+                    if (y.type === "password") {
+                        y.type = "text";
+                        ShowPassword.style.display = "none";
+                        HidePassword.style.display = "block";
+                    } else {
+                        y.type = "password";
+                        ShowPassword.style.display = "block";
+                        HidePassword.style.display = "none";
+                    }
+                }
+
+            }
+
+        </script>
+
+    </div>
+    <!-- /page container -->
+
+</body>
+</html>
