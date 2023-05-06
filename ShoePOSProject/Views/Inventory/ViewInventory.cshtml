@@ -32,30 +32,30 @@
 
 
 <!--Modal-->
-<div class="modal fade" id="DeleteModal">
+<div class="modal fade" id="DiscountPrice">
     <div class="modal-dialog">
         <div class="modal-content text-center">
             <div class="modal-header bg-danger">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Warning</h3>
+                <h3 class="modal-title">Success</h3>
             </div>
-            <form method="post" action="@Url.Action("Delete", "Option")">
-                <div class="modal-body p-5">
-                    <h6 class="text-semibold">
-                        Do you really want to Delete this Option?<br />
-                        This Option is going to permanently delete from our System.<br />
-                        This Action Cannot be Undone.
-                    </h6>
-                    <input type="hidden" name="id" id="OptionDeleteId" />
-                    <input type="hidden" name="PageId" value="2"  />
+            <div class="modal-body p-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Discount Percentage: <span class="text-danger">*</span></label>
+                            <input type="number" name="Discount" id="DiscountPercentage" class="form-control required" required="required" placeholder="Discount Percentage">
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
-                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                <button onclick="Discount()" class="btn btn-danger">Add Discount</button>
+            </div>
         </div>
     </div>
+
 </div>
 <!--Form Modal-->
 <!-- row -->
@@ -102,29 +102,67 @@
 
                     <div class="col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label><strong>Style:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchStyle">
+                            <label class="control-label text-bold">
+                                Brand: <span class="text-danger">*</span>
+                                <i id="brandLoader" class="icon-circle" style="display:none"></i>
+                            </label>
+                            <select name="BrandId" data-placeholder="Select Brand..." id="getBrandOptions" class="form-control required" required="">
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label><strong>Brand:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchBrand">
+                            <label class="control-label text-bold">
+                                Size <span class="text-danger">*</span>
+                                <i id="getSizeLoader" class="icon-circle" style="display:none"></i>
+                            </label>
+                            <select name="SizeId" id="getSizeOptions" data-placeholder="Select Size..." class="form-control required" required="required">
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label><strong>Color:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchColor">
+                            <label class="control-label text-bold">
+                                Collection <span class="text-danger">*</span>
+                                <i id="getCollectionLoader" class="icon-circle" style="display:none"></i>
+                            </label>
+                            <select name="CollectionId" id="getCollectionOptions" data-placeholder="Select Collection..." class="form-control required" required="required">
+                            </select>
                         </div>
                     </div>
 
                     <div class="col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label><strong>Size:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchSize">
+                            <label class="control-label text-bold">
+                                Color <span class="text-danger">*</span>
+                                <i id="getColorLoader" class="icon-circle" style="display:none"></i>
+                            </label>
+                            <select name="ColorId" id="getColorOptions" data-placeholder="Select Color..." class="form-control required" required="required">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label text-bold">
+                                Gender <span class="text-danger">*</span>
+                                <i id="getGenderLoader" class="icon-circle" style="display:none"></i>
+                            </label>
+                            <select name="GenderId" id="getGenderOptions" data-placeholder="Select Gender..." class="form-control required" required="required">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="control-label text-bold">
+                                Shoe Style <span class="text-danger">*</span>
+                                <i id="getShoeStyleLoader" class="icon-circle" style="display:none"></i>
+                            </label>
+                            <select name="ShoeStyleId" id="getShoeStyleOptions" data-placeholder="Select Shoe Style..." class="form-control required" required="required">
+                            </select>
                         </div>
                     </div>
 
@@ -155,7 +193,13 @@
                             <a href="@Url.Action("ViewInventory","Inventory")" class="btn btn-danger btn-block">Reset</a><br />
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12"></div>
+                    <div class="col-md-3 col-sm-12 col-xs-12"></div>
+
+                    <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px; ">
+                        <div class="form-group text-right">
+                            <button onclick="AddDiscount()" class="btn btn-warning btn-block">Add Discount</button><br />
+                        </div>
+                    </div>
 
                     <div class="col-md-3 col-sm-12 col-xs-12" style="padding-left: 20px; padding-right: 20px; ">
                         <div class="form-group text-right">
@@ -203,6 +247,8 @@
                                 <th class="text-center">Sale Price</th>
                                 <th class="text-center">Inventory Date</th>
                                 <th class="text-center">Days on Lot</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-center">Discount Percentage</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -217,7 +263,7 @@
 
 <script>
     LoadInventory();
-    function LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date) {
+    function LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date, Discount) {
         $('#InventoryTable').DataTable(
         {
             "ajax":
@@ -233,7 +279,8 @@
                     Size: Size,
                     Price: Price,
                     SalePrice: SalePrice,
-                    Date: Date
+                    Date: Date,
+                    Discount: Discount
                 }
             },
             'columns':
@@ -248,6 +295,8 @@
                     { "data": "SalePrice", "name": "SalePrice" },
                     { "data": "InventoryDate", "name": "InventoryDate" },
                     { "data": "DaysofLot", "name": "InventoryDate" },
+                    { "data": "Quantity", "name": "extra1" },
+                    { "data": "Discount", "name": "Discount" },
                     { "data": "Action", "name": "" }
                 ],
             'columnDefs':
@@ -324,6 +373,20 @@
                 },
                 {
                     "targets": 10,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Quantity;
+                    }
+                },
+                {
+                    "targets": 11,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.Discount;
+                    }
+                },
+                {
+                    "targets": 12,
                     'className': 'col-lg-1',
                     'searchable': false,
                     'orderable': false,
@@ -371,24 +434,28 @@
                 "lengthMenu": "<span>Show :</span> _MENU_",
                 "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
             },
+            "initComplete": function (settings, json) {
+                
+            }
         });
     }
 
     function SearchInventory()
     {
         var Serial = $('#searchSerial').val();
-        var Style = $('#searchStyle').val();
-        var Brand = $('#searchBrand').val();
-        var Color = $('#searchColor').val();
-        var Size = $('#searchSize').val();
+        var Brand = $('#getBrandOptions').val();
+        var Size = $('#getSizeOptions').val();
+        var Collection = $('#getCollectionOptions').val();
+        var Color = $('#getColorOptions').val();
+        var Gender = $('#getGenderOptions').val();
+        var Style = $('#getShoeStyleOptions').val();
         var Price = $('#searchPrice').val();
         var SalePrice = $('#searchSalePrice').val();
         var Date = $('#searchDate').val();
-
+        var Discount = -1;
         $('#InventoryTable').DataTable().clear();
         $('#InventoryTable').DataTable().destroy();
-
-        LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date);
+        LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date, Discount);
 
     }
 
@@ -397,5 +464,189 @@
         $("#DeleteModal").modal('show');
     }
 
+    function AddDiscount() {
+        $("#DiscountPrice").modal('show');
+    }
 
+    function Discount() {
+        var Serial = $('#searchSerial').val();
+        var Brand = $('#getBrandOptions').val();
+        var Size = $('#getSizeOptions').val();
+        var Collection = $('#getCollectionOptions').val();
+        var Color = $('#getColorOptions').val();
+        var Gender = $('#getGenderOptions').val();
+        var Style = $('#getShoeStyleOptions').val();
+        var Price = $('#searchPrice').val();
+        var SalePrice = $('#searchSalePrice').val();
+        var Date = $('#searchDate').val();
+        var Discount = $("#DiscountPercentage").val();
+        $('#InventoryTable').DataTable().clear();
+        $('#InventoryTable').DataTable().destroy();
+        LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date, Discount);
+        $("#DiscountPrice").modal('hide');
+    }
+</script>
+
+<script>
+    GetBrand();
+    function GetBrand() {
+        $("#brandLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 1
+            },
+            success: function (data) {
+                var listAppend = "<option value=''>Select Brand...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getBrandOptions").append(listAppend);
+
+                $("#brandLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetSize();
+            }
+        });
+    }
+
+    function GetSize() {
+        $("#getSizeLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 2
+            },
+            success: function (data) {
+                $("#getSizeOptions").empty().append("");
+                var listAppend = "<option value=''>Select Size...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getSizeOptions").append(listAppend);
+
+                $("#getSizeLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetCollection();
+            }
+        });
+    }
+
+    function GetCollection() {
+        $("#getCollectionLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 3
+            },
+            success: function (data) {
+                $("#getCollectionOptions").empty().append(listAppend);
+                var listAppend = "<option value=''>Select Collection...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getCollectionOptions").append(listAppend);
+
+                $("#getCollectionLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetColor();
+            }
+        });
+    }
+
+    function GetColor() {
+        $("#getColorLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 4
+            },
+            success: function (data) {
+                $("#getColorOptions").empty().append("");
+                var listAppend = "<option value=''>Select Color...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getColorOptions").append(listAppend);
+
+                $("#getColorLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetGender();
+            }
+        });
+    }
+
+    function GetGender() {
+        $("#getGenderLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 5
+            },
+            success: function (data) {
+                $("#getGenderOptions").empty().append("");
+                var listAppend = "<option value=''>Select Gender...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getGenderOptions").append(listAppend);
+
+                $("#getGenderLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetShoeStyle();
+            }
+        });
+    }
+
+    function GetShoeStyle() {
+        $("#getShoeStyleLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/getBsst',
+            data: {
+                categoryName: 6
+            },
+            success: function (data) {
+                $("#getShoeStyleOptions").empty().append("");
+                var listAppend = "<option value=''>Select Shoe Style...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
+                }
+                $("#getShoeStyleOptions").append(listAppend);
+
+                $("#getShoeStyleLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+
+            }
+        });
+    }
 </script>

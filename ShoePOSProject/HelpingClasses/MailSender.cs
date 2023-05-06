@@ -144,5 +144,53 @@ namespace ShoePOSProject.HelpingClasses
                 return false;
             }
         }
+
+        public static bool SendErrorEmail(string msg)
+        {
+            try
+            {
+                string SubjectBody = "Error Message";
+                string MailBody = "<html>" +
+                    "<head></head>" +
+                    "<body>" +
+                    msg +
+                    "</body></html>";
+
+                return SendEmail(ProjectVariables.ToEmail, SubjectBody, MailBody);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool SendEmail(string email, string subject, string MailBody)
+        {
+            try
+            {
+                MailMessage msg = new MailMessage();
+                msg.From = new MailAddress(ProjectVariables.FromEmail);
+                msg.To.Add(email);
+                msg.Subject = subject;
+                msg.IsBodyHtml = true;
+                msg.Body = MailBody;
+                using (SmtpClient client = new SmtpClient())
+                {
+                    client.EnableSsl = true;
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "qwerty_123!@#");
+                    client.Host = "smtp.gmail.com";
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.Send(msg);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

@@ -57,9 +57,8 @@ namespace ShoePOSProject.Controllers
 
         [HttpPost]
         public ActionResult GetInventoryList(string Serial = "", int Style = -1,
-            int Brand = -1, int Color = -1, int Collection = -1, int Gender = -1,
-            int Size = -1,  string Price = "",
-            string SalePrice = "", string Date = "")
+            int Brand = -1, int Color = -1, int Collection = -1, int Gender = -1, int Size = -1,
+            string Price = "", string SalePrice = "", string Date = "", int Discount = -1)
         {
             List<Inventory> IList = new List<Inventory>();
 
@@ -112,6 +111,10 @@ namespace ShoePOSProject.Controllers
             {
                 IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).ToShortDateString() == Convert.ToDateTime(Date).ToShortDateString()).ToList();
             }
+            if (Discount != -1)
+            {
+                UpdateDiscount(IList, Discount);
+            }
             int start = Convert.ToInt32(Request["start"]);
             int length = Convert.ToInt32(Request["length"]);
             string searchValue = Request["search[value]"];
@@ -145,6 +148,7 @@ namespace ShoePOSProject.Controllers
             int Daysonlot = 0;
             var TotalPrice = 0.0;
             var TotalSalePrice = 0.0;
+            
             foreach (Inventory u in IList)
             {
                 TotalPrice = TotalPrice + Convert.ToInt32(u.Price);
@@ -168,12 +172,6 @@ namespace ShoePOSProject.Controllers
                     Id = u.Id,
                     EncryptedId = StringCypher.Base64Encode(Convert.ToString(u.Id)),
                     SerialNumber = u.BarcodeNo,
-                    Brand = u.BSST.Name,
-                    Size = u.BSST1.Name,
-                    Collection = u.BSST2.Name,
-                    Color = u.BSST3.Name,
-                    Gender = u.BSST4.Name,
-                    ShoeStyle = u.BSST5.Name,
                     InventoryDate = u.InventoryDate != null ? u.InventoryDate.Value.ToString("d") : "",
                     DaysofLot = u.InventoryDate != null ? Convert.ToString(Daysonlot) : "",
                     Address = u.AvailableAt,
@@ -182,7 +180,33 @@ namespace ShoePOSProject.Controllers
                     Role = gp.validateUser().Role,
                     TotalPrice = TotalPrice,
                     TotalSalePrice = TotalSalePrice,
+                    Discount = u.Discount,
+                    Quantity = u.extra1
                 };
+                if(u.BrandId != null)
+                {
+                    obj.Brand = u.BSST.Name;
+                }
+                if(u.SizeId != null)
+                {
+                    obj.Size = u.BSST5.Name;
+                }
+                if(u.CollectionId != null)
+                {
+                    obj.Collection = u.BSST1.Name;
+                }
+                if (u.ColorId != null)
+                {
+                    obj.Color = u.BSST2.Name;
+                }
+                if (u.GenderId != null)
+                {
+                    obj.Gender = u.BSST3.Name;
+                }
+                if (u.ShoeStyleId != null)
+                {
+                    obj.ShoeStyle = u.BSST4.Name;
+                }
 
                 dto.Add(obj);
             }
@@ -768,5 +792,28 @@ namespace ShoePOSProject.Controllers
 
             return Json(bsstDto, JsonRequestBehavior.AllowGet);
         } 
+
+        public ActionResult UploadExcel(string message = "", string color = "")
+        {
+            ViewBag.Message = message;
+            ViewBag.Color = color;
+            return View();
+        }
+
+        public bool UpdateDiscount(List<Inventory> inventories, int Discount = -1)
+        {
+            if(inventories.Count > 0)
+            {
+                foreach(var item in inventories)
+                {
+                    item.Discount = Discount.ToString();
+                    if(!new InventoryBL().UpdateInventory(item, db)){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
     }
 }

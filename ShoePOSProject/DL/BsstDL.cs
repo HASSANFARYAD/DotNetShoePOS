@@ -29,6 +29,21 @@ namespace ShoePOSProject.DL
                 return false;
             }
         }
+
+        public int AddBSSTReturnId(BSST _BSST, DatabaseEntities de)
+        {
+            try
+            {
+                de.BSSTs.Add(_BSST);
+                de.SaveChanges();
+                return _BSST.Id;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
         public bool UpdateBSST(BSST _BSST, DatabaseEntities de)
         {
             try

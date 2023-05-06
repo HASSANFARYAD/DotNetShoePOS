@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "UploadExcel";
+}
+
+<div class="p-20">
+
+    <div class="row">
+        <form action="@Url.Action("PostImportExcel", "Admin")" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-flat">
+                        <div class="panel-heading">
+                            <h2 class="panel-title text-center text-bold">Upload File</h2>
+                            <div class="row">
+                                <div class="col-md-3 col-md-offset-9">
+                                    <a href="~/Content/NewAssets/Maintenance_Task.xlsx" class="btn btn-primary pull-right" download="">
+                                        Download File
+                                    </a>
+                                </div>
+                            </div>
+                            @if (ViewBag.Message == "File uploaded with errors")
+                            {
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-lg-8" style="color:red;">File Uploaded with erros, Please Check error Logs -> <a class="text-bold" href="~/Content/ErrorLogs/Maintenance_Task_Log.xlsx" download>Download</a></div>
+                                </div>
+                                <br />
+                            }
+                            else
+                            {
+                                <div class="text-center" id="alertMsg" style="color:@ViewBag.Color ; font-weight:bold">
+                                    @ViewBag.Message
+                                </div>
+                            }
+                        </div>
+
+                        <div class="panel-body">
+                            <legend class="text-bold text-uppercase"><span class="text-danger">*</span> Fields are Mandatory to fill</legend>
+
+                            <input type="hidden" name="way" value="@ViewBag.Way" />
+                            <div class="form-group">
+                                <label class="text-bold">Upload .xlsx File: <span class="text-danger">*</span></label>
+                                <input type="file" class="form-control" onchange="ValidateUploadFileSize(this)" required name="PostedFile" accept=".xlsx">
+                                <span class="text-danger-300" id="fileErrMsg">Max 15Mbs</span>
+                            </div>
+
+                            <div class="text-right">
+                                <button type="submit" id="subBtn" class="btn btn-primary">Upload <i class="icon-upload position-right"></i></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script>
+
+    function ValidateUploadFileSize(file)
+    {
+        var FileSize = file.files[0].size / 1024 / 1024;
+        if (FileSize > 15) {
+            $('#fileErrMsg').text("File Size Increased 15Mbs");
+            $('#subBtn').attr('disabled', true);
+        }
+        else {
+            $('#fileErrMsg').text("Max 15Mbs");
+            $('#subBtn').attr('disabled', false);
+        }
+    }
+</script>
+

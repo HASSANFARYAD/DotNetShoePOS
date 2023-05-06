@@ -1,8 +1,10 @@
-﻿using ShoePOSProject.BL;
+﻿using OfficeOpenXml;
+using ShoePOSProject.BL;
 using ShoePOSProject.HelpingClasses;
 using ShoePOSProject.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -341,6 +343,228 @@ namespace ShoePOSProject.Controllers
                 return RedirectToAction("ViewUser", new { message = "Somethings' wrong", color = "red" });
             }
         }
+        #endregion
+
+        #region Excel
+        [HttpPost]
+        public ActionResult PostImportExcel(FormCollection formCollection, string way = "")
+        {
+            try
+            {
+                DatabaseEntities dc = new DatabaseEntities();
+                if (Request != null)
+                {
+                    HttpPostedFileBase file = Request.Files["PostedFile"];
+                    if ((file != null && file.ContentLength > 0 && !string.IsNullOrEmpty(file.FileName)))
+                    {
+                        string fileName = file.FileName;
+                        string fileContentType = file.ContentType;
+                        byte[] filebytes = new byte[file.ContentLength];
+                        var data = file.InputStream.Read(filebytes, 0, Convert.ToInt32(file.ContentLength));
+
+                        using (var package = new ExcelPackage(file.InputStream))
+                        {
+                            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+                            var currentSheet = package.Workbook.Worksheets;
+                            var workSheet = currentSheet.First();
+                            var noOfColumns = workSheet.Dimension.End.Column;
+                            var noOfRows = workSheet.Dimension.End.Row;
+
+                            for (int rowIterator = 2; rowIterator <= noOfRows; rowIterator++)
+                            {
+                                var BrandId = 0;
+                                var SizeId = 0;
+                                var CollectionId = 0;
+                                var ColorId = 0;
+                                var GenderId = 0;
+                                var ShoeStyleId = 0;
+                                List<Inventory> listTask = new InventoryBL().GetActiveInventoriesList(db).ToList();
+                                List<BSST> bsstList = new BsstBL().GetActiveBSSTsList(db).ToList();
+                                if (workSheet.Cells[rowIterator, 1] == null)//can this be null?
+                                {
+                                    break; //if it's null exit from the for loop
+                                }
+
+                                var ShoeStyle = workSheet.Cells[rowIterator, 3].Value.ToString();
+                                ShoeStyle = ShoeStyle.Trim(' ');
+                                var Gender = workSheet.Cells[rowIterator, 4].Value.ToString();
+                                Gender = Gender.Trim(' ');
+                                var Color = workSheet.Cells[rowIterator, 6].Value.ToString();
+                                Color = Color.Trim(' ');
+                                var Size = workSheet.Cells[rowIterator, 7].Value.ToString();
+                                Size = Size.Trim(' ');
+                                var Brand = workSheet.Cells[rowIterator, 10].Value.ToString();
+                                Brand = Brand.Trim(' ');
+                                var Collection = workSheet.Cells[rowIterator, 11].Value.ToString();
+                                Collection = Collection.Trim(' ');
+
+
+                                var barCode = workSheet.Cells[rowIterator, 5].Value.ToString();
+                                barCode = barCode.Trim(' ');
+
+                                if (workSheet.Cells[rowIterator, 3] != null)
+                                {
+                                    BSST e = bsstList.Where(x => x.Name.Trim() == ShoeStyle && x.BsstCategoryId == 6).FirstOrDefault();
+                                    if (e != null)
+                                    {
+                                        ShoeStyleId = e.Id;
+                                    }
+                                    else
+                                    {
+                                        var equip = new BSST();
+                                        equip.Name = ShoeStyle;
+                                        equip.IsActive = 1;
+                                        equip.BsstCategoryId = 6;
+                                        equip.CreatedAt = gp.CurrentDateTime();
+                                        new BsstBL().AddBSST2(equip, db);
+                                        ShoeStyleId = equip.Id;
+                                    }
+                                }
+                                if (workSheet.Cells[rowIterator, 4] != null)
+                                {
+                                    BSST e = bsstList.Where(x => x.Name.Trim() == Gender && x.BsstCategoryId == 5).FirstOrDefault();
+                                    if (e != null)
+                                    {
+                                        GenderId = e.Id;
+                                    }
+                                    else
+                                    {
+                                        var equip = new BSST();
+                                        equip.Name = Gender;
+                                        equip.IsActive = 1;
+                                        equip.BsstCategoryId = 5;
+                                        equip.CreatedAt = gp.CurrentDateTime();
+                                        equip.CreatedBy = gp.validateUser().Id;
+                                        new BsstBL().AddBSST2(equip, db);
+                                        GenderId = equip.Id;
+                                    }
+                                }
+                                if (workSheet.Cells[rowIterator, 6] != null)
+                                {
+                                    BSST e = bsstList.Where(x => x.Name.Trim() == Color && x.BsstCategoryId == 4).FirstOrDefault();
+                                    if (e != null)
+                                    {
+                                        ColorId = e.Id;
+                                    }
+                                    else
+                                    {
+                                        var equip = new BSST();
+                                        equip.Name = Color;
+                                        equip.IsActive = 1;
+                                        equip.BsstCategoryId = 4;
+                                        equip.CreatedAt = gp.CurrentDateTime();
+                                        equip.CreatedBy = gp.validateUser().Id;
+                                        new BsstBL().AddBSST2(equip, db);
+                                        ColorId = equip.Id;
+                                    }
+                                }
+                                if (workSheet.Cells[rowIterator, 7] != null)
+                                {
+                                    BSST e = bsstList.Where(x => x.Name.Trim() == Size && x.BsstCategoryId == 2).FirstOrDefault();
+                                    if (e != null)
+                                    {
+                                        SizeId = e.Id;
+                                    }
+                                    else
+                                    {
+                                        var equip = new BSST();
+                                        equip.Name = Size;
+                                        equip.IsActive = 1;
+                                        equip.BsstCategoryId = 2;
+                                        equip.CreatedAt = gp.CurrentDateTime();
+                                        equip.CreatedBy = gp.validateUser().Id;
+                                        new BsstBL().AddBSST2(equip, db);
+                                        SizeId = equip.Id;
+                                    }
+                                }
+                                if (workSheet.Cells[rowIterator, 10] != null)
+                                {
+                                    BSST e = bsstList.Where(x => x.Name.Trim() == Brand && x.BsstCategoryId == 1).FirstOrDefault();
+                                    if (e != null)
+                                    {
+                                        BrandId = e.Id;
+                                    }
+                                    else
+                                    {
+                                        var equip = new BSST();
+                                        equip.Name = Brand;
+                                        equip.IsActive = 1;
+                                        equip.BsstCategoryId = 1;
+                                        equip.CreatedAt = gp.CurrentDateTime();
+                                        equip.CreatedBy = gp.validateUser().Id;
+                                        new BsstBL().AddBSST2(equip, db);
+                                        BrandId = equip.Id;
+                                    }
+                                }
+                                if (workSheet.Cells[rowIterator, 11] != null)
+                                {
+                                    BSST e = bsstList.Where(x => x.Name.Trim() == Collection && x.BsstCategoryId == 3).FirstOrDefault();
+                                    if (e != null)
+                                    {
+                                        CollectionId = e.Id;
+                                    }
+                                    else
+                                    {
+                                        var equip = new BSST();
+                                        equip.Name = Collection;
+                                        equip.IsActive = 1;
+                                        equip.BsstCategoryId = 3;
+                                        equip.CreatedAt = gp.CurrentDateTime();
+                                        equip.CreatedBy = gp.validateUser().Id;
+                                        new BsstBL().AddBSST2(equip, db);
+                                        CollectionId = equip.Id;
+                                    }
+                                }
+                                if (workSheet.Cells[rowIterator, 5] != null)
+                                {
+                                    var BarCodeNumber = barCode + Color + Size;
+                                    Inventory v = listTask.Where(x => x.BarcodeNo.ToLower().Trim() == BarCodeNumber.ToLower()).FirstOrDefault();
+
+                                    if (v == null)
+                                    {
+                                        var claim = new Inventory();
+
+                                        claim.BarcodeNo = BarCodeNumber;
+                                        claim.BrandId = BrandId;
+                                        claim.SizeId = SizeId;
+                                        claim.CollectionId = CollectionId;
+                                        claim.ColorId = ColorId;
+                                        claim.GenderId = GenderId;
+                                        claim.ShoeStyleId = ShoeStyleId;
+                                        claim.extra1 = workSheet.Cells[rowIterator, 8].Value == null ? string.Empty : workSheet.Cells[rowIterator, 8].Value.ToString();
+                                        claim.InventoryDate = gp.CurrentDateTime();
+                                        claim.IsActive = 1;
+                                        claim.CreatedAt = DateTime.Now;
+                                        claim.CreatedBy = gp.validateUser().Id;
+
+                                        if (!new InventoryBL().AddInventory(claim, db))
+                                        {
+                                            return RedirectToAction("ViewInventory", "Inventory", new { msg = "Something went Wrong", color = "red" });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return RedirectToAction("ViewInventory", "Inventory", new { msg = "File Uploaded Successfully", color = "green" });
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                if (ex.InnerException != null)
+                {
+                    MailSender.SendErrorEmail(ex.InnerException.Message.ToString() + "_" + ex.Message);
+                }
+                else
+                {
+                    MailSender.SendErrorEmail(ex.Message.ToString());
+                }
+            }
+            return RedirectToAction("ViewInventory", "Inventory", new { msg = "Something went Wrong", color = "red" });
+        }
+
         #endregion
     }
 }

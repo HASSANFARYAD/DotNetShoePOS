@@ -31,6 +31,18 @@ namespace ShoePOSProject.BL
             }
         }
 
+        public int AddBSST2(BSST _BSST, DatabaseEntities de)
+        {
+            if (_BSST.Name == null || _BSST.BsstCategoryId == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return new BsstDL().AddBSSTReturnId(_BSST, de);
+            }
+        }
+
         public bool UpdateBSST(BSST _BSST, DatabaseEntities de)
         {
             if (_BSST.Name == "" || _BSST.BsstCategoryId == null)
