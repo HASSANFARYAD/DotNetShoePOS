@@ -61,35 +61,6 @@
     </div>
 </div>
 
-<!--Delete Option-->
-<div class="modal fade" id="DeleteModal">
-    <div class="modal-dialog">
-        <div class="modal-content text-center">
-            <div class="modal-header bg-danger">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Warning</h3>
-            </div>
-            <form method="post" action="@Url.Action("Delete", "Option")">
-                <div class="modal-body p-5">
-                    <h6 class="text-semibold">
-                        Do you really want to Delete this Option?<br />
-                        This Option is going to permanently delete from our System.<br />
-                        This Action Cannot be Undone.
-                    </h6>
-                    <input type="hidden" name="id" id="DeleteOptionId" />
-                    <input type="hidden" name="PageId" value="2" />
-                    <input type="hidden" name="InventoryId" value="@ViewBag.EncryptedId" />
-                </div>
-                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
-                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 <div class="row">
     <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
         @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
@@ -381,6 +352,13 @@
     var getColorId = $("#getColorId").val();
     var getGenderId = $("#getGenderId").val();
     var getShoeStyleId = $("#getShoeStyleId").val();
+    getBrandId = parseInt(getBrandId);
+    getSizeId = parseInt(getSizeId);
+    getCollectionId = parseInt(getCollectionId);
+    getColorId = parseInt(getColorId);
+    getGenderId = parseInt(getGenderId);
+    getShoeStyleId = parseInt(getShoeStyleId);
+
 
     GetBrand();
     function GetBrand() {
@@ -394,11 +372,11 @@
             success: function (data) {
                 var listAppend = "<option value=''>Select Brand...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    if (getBrandId == data[i].BSSTCategoryId) {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    if (getBrandId == data[i].Id) {
+                        listAppend += "<option value = '" + data[i].Id + "' selected>" + data[i].BSSTName + " </option>";
                     }
                     else {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
                     }
                 }
                 $("#getBrandOptions").append(listAppend);
@@ -426,11 +404,11 @@
                 $("#getSizeOptions").empty().append("");
                 var listAppend = "<option value=''>Select Size...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    if (getSizeId == data[i].BSSTCategoryId) {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    if (getSizeId == data[i].Id) {
+                        listAppend += "<option value = '" + data[i].Id + "' selected>" + data[i].BSSTName + " </option>";
                     }
                     else {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
                     }
                 }
                 $("#getSizeOptions").append(listAppend);
@@ -458,11 +436,11 @@
                 $("#getCollectionOptions").empty().append(listAppend);
                 var listAppend = "<option value=''>Select Collection...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    if (getCollectionId == data[i].BSSTCategoryId) {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    if (getCollectionId == data[i].Id) {
+                        listAppend += "<option value = '" + data[i].Id + "' selected>" + data[i].BSSTName + " </option>";
                     }
                     else {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
                     }
                 }
                 $("#getCollectionOptions").append(listAppend);
@@ -490,11 +468,11 @@
                 $("#getColorOptions").empty().append("");
                 var listAppend = "<option value=''>Select Color...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    if (getColorId == data[i].BSSTCategoryId) {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    if (getColorId == data[i].Id) {
+                        listAppend += "<option value = '" + data[i].Id + "' selected>" + data[i].BSSTName + " </option>";
                     }
                     else {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
                     }
                 }
                 $("#getColorOptions").append(listAppend);
@@ -522,11 +500,11 @@
                 $("#getGenderOptions").empty().append("");
                 var listAppend = "<option value=''>Select Gender...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    if (getGenderId == data[i].BSSTCategoryId) {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    if (getGenderId == data[i].Id) {
+                        listAppend += "<option value = '" + data[i].Id + "' selected>" + data[i].BSSTName + " </option>";
                     }
                     else {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
                     }
                 }
                 $("#getGenderOptions").append(listAppend);
@@ -554,11 +532,11 @@
                 $("#getShoeStyleOptions").empty().append("");
                 var listAppend = "<option value=''>Select Shoe Style...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    if (getShoeStyleId == data[i].BSSTCategoryId) {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "' selected>" + data[i].BSSTName + " </option>";
+                    if (getShoeStyleId == data[i].Id) {
+                        listAppend += "<option value = '" + data[i].Id + "' selected>" + data[i].BSSTName + " </option>";
                     }
                     else {
-                        listAppend += "<option value = '" + data[i].BSSTCategoryId + "'>" + data[i].BSSTName + " </option>";
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].BSSTName + " </option>";
                     }
                 }
                 $("#getShoeStyleOptions").append(listAppend);

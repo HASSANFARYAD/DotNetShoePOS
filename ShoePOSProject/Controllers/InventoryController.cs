@@ -36,6 +36,7 @@ namespace ShoePOSProject.Controllers
                 return false;
             }
         }
+        
         public ActionResult ViewInventory(string message = "", string color = "")
         {
             if (!isLogedIn())
@@ -295,7 +296,6 @@ namespace ShoePOSProject.Controllers
                     {
                         Inventory i = new Inventory()
                         {
-                            BarcodeNo = inventory.BarcodeNo,
                             BrandId = inventory.BrandId,
                             SizeId = inventory.SizeId,
                             CollectionId = inventory.CollectionId,
@@ -314,7 +314,17 @@ namespace ShoePOSProject.Controllers
                             CreatedBy = gp.validateUser().Id,
                             CreatedAt = gp.CurrentDateTime()
                         };
-
+                        var getColor = "";
+                        var getSize = "";
+                        if (i.ColorId != null)
+                        {
+                            getColor = new BsstBL().GetActiveBSSTById((int)i.ColorId, db).Name;
+                        }
+                        if(i.SizeId != null)
+                        {
+                            getSize = new BsstBL().GetActiveBSSTById((int)i.SizeId, db).Name;
+                        }
+                        i.BarcodeNo = inventory.BarcodeNo + getColor + getSize;
                         if (new InventoryBL().AddInventory(i, context))
                         {
                             if (Images != null)

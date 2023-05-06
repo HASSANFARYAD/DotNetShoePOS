@@ -32,20 +32,19 @@ namespace ShoePOSProject.Controllers
             {
                 return RedirectToAction("Login", "Auth");
             }
+            User LoggedInUser = gp.validateUser();
             //For Admin
-            if(gp.validateUser().Role == 1)
+            if(LoggedInUser.Role == 1)
             {
-                //Admin
-                ViewBag.Admin = new UserBL().GetActiveUsersList(db).Where(x => x.IsActive == 1 && x.Role == 1).ToList().Count;
-                //Managers
-                ViewBag.User = new UserBL().GetActiveUsersList(db).Where(x => x.IsActive == 1 && x.Role == 3).ToList().Count;
-                //Company or Customer
-                //ViewBag.Customer = new CustomerBL().GetActiveCustomersList(db).Where(x => x.IsActive == 1).ToList().Count;
+                ViewBag.Brand = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1).ToList().Count;
+                ViewBag.Size = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2).ToList().Count;
+                ViewBag.Color = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4).ToList().Count;
             }
-            // For Manager
-            if (gp.validateUser().Role == 2)
+            else
             {
-                ViewBag.User = new UserBL().GetActiveUsersList(db).Where(x => x.IsActive == 1 && x.Role == 3).ToList().Count;
+                ViewBag.Brand = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
+                ViewBag.Size = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
+                ViewBag.Color = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
             }
             ViewBag.Role = gp.validateUser().Role;
             return View();

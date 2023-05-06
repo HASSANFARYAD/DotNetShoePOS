@@ -16,8 +16,8 @@ namespace ShoePOSProject.HelpingClasses
         public string Color { get; set; }
         public string Gender { get; set; }
         public string Sides { get; set; }
-        public string LoadingInstruction { get; set; }
-        public string Fence { get; set; }
+        public string Discount { get; set; }
+        public string Quantity { get; set; }
         public string Access { get; set; }
         public string Address { get; set; }
         public string Street { get; set; }

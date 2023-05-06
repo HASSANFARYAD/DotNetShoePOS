@@ -147,12 +147,19 @@ namespace ShoePOSProject.Controllers
 
             return View();
         }
+        
         [HttpPost]
         public ActionResult GetUserList(string name = "", string email = "", int AccessRole = -1)
         {
             List<User> ulist = new List<User>();
-
-            ulist = new UserBL().GetActiveUsersList(db).OrderByDescending(x => x.Id).ToList();
+            if(gp.validateUser().Role == 1)
+            {
+                ulist = new UserBL().GetActiveUsersList(db).Where(x => x.Role != 1).OrderByDescending(x => x.Id).ToList();
+            }
+            else
+            {
+                ulist = new UserBL().GetActiveUsersList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
+            }
 
             if (name != "")
             {
@@ -204,11 +211,11 @@ namespace ShoePOSProject.Controllers
                 }
                 else if(u.Role == 2)
                 {
-                    Role = "Dealer";
+                    Role = "Manager";
                 }
                 else
                 {
-                    Role = "Customer";
+                    Role = "User";
                 }
 
                 UserDTO obj = new UserDTO()
@@ -226,7 +233,6 @@ namespace ShoePOSProject.Controllers
             }
             return Json(new { data = udto, draw = Request["draw"], recordsTotal = totalrows, recordsFiltered = totalrowsafterfilterinig }, JsonRequestBehavior.AllowGet);
         }
-
 
         public ActionResult UpdateUser(string UserId = "", string message = "", string color = "")
         {
@@ -313,6 +319,7 @@ namespace ShoePOSProject.Controllers
                 return RedirectToAction("UpdateUser", new { UserId = StringCypher.Base64Encode(Convert.ToString(u.Id)), message = "Somethings' wrong", color = "red" });
             }
         }
+        
         [HttpPost]
         public ActionResult UserById(int id)
         {
@@ -327,6 +334,7 @@ namespace ShoePOSProject.Controllers
             };
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
+        
         public ActionResult DeleteUser(int id)
         {
             if (!isLogedIn())
