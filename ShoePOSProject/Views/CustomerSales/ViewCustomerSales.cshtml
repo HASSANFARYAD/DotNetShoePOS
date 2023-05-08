@@ -1,0 +1,395 @@
+﻿
+@{
+    ViewBag.Title = "View Customer Sales";
+}
+@using ShoePOSProject.HelpingClasses
+@{
+    GeneralPurpose gp = new GeneralPurpose();
+}
+<!--Modal-->
+<div class="modal fade" id="DeleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-header bg-danger">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Warning</h3>
+            </div>
+            <form method="post" action="@Url.Action("DeleteCustomerSales", "CustomerSales")">
+                <div class="modal-body p-5">
+                    <h6 class="text-semibold">
+                        Do you really want to Delete this Customer Sale?<br />
+                        This Customer Sale is going to permanently delete from our System.<br />
+                        This Action Cannot be Undone.
+                    </h6>
+                    <input type="hidden" name="id" id="CustomerDeleteId" />
+                </div>
+                <div class="modal-footer border-top-1 border-top-grey-800 pt-10">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+        @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+        {
+            <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+            </div>
+        }
+        @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+        {
+            <div class="alert alert-danger alert-styled-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="panel panel-flat text-black">
+            <div class="panel-heading" style="background: #e8eced ">
+                <h2 class="text-center text-black">
+                    Search
+                </h2>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-action="collapse" class="rotate-180"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body pt-20 pb-20" style="display:none">
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Customer Name:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchName">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Inventory Brand:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchBrand">
+                        </div>
+                    </div>
+
+                    @*<div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>Serial #:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchSerial">
+                        </div>
+                    </div>*@
+
+                    @{
+                        if (gp.validateUser().Role == 1)
+                        {
+
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label><strong>Delaer Name:</strong></label>
+                                    <select class="select" id="searchDealer" data-placeholder="Choose Dealer...">
+                                        <option value="">Choose Dealer...</option>
+                                        @foreach (var x in ViewBag.users)
+                                        {
+                                            <option value="@x.Id">@x.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="form-group">
+                            <a href="@Url.Action("ViewCustomerSales","CustomerSales")" class="btn btn-danger btn-block">Reset</a><br />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12"></div>
+
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="form-group text-right">
+                            <button onclick="SearchSales()" class="btn btn-success btn-block">Search</button><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-header pb-0">
+                <div class="d-flex justify-content-between">
+                    <h4 class="card-title mg-b-0"></h4>
+                    <i class="mdi mdi-dots-horizontal text-gray"></i>
+                </div>
+                <p class="tx-12 tx-gray-500 mb-2">
+
+                </p>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table text-md-nowrap table-striped table-bordered text-center" id="CustomerSalesTable">
+                        <thead class="bg-purple">
+                            <tr>
+                                <th class="text-center">Customer Name</th>
+                                <th class="text-center">Inventory Brand</th>
+                                <th class="text-center">Serial #</th>
+                                <th class="text-center">Cash Price</th>
+                                <th class="text-center">Ownership Term</th>
+                                <th class="text-center">Dealer Name</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#CustomerSalesTable').DataTable(
+    {
+        "ajax":
+        {
+            "url": '@Url.Action("GetCusomersSaleList", "CustomerSales")',
+            "type": "POST",
+            "datatype": "json",
+        },
+        'columns':
+            [
+                { "data": "CustomerName", "name": "CustomerId" },
+                { "data": "Brand", "name": "InventoryId" },
+                { "data": "CustomerSalesSerialNumber", "name": "CustomerId" },
+                { "data": "CustomerSalesCashPrice", "name": "CashPrice" },
+                { "data": "CustomerSalesOwnership", "name": "OwnershipTerm" },
+                { "data": "CustomerSalesCreatedBy", "name": "CreatedBy" },
+                { "data": "Action", "name": "" }
+            ],
+        'columnDefs':
+        [
+            {
+                "targets": 0,
+                'className': 'col-lg-2',
+                "render": function(data, type, full, meta) {
+                    return full.CustomerName;
+                }
+            },
+            {
+                "targets": 1,
+                'className': 'col-lg-3',
+                "render": function (data, type, full, meta) {
+                    return full.Brand;
+                }
+            },
+            {
+                "targets": 2,
+                'className': 'col-lg-4',
+                "render": function (data, type, full, meta) {
+                    return full.CustomerSalesSerialNumber;
+                }
+            },
+            {
+                "targets": 3,
+                'className': 'col-lg-2',
+                "render": function (data, type, full, meta) {
+                    return full.CustomerSalesCashPrice;
+                }
+            },
+            {
+                "targets": 4,
+                'className': 'col-lg-2',
+                "render": function (data, type, full, meta) {
+                    return full.CustomerSalesOwnership;
+                }
+            },
+            {
+                "targets": 5,
+                'className': 'col-lg-2',
+                "render": function (data, type, full, meta) {
+                    return full.CustomerSalesCreatedBy;
+                }
+            },
+            {
+                "targets": 6,
+                'className': 'col-lg-1',
+                'searchable': false,
+                'orderable': false,
+                "render": function (data, type, full, meta)
+                {
+                    if (full.Role == 1) {
+                        return '<ul class="icons-list text-center">' +
+                                '<li class="dropdown"> ' +
+                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
+                                        '<i class="icon-menu9"></i >' +
+                                    '</a >' +
+                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                        '<li><a class="text-primary" href="../CustomerSales/UpdateCustomerSales?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                        '<li><a class="text-success" href="../CustomerSales/Details?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
+                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.CustomerSalesId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                        '<li><a class="text-danger" href="../CustomerSales/Invoice?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-file-pdf"></i> Invoice</a></li>' +
+                                    '</ul>' +
+                                '</li>' +
+                            '</ul>';
+                    }
+                    else {
+                        return '<ul class="icons-list text-center">' +
+                                '<li class="dropdown"> ' +
+                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
+                                        '<i class="icon-menu9"></i >' +
+                                    '</a >' +
+                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                        '<li><a class="text-primary" href="../CustomerSales/UpdateCustomerSales?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                        '<li><a class="text-success" href="../CustomerSales/Details?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
+                                        '<li><a class="text-danger" href="../CustomerSales/Invoice?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-file-pdf"></i> Invoice</a></li>' +
+                                    '</ul>' +
+                                '</li>' +
+                            '</ul>';
+                    }
+                }
+            }
+        ],
+       "serverSide": "true",
+        "processing": "true",
+        "language":
+        {
+            "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+            "search": "<span>Search :</span> _INPUT_",
+            "searchPlaceholder": "Type to Filter",
+            "lengthMenu": "<span>Show :</span> _MENU_",
+            "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+        },
+    });
+
+
+    function SearchSales()
+    {
+        $('#CustomerSalesTable').DataTable().clear();
+        $('#CustomerSalesTable').DataTable().destroy();
+        var Name = $('#searchName').val();
+        var Brand = $('#searchBrand').val();
+        var Serial = $('#searchSerial').val();
+        var Dealer = $('#searchDealer').val();
+        $('#CustomerSalesTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetCusomersSaleList", "CustomerSales")',
+                "type": "Post",
+                "datatype": "json",
+                "data": {
+                    Name: Name,
+                    Brand: Brand,
+                    Serial: Serial,
+                    Dealer: Dealer
+                }
+            },
+        'columns':
+            [
+                { "data": "CustomerName", "name": "CustomerId" },
+                { "data": "Brand", "name": "InventoryId" },
+                { "data": "CustomerSalesSerialNumber", "name": "SerialNumber" },
+                { "data": "CustomerSalesCashPrice", "name": "CashPrice" },
+                { "data": "CustomerSalesOwnership", "name": "OwnershipTerm" },
+                { "data": "CustomerSalesCreatedBy", "name": "CreatedBy" },
+                { "data": "Action", "name": "" }
+            ],
+        'columnDefs':
+            [
+                {
+                    "targets": 0,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.CustomerName;
+                    }
+                },
+                {
+                    "targets": 1,
+                    'className': 'col-lg-3',
+                    "render": function (data, type, full, meta) {
+                        return full.Brand;
+                    }
+                },
+                {
+                    "targets": 2,
+                    'className': 'col-lg-4',
+                    "render": function (data, type, full, meta) {
+                        return full.CustomerSalesSerialNumber;
+                    }
+                },
+                {
+                    "targets": 3,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.CustomerSalesCashPrice;
+                    }
+                },
+                {
+                    "targets": 4,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.CustomerSalesOwnership;
+                    }
+                },
+                {
+                    "targets": 5,
+                    'className': 'col-lg-2',
+                    "render": function (data, type, full, meta) {
+                        return full.CustomerSalesCreatedBy;
+                    }
+                },
+                {
+                    "targets": 6,
+                    'className': 'col-lg-1',
+                    'searchable': false,
+                    'orderable': false,
+                    "render": function (data, type, full, meta) {
+                        return '<ul class="icons-list text-center">' +
+                            '<li class="dropdown"> ' +
+                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                            '<i class="icon-menu9"></i >' +
+                            '</a >' +
+                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                            '<li><a class="text-primary" href="../CustomerSales/UpdateCustomerSales?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                            '<li><a class="text-success" href="../CustomerSales/Details?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
+                            '<li><a class="text-danger" onclick="deleteFunction(' + full.CustomerSalesId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                            '<li><a class="text-danger" href="../CustomerSales/Invoice?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-file-pdf"></i> Invoice</a></li>' +
+                            '</ul>' +
+                            '</li>' +
+                            '</ul>';
+                    }
+                }
+            ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "filter Product Type",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            }
+        });
+    }
+
+    function deleteFunction(id) {
+        $("#CustomerDeleteId").val(id);
+        $("#DeleteModal").modal('show');
+    }
+
+</script>

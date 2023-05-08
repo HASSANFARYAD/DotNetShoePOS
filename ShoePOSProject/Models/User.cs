@@ -22,6 +22,8 @@ namespace ShoePOSProject.Models
             this.Inventories = new HashSet<Inventory>();
             this.NewOptions = new HashSet<NewOption>();
             this.User1 = new HashSet<User>();
+            this.Customers = new HashSet<Customer>();
+            this.CustomerSales = new HashSet<CustomerSale>();
         }
     
         public int Id { get; set; }
@@ -54,5 +56,9 @@ namespace ShoePOSProject.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> User1 { get; set; }
         public virtual User User2 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Customer> Customers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CustomerSale> CustomerSales { get; set; }
     }
 }

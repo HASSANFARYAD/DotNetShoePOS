@@ -18,6 +18,7 @@ namespace ShoePOSProject.Models
         public Inventory()
         {
             this.InventoryImages = new HashSet<InventoryImage>();
+            this.CustomerSales = new HashSet<CustomerSale>();
         }
     
         public int Id { get; set; }
@@ -49,5 +50,7 @@ namespace ShoePOSProject.Models
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InventoryImage> InventoryImages { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CustomerSale> CustomerSales { get; set; }
     }
 }

@@ -31,5 +31,7 @@ namespace ShoePOSProject.Models
         public virtual DbSet<InventoryImage> InventoryImages { get; set; }
         public virtual DbSet<NewOption> NewOptions { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<CustomerSale> CustomerSales { get; set; }
     }
 }

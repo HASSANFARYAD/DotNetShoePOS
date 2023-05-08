@@ -1,0 +1,176 @@
+﻿
+@{
+    ViewBag.Title = "New Customer Sales";
+}
+
+<div class="row">
+    <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+        @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+        {
+            <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+            </div>
+        }
+        @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+        {
+            <div class="alert alert-danger alert-styled-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Wizard with validation -->
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Add New Customer Sales</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-action="collapse"></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form class="form-validation" action="@Url.Action("PostAddCustomerSales","CustomerSales")" method="post" enctype="multipart/form-data">
+        <fieldset class="step" id="validation-step1">
+            <h6 class="form-wizard-title text-semibold">
+                <span class="form-wizard-count">1</span>
+                Sales info
+                <small class="display-block">Customer Sales</small>
+            </h6>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Customers <span class="text-danger">*</span></label>
+                        <select name="CustomerId" id="CustomerId" data-placeholder="Select Customers..." class="select required" onchange="GetCustomerId()">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="AddNewCustomerDiv">                
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Name: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" placeholder="Customers Name" id="CustomerName" name="Name" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Email: <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" placeholder="Customers Email" id="CustomerEmail" name="EmailAddress" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Date of Birth: <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" value="@DateTime.Now.ToString("MM/dd/yyyy")" id="CustomerDateofBirth" name="DateOfBirth" required>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Primary Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" data-mask="(999) 999-9999" placeholder="Enter your phone #" id="CustomerPhone" name="PrimaryPhone" required>
+                        <span class="help-block">(999) 999-9999</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
+                        <select name="InventoryId" data-placeholder="Choose an Option..." class="select">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-wizard-actions">
+            @*<button class="btn btn-default" id="validation-back" type="reset">Back</button>*@
+            <button class="btn btn-info" id="validation-next" type="submit">Add New Sales</button>
+        </div>
+    </form>
+</div>
+
+<!-- /wizard with validation -->
+
+<script>
+    GetCustomers();
+    function GetCustomers() {
+        $("#customersLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Customer/GetCustomers',
+            data: {
+                
+            },
+            success: function (data) {
+                var listAppend = "<option value='AddNewCustomer'>Add New Customer...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].CustomerId + "'>" + data[i].CustomerName + " </option>";
+                }
+                $("#CustomerId").append(listAppend);
+
+                $("#customersLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function GetCustomerId(value) {
+        var CustomerId = $("#CustomerId").val();
+        $("#CustomerName").val("");
+        $("#CustomerEmail").val("");
+        $("#CustomerPhone").val("");
+        $("#CustomerDateofBirth").val("");
+        if (value != "AddNewCustomer") {
+            $("#getCustomersLoader").show();
+            var CustomerId = $("#CustomerId").val();
+            $.ajax({
+                type: "GET",
+                url: '../Customer/GetCustomers',
+                data: {
+                    CustomerId: CustomerId
+                },
+                success: function (data) {
+                    for (var item in data) {
+                        $("#CustomerName").val(data[item].CustomerName);
+                        $("#CustomerEmail").val(data[item].CustomerMailingAddress);
+                        $("#CustomerPhone").val(data[item].CustomerPrimaryPhone);
+                        $("#CustomerDateofBirth").val(data[item].CustomerDateofBirth);
+                    }
+                },
+                error: function () {
+                    alert("There was an error retrieving the hierarchy; please reload the page.");
+                },
+                complete: function () {
+                    $("#getCustomersLoader").hide();
+                }
+            });
+        }
+        else {
+            
+            $("#CustomerName").prop("required", true);
+            $("#CustomerEmail").prop("required", true);
+            $("#CustomerPhone").prop("required", true);
+            $("#CustomerDateofBirth").prop("required", true);
+            $("#CustomerName").prop("disabled", false);
+            $("#CustomerEmail").prop("disabled", false);
+            $("#CustomerPhone").prop("disabled", false);
+            $("#CustomerDateofBirth").prop("disabled", false);
+        }
+    }
+</script>

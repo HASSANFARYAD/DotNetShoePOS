@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "Update";
+}
+
+<div class="row">
+    <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+        @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+        {
+            <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+            </div>
+        }
+        @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+        {
+            <div class="alert alert-danger alert-styled-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Wizard with validation -->
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Update Customer</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-action="collapse"></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form class="form-validation" action="@Url.Action("PostUpdateCustomer","Customer")" method="post" enctype="multipart/form-data">
+        <fieldset class="step" id="validation-step1">
+            <h6 class="form-wizard-title text-semibold">
+                <span class="form-wizard-count">1</span>
+                Basic info
+                <small class="display-block">Information</small>
+            </h6>
+            <input type="hidden" name="Id" value="@ViewBag.Customer.Id" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Name: <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control required" value="@ViewBag.Customer.Name" name="Name">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Email: <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control required" value="@ViewBag.Customer.EmailAddress" name="EmailAddress">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Date of Birth: <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control required" value="@ViewBag.Customer.DateOfBirth" name="DateOfBirth" onfocus="this.type='date'">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Primary Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control required" data-mask="(999) 999-9999" value="@ViewBag.Customer.PrimaryPhone" name="PrimaryPhone">
+                        <span class="help-block">(999) 999-9999</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Secondary Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" data-mask="(999) 999-9999" value="@ViewBag.Customer.SecondaryPhone" name="secondaryPhone">
+                        <span class="help-block">(999) 999-9999</span>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <h6 class="text-bold">Mailing Address</h6>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Address <span class="text-danger">*</span></label>
+                        <input type="text" name="PhysicalAddress" class="form-control required" value="@ViewBag.Customer.PhysicalAddress">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">City <span class="text-danger">*</span></label>
+                        <input type="text" name="City" class="form-control required" value="@ViewBag.Customer.City">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label text-bold">State <span class="text-danger">*</span></label>
+                        <input type="text" name="State" class="form-control required" value="@ViewBag.Customer.State">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Zip <span class="text-danger">*</span></label>
+                        <input type="text" name="Zip" class="form-control required" value="@ViewBag.Customer.Zip">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-wizard-actions">
+            <button class="btn btn-info" id="validation-next" type="submit">Next</button>
+        </div>
+    </form>
+
+</div>
+<!-- /wizard with validation -->

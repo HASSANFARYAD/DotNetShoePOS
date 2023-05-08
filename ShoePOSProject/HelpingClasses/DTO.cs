@@ -36,6 +36,7 @@ namespace ShoePOSProject.HelpingClasses
         public string SalePrice { get; set; }
         public double TotalPrice { get; set; }
         public double TotalSalePrice { get; set; }
+        public string Month { get; set; }
 
         //Customer DTO List
 

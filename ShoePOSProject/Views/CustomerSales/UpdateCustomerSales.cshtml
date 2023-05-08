@@ -1,0 +1,290 @@
+﻿
+@{
+    ViewBag.Title = "Update Customer Sales";
+}
+
+<div class="row">
+    <div class="col-lg-6 col-md-offset-3" id="ViewBagMessages">
+        @if (ViewBag.successfullmessage != "" && ViewBag.successfullmessage != null)
+        {
+            <div class="alert alert-success alert-styled-left alert-arrow-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Complete!</span> @ViewBag.successfullmessage.
+            </div>
+        }
+        @if (ViewBag.errormessage != "" && ViewBag.errormessage != null)
+        {
+            <div class="alert alert-danger alert-styled-left alert-bordered">
+                <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                <span class="text-semibold">Oh snap!</span> @ViewBag.errormessage <span class="alert-link">try submitting again</span>.
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Wizard with validation -->
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Update Customer Sales</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-action="collapse"></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <form class="form-validation" action="@Url.Action("PostUpdateCustomerSales","CustomerSales")" method="post" enctype="multipart/form-data">
+        <fieldset class="step" id="validation-step1">
+            <h6 class="form-wizard-title text-semibold">
+                <span class="form-wizard-count">1</span>
+                Sales info
+                <small class="display-block">Customer Sales</small>
+            </h6>
+
+            <input type="hidden" name="Id" value="@ViewBag.CustomerSales.Id" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Customers <span class="text-danger">*</span></label>
+                        <select name="CustomerId" data-placeholder="Select Loading Instructions..." class="select required" required="required">
+                            <option value="">Select Loading Instructions... </option>
+                            @if (ViewBag.customers != null)
+                            {
+                                foreach (var x in ViewBag.customers)
+                                {
+                                    if (ViewBag.CustomerSales.CustomerId == x.Id)
+                                    {
+                                        <option value="@x.Id" selected>@x.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@x.Id" selected>@x.Name</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
+                        <select name="InventoryId" data-placeholder="Choose an Option..." class="select required" required="required">
+                            <option value="">Choose an Option... </option>
+                            @if (ViewBag.inventory != null)
+                            {
+                                foreach (var x in ViewBag.inventory)
+                                {
+                                    if (ViewBag.CustomerSales.InventoryId == x.Id)
+                                    {
+                                        <option value="@x.Id" selected>@x.Brand</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@x.Id" selected>@x.Brand</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">CashPrice: <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <span class="btn btn-default input-group-addon">$</span>
+                            <input type="number" step="0.01" class="form-control required" min="1" name="CashPrice" value="@ViewBag.CustomerSales.CashPrice">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Condition <span class="text-danger">*</span></label>
+                        <select name="Condition" data-placeholder="Choose an Option..." class="form-control required">
+                            <option value="">Choose an Option... </option>
+                            @if (ViewBag.CustomerSales.Condition == "New")
+                            {
+                                <option value="New" selected>New</option>
+                                <option value="Used">Used</option>
+                            }
+                            else if (ViewBag.CustomerSales.Condition == "Used")
+                            {
+                                <option value="New">New</option>
+                                <option value="Used" selected>Used</option>
+                            }
+                            else
+                            {
+                                <option value="New">New</option>
+                                <option value="Used">Used</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">(if used, note any damages) <span class="text-danger">*</span></label>
+                        <input type="text" name="UsedDamage" class="form-control required" value="@ViewBag.CustomerSales.UsedDamage">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Rental Ownership Term <span class="text-danger">*</span></label>
+                        <select name="OwnershipTerm" data-placeholder="Choose an Option..." class="select required">
+                            <option value="">Choose an Option... </option>
+                            @if (ViewBag.CustomerSales.OwnershipTerm == "24 Months")
+                            {
+                                <option value="24 Month" selected>24 Months</option>
+                                <option value="36 Months">36 Months</option>
+                                <option value="48 Months">48 Months</option>
+                                <option value="60 Months">60 Months</option>
+                            }
+                            else if (ViewBag.CustomerSales.OwnershipTerm == "36 Months")
+                            {
+                                <option value="24 Months">24 Months</option>
+                                <option value="36 Months" selected>36 Months</option>
+                                <option value="48 Months">48 Months</option>
+                                <option value="60 Months">60 Months</option>
+                            }
+                            else if (ViewBag.CustomerSales.OwnershipTerm == "48 Months")
+                            {
+                                <option value="24 Months">24 Months</option>
+                                <option value="36 Months">36 Months</option>
+                                <option value="48 Months" selected>48 Months</option>
+                                <option value="60 Months">60 Months</option>
+                            }
+                            else if (ViewBag.CustomerSales.OwnershipTerm == "60 Months")
+                            {
+                                <option value="24 Months">24 Months</option>
+                                <option value="36 Months">36 Months</option>
+                                <option value="48 Months">48 Months</option>
+                                <option value="60 Months" selected>60 Months</option>
+                            }
+                            else
+                            {
+                                <option value="24 Months">24 Months</option>
+                                <option value="36 Months">36 Months</option>
+                                <option value="48 Months">48 Months</option>
+                                <option value="60 Months">60 Months</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Loading Instructions <span class="text-danger">*</span></label>
+                        <select name="Loading" data-placeholder="Select Loading Instructions..." class="form-control" required="required" id="LoadingInstructions">
+                            @if (ViewBag.CustomerSales.Loading == "Doors on Passenger Side")
+                            {
+                                <option value="">Select Loading Instructions... </option>
+                                <option value="Doors on Passenger Side" selected>Doors on Passenger Side</option>
+                                <option value="Doors on Driver Side">Doors on Driver Side</option>
+                                <option value="Doors Facing Cab">Doors Facing Cab</option>
+                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
+                            }
+                            else if (ViewBag.CustomerSales.Loading == "Doors on Driver Side")
+                            {
+                                <option value="">Select Loading Instructions... </option>
+                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
+                                <option value="Doors on Driver Side" selected>Doors on Driver Side</option>
+                                <option value="Doors Facing Cab">Doors Facing Cab</option>
+                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
+                            }
+                            else if (ViewBag.CustomerSales.Loading == "Doors Facing Cab")
+                            {
+                                <option value="">Select Loading Instructions... </option>
+                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
+                                <option value="Doors on Driver Side">Doors on Driver Side</option>
+                                <option value="Doors Facing Cab" selected>Doors Facing Cab</option>
+                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
+                            }
+                            else if (ViewBag.CustomerSales.Loading == "Doors at Back End of Trailer")
+                            {
+                                <option value="">Select Loading Instructions... </option>
+                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
+                                <option value="Doors on Driver Side">Doors on Driver Side</option>
+                                <option value="Doors Facing Cab">Doors Facing Cab</option>
+                                <option value="Doors at Back End of Trailer" selected>Doors at Back End of Trailer</option>
+                            }
+                            else
+                            {
+                                <option value="">Select Loading Instructions... </option>
+                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
+                                <option value="Doors on Driver Side">Doors on Driver Side</option>
+                                <option value="Doors Facing Cab">Doors Facing Cab</option>
+                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Is there a fence around your property? <span class="text-danger">*</span></label>
+                        <select name="Fence" data-placeholder="Choose an Option..." class="form-control" required="required" id="HouseFence">
+                            @if (ViewBag.CustomerSales.Fence == "No")
+                            {
+                                <option value="">Choose an Option... </option>
+                                <option value="No" selected>No</option>
+                                <option value="Yes">Yes</option>
+                            }
+                            else if (ViewBag.CustomerSales.Fence == "Yes")
+                            {
+                                <option value="">Choose an Option... </option>
+                                <option value="No">No</option>
+                                <option value="Yes" selected>Yes</option>
+                            }
+                            else
+                            {
+                                <option value="">Choose an Option... </option>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Do you have concerns about access? <span class="text-danger">*</span></label>
+                        <select name="Access" data-placeholder="Choose an Option..." class="form-control" required="required" id="HouseAccess">
+                            @if (ViewBag.CustomerSales.Access == "No")
+                            {
+                                <option value="">Choose an Option... </option>
+                                <option value="No" selected>No</option>
+                                <option value="Yes">Yes</option>
+                            }
+                            else if (ViewBag.CustomerSales.Access == "Yes")
+                            {
+                                <option value="">Choose an Option... </option>
+                                <option value="No">No</option>
+                                <option value="Yes" selected>Yes</option>
+                            }
+                            else
+                            {
+                                <option value="">Choose an Option... </option>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <div class="form-wizard-actions">
+            @*<button class="btn btn-default" id="validation-back" type="reset">Back</button>*@
+            <button class="btn btn-info" id="validation-next" type="submit">Update</button>
+        </div>
+    </form>
+</div>
+
+<!-- /wizard with validation -->

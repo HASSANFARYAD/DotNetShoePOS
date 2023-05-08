@@ -69,4 +69,110 @@
             </div>
         </div>
     }
+
+    <!--<div class="panel panel-flat mt-20">
+        <div class="panel-heading">
+            <h5 class="panel-title">Students Performance</h5>-->
+            @*<div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-action="collapse"></a></li>
+                        <li><a data-action="reload"></a></li>
+                        <li><a data-action="close"></a></li>
+                    </ul>
+                </div>*@
+
+        <!--</div>
+
+        <div class="panel-body">
+
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-md-1">
+                        <div class="bg-behaviour" style="width:100%; height:20px"></div>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="" style="font-size:14px;">Disruptive Behaviour</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1">
+                        <div class="bg-engagment" style="width:100%; height:20px"></div>
+                    </div>
+                    <div class="col-md-2">
+                        <span class="" style="font-size:14px;">Level of Engagment</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div class="chart" id="chart_div"><br /><center><i class="icon-spinner spinner icon-2x"></i></center><br /></div>
+            </div>
+        </div>
+    </div>-->
 </div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    //google.charts.load('current', { 'packages': ['corechart'] });
+    //    google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+
+            $.ajax({
+                url: '@Url.Action("SalesPurchaseGraph", "Home")',
+                dataType: "json",
+                type: "POST",
+                success: function (response) {
+                    var data = new google.visualization.DataTable();
+                    const myJSON = JSON.stringify(response);
+
+                    data.addColumn('string', 'Date');
+                    data.addColumn('number', 'Purchase Price');
+                    data.addColumn({ type: 'string', role: 'tooltip', 'p': { 'html': true } });
+                    data.addColumn('number', 'Sale Price');
+                    data.addColumn({ type: 'string', role: 'tooltip', 'p': { 'html': true } });
+
+//                    var i = 0;
+                    var pPrice = 0;
+                    var sPrice = 0; 
+                    for (var i in response) {
+                        if (response[i].PurchasePrice == 0) {
+                            pPrice = 15;
+                        }
+                        if (response[i].SalePrice == 0) {
+                            sPrice = 15;
+                        }
+                        var x = JSON.parse(response[i]);
+                        data.addRows([
+                                String(response[i].Month),
+                                pPrice,
+                                sPrice
+                        ]);
+                    }
+                    //$.each(response, function () {
+                        
+                    //    i++;
+                    //});
+
+                    var options = {
+                        bars: 'vertical',
+                        vaxis: 5,
+                        height: 400,
+                        legend: { position: "none" },
+                        tooltip: { isHtml: true },
+                        colors: ['#3F51B5'],
+                        vAxis: { ticks: [{ v: 0, f: '0' }, { v: 10, f: '10%' }, { v: 20, f: '20%' }, { v: 30, f: '30%' }, { v: 40, f: '40%' }, { v: 50, f: '50%' }, { v: 60, f: '60%' }, { v: 70, f: '70%' }, { v: 80, f: '80%' }, { v: 90, f: '90%' }, { v: 100, f: '100%' }] }
+                    };
+
+                    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+                    chart.draw(data, options);
+                },
+                error: function (xhr, status, error) {
+                    alert("error");
+                }
+            });
+
+    }
+
+</script>

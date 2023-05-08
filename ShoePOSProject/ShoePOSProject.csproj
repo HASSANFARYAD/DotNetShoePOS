@@ -239,6 +239,12 @@
     <Compile Include="Models\BsstCategory.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Customer.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CustomerSale.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Inventory.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -3220,6 +3226,14 @@
     <Content Include="Views\Option\Index.cshtml" />
     <Content Include="Views\Shared\_AuthLayout.cshtml" />
     <Content Include="Views\Inventory\UploadExcel.cshtml" />
+    <Content Include="Views\Customer\NewCustomer.cshtml" />
+    <Content Include="Views\Customer\UpdateCustomer.cshtml" />
+    <Content Include="Views\Customer\ViewCustomer.cshtml" />
+    <Content Include="Views\CustomerSales\Details.cshtml" />
+    <Content Include="Views\CustomerSales\Invoice.cshtml" />
+    <Content Include="Views\CustomerSales\NewCustomerSales.cshtml" />
+    <Content Include="Views\CustomerSales\UpdateCustomerSales.cshtml" />
+    <Content Include="Views\CustomerSales\ViewCustomerSales.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

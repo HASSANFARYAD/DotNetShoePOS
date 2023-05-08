@@ -1,0 +1,1299 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Invoice </title>
+    <link rel="icon" href="~/Content/assets/assets/images/S-Fav.jpg" type="image/gif" sizes="32x32">
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/assets/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <!-- Core JS files -->
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/plugins/loaders/blockui.min.js"></script>
+    <!-- /core JS files -->
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="~/Content/assets/ckeditor/ckeditor.js"></script>
+
+    <script type="text/javascript" src="~/Content/assets/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="~/Content/assets/assets/js/pages/invoice_template.js"></script>
+    <!-- /theme JS files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+
+
+    <style>
+        #sig-canvas {
+            border: 2px dotted #CCCCCC;
+            border-radius: 15px;
+            cursor: crosshair;
+        }
+
+        .html2pdf__page-break {
+            page-break-before: always;
+        }
+
+        canvas {
+            width: 100%;
+            height: 160px;
+        }
+
+        table > tbody > tr td {
+            padding: 10px 9px !important;
+            line-height: 1 !important;
+            word-break: break-all;
+        }
+
+        .form-control {
+            border: 0px !important;
+            border-bottom: 1px solid #000 !important;
+            border-radius: 0px !important;
+            height: 20px !important;
+            padding: 0px !important;
+        }
+
+        .form-group {
+            line-height: 2;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Main content -->
+            <div class="content-wrapper">
+
+                <!-- Content area -->
+                <div class="content">
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <!-- Invoice template -->
+                            <div class="panel panel-white">
+                                <div class="panel-heading" id="PrintButton">
+                                    <h6 class="panel-title">Generated Invoice</h6>
+                                    <div class="heading-elements">
+                                        <button type="button" class="btn btn-default btn-xs heading-btn" onclick="generatePDF()"><i class="icon-file-check position-left"></i> Print</button>
+                                    </div>
+                                </div>
+                                <!--1st Page-->
+                                <div class="panel-body no-padding-bottom" id="invoice">
+                                    <div class="row">
+                                        <div class="col-sm-6 content-group text-center" style="">
+                                            <img src="~/Content/assets/assets/images/pdf-logo1.jpg" class="mt-10" alt="" style="">
+                                            <h4 class="text-bold text-success">Sheds, Garages, Cabins, & More</h4>
+                                            <ul class="list-condensed list-unstyled text-semibold text-center">
+                                                <li>PO Box 344, Campbellsville KY 42719</li>
+                                                <li>(270) 789-4236 or 1-866-902-2129</li>
+                                                <li>Fax: 270-789-0075</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-sm-6 content-group" style="">
+                                            <div class="invoice-details">
+                                                <h1 class="text-bold text-grey" style="margin:0px !important">Order Form</h1>
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered border-dark text-left">
+                                                        <tr>
+                                                            <td class="text-grey-300">Salesperson</td>
+                                                            <td>@ViewBag.Sale.Customer.User.Name</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-grey-300">
+                                                                Sale Date
+                                                            </td>
+                                                            <td>@ViewBag.Sale.Customer.CreatedAt</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-grey-300">
+                                                                Invoice #
+                                                            </td>
+                                                            <td>49029</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-grey-300">
+                                                                Serial #
+                                                            </td>
+                                                            <td>
+                                                                @ViewBag.Sale.Inventory.extra1
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-grey-300">
+                                                                Delivery Date
+                                                            </td>
+                                                            <td>January 12, 2015</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6 content-group" style="">
+                                            <h6 class="text-bold">Billing Address</h6>
+
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered border-dark text-left">
+                                                    <tr>
+                                                        <td class="text-grey-300">Name</td>
+                                                        <td>@ViewBag.Sale.Customer.Name</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            Address
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Customer.MailingAddress</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            City, State, Zip
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Customer.City, @ViewBag.Sale.Customer.State, @ViewBag.Sale.Customer.Zip</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            Phone 1
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Customer.PrimaryPhone</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 content-group">
+                                            <h6 class="text-bold">Shipping Address</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered border-dark text-left">
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            Address
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Customer.PhysicalAddress</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            City, State, Zip
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Customer.PhysicalState, @ViewBag.Sale.Customer.PhysicalZip</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-grey-300">
+                                                            Phone 2
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Customer.secondaryPhone</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <h6 class="text-bold">Building</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered border-dark text-left">
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Brand
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Brand</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Size
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Size</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Style
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Style</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Type
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Type</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Roof
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Roof</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Trim
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Trim</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            Sides
+                                                        </td>
+                                                        <td>@ViewBag.Sale.Inventory.Sides</td>
+                                                    </tr>
+                                                    @*<tr>
+                                                        <td class="text-bold">
+                                                            Loading Instructions
+                                                        </td>
+                                                        <td>ViewBag.Sale.Inventory.Loading</td>
+                                                    </tr>*@
+                                                </table>
+                                            </div>
+
+                                            @*<div class="row mt-10 mb-10">
+                                                <div class="col-sm-9">
+                                                    <p class="text-black text-semibold">Is there a fence around your property?</p>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <p class="text-black text-semibold">ViewBag.Sale.Inventory.Fence</p>
+                                                </div>
+                                                <div class="col-sm-9">
+                                                    <p class="text-black text-semibold">
+                                                        Do you have concerns about access?
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <p class="text-black text-semibold">ViewBag.Sale.Inventory.Access</p>
+                                                </div>
+                                            </div>*@
+
+                                            <div class="row">
+                                                <div class="col-sm-8 col-sm-offset-2">
+                                                    <div class="card">
+                                                        <div class="thumbnail">
+                                                            <a href="" data-popup="lightbox">
+                                                                <img src="~/Content/assets/assets/images/cover.jpg" id="" alt="" />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-7">
+                                            <h6 class="text-bold">Itemization</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered border-dark text-left">
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td colspan="2">January 12, 2015</td>
+                                                        <td class="text-right">$3000.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-bold">
+                                                            1
+                                                        </td>
+                                                        <td>49029</td>
+                                                        <td>49029</td>
+                                                        <td class="text-right">$0.00</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+
+                                            <div class="row">
+                                                @*<div class="col-sm-3 mt-10 mb-10">
+                                                    <p class="text-black text-semibold">48 Month</p>
+                                                    <p class="text-black text-semibold">48 Month</p>
+                                                </div>*@
+                                                <div class="col-sm-9">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered border-dark text-right">
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    TOTAL PRETAX COST
+                                                                </td>
+                                                                <td class="text-right">$3000.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Sales Tax Rate
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    ---
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Purchase Reserve
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Security Deposit
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Monthly R.T.O Payment
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Monthly Sales Tax
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Monthly Liability Damage Waver
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Monthly Total
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="text-bold">
+                                                                    Due to Signing
+                                                                </td>
+                                                                <td class="text-right">$0.00</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="text-bold">LAWN,LANDSCAPE & PROPERTY WAIVER</span> By signing below, I agree that Premier Rentals will have no liability for any damage to lawns, landscaping,
+                                            fencing, or any other property that may occur during delivery or pick up of the building. In addition. I guarantee that I will receive or have received permission to use
+                                            any adjacent property necessary for access to mine for the delivery, and I assume all responsibility for any damage to adjacent property that may occur
+                                            during delivery or pick up of the building. I agree that I am responsible for any code restraints or permits relating to the building. I understand that additional terms
+                                            and conditions may apply, based on the building and terms of possession that I have chosen.
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-3">Customer:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-3">Date:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-3">Sales Rep:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-3">Date:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-20 mb-20 pb-15 pt-20">
+                                    <div class="col-sm-12">
+                                        <span>&nbsp;&nbsp;</span>
+                                    </div>
+                                </div>
+
+
+                                <!-- 2nd Invoice template -->
+                                <div class="panel-body no-padding-bottom pt-20" style="border:0px">
+                                    <div class="row">
+                                        <div class="col-sm-6 content-group no-margin-bottom" style="">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="~/Content/assets/assets/images/logo2.PNG" class="content-group mt-10" alt="" style="">
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <ul class="list-condensed list-unstyled text-muted">
+                                                        <li>PO Box 38</li>
+                                                        <li>Cave City, AR 72521</li>
+                                                        <li>Ph: 870-569-3090</li>
+                                                        <li>Fax: 870-569-3722</li>
+                                                        <li>Email: support@paymyshed.com</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 content-group" style="">
+                                            <div class="invoice-details">
+                                                <h1 class="text-bold text-grey-300" style="margin:0px !important">WYOMING</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-heading" style="padding:0px;">
+                                        <h4 class="text-bold">
+                                            Rental Purchase Agreement
+                                        </h4>
+                                        <div class="heading-elements">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-2">Date:</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">Rental Customer:</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.Name" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-5 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-4">Primary Phone:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.PrimaryPhone" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">Mailing Address:</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.MailingAddress" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-5 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-5">Secondary Phone:</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.secondaryPhone" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-2">City:</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.City" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-4">State:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.State" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-5">Zip Code:</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.Zip" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-6 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-4">Email Address:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.Email" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-4">D.O.B:</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.DateOfBirth" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-2">S.S.#</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.SocialSecurity" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-6">
+                                                            Reference
+                                                            <sub class="text-danger">(not living at same address)</sub> Name:
+                                                        </label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.ReferenceName" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-5 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-2">Phone:</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Customer.ReferencePhone" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20">
+                                        <div class="col-sm-12">
+                                            <p>
+                                                In this Agreement, “we,” “us,” and “our” means Premier Rentals, as Lessor. “You” and “your” means the person(s) sign-ing this
+                                                Agreement as the Lessee/Rental Customer. “Agreement” means this Rental-Purchase Agreement. “Property” means the rental
+                                                Property described below.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <h6 class="text-bold">Description of Property</h6>
+                                            <div class="row">
+                                                <div class="col-sm-4 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-2">Size:</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Inventory.Size" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-1">Style:</label>
+                                                        <div class="col-sm-11">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Inventory.Style" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-5 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-2">Type:</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Inventory.Type" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">Roof Color:</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Inventory.Roof" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-5 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">Trim Color:</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Inventory.Trim" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">Side Color:</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Inventory.Sides" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-5 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">Cash Price:</label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="$ @ViewBag.Sale.Inventory.Price" readonly>
+                                                            <sup class="text-danger">(not including sales tax)</sup>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-7 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-2">Serial #</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.SerialNumber" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-4 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">
+                                                            Condition
+                                                        </label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.Condition" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-8 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-4">(if used, note any damages)</label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.UsedDamage" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-sm-12 no-padding">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-3">
+                                                            Rental Ownership Term
+                                                        </label>
+                                                        <div class="col-sm-9">
+                                                            <input type="text" class="form-control" placeholder="" value="@ViewBag.Sale.OwnershipTerm" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 ">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">1. Initial Payment:</span> Your total initial payment due when you sign this Agreement includes the following charges:
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-10">a. First Month’s Rental Payment (Includes tax) --------------------------------------------------------------------------------------------------------------------------------</label>
+
+                                                        <div class="col-sm-2">
+                                                            <input type="text" class="form-control" placeholder="" value="$" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-10">b. Security Deposit -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------</label>
+                                                        <div class="col-sm-2">
+                                                            <input type="text" class="form-control" placeholder="" value="$" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-10">c. Liability Damage Waiver (Optional) ----------------------------------------------------------------------------------------------------------------------------------------------------</label>
+                                                        <div class="col-sm-2">
+                                                            <input type="text" class="form-control" placeholder="" value="$" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-10">d. Customer Reserve Account (Optional) -----------------------------------------------------------------------------------------------------------------------------------------------</label>
+
+                                                        <div class="col-sm-2">
+                                                            <input type="text" class="form-control" placeholder="" value="$" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-10">e. Delivery Charge (Optional) ---------------------------------------------------------------------------------------------------------------------------------------------------------------</label>
+
+                                                        <div class="col-sm-2">
+                                                            <input type="text" class="form-control" placeholder="" value="$" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label text-semibold col-sm-10">f. Total Initial Payment of --------------------------------------------------------------------------------------------------------------------------------------------------------------------</label>
+
+                                                        <div class="col-sm-2">
+                                                            <input type="text" class="form-control" placeholder="" value="$" readonly>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">2. Rental Purchase Ownership:</span>
+                                            If you make <span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span> monthly rental payments in a row, we will apply the balance in your
+                                            Customer Reserve Account, if any, plus sales tax, and you will own the Property. You will have paid a Total Cost of
+                                            $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span> not including LDW or sales tax.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">3. Deposit:</span>
+                                            You must pay us a Security Deposit in the amount of $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span> to be held by us as security for the
+                                            performance of your obligations under this Agreement, including payment of charges related to retrieval or redelivery of the Property. We will refund your deposit (or any part of it that has not been applied to remedy your defaults) without interest, within 10
+                                            days after this Agreement ends, less any amounts you still owe us at that time.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">4. Customer Reserve Account (Optional):</span>
+                                            If you choose, you can reduce the amount of your monthly rental payment by depositing
+                                            money into your CRA. If you deposit $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>, this will reduce your rental payment as shown in item 4. You can apply
+                                            your CRA to your Early Purchase Option (Item 8). If you return the Property, we will return the money in your CRA within 10
+                                            days, less any amount you still owe us as of the date of return.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">5. Rental Renewal Payments:</span>
+                                            The monthly rental payment without CRA is $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>, plus sales tax of
+                                            $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>, plus optional Liability Damage Waiver fee of $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span> for a total of $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>. The monthly
+                                            rental payment with CRA is $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>, plus sales tax of $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>, plus optional Liability Damage Waiver fee of
+                                            $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span> for a total of $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>. Sales tax is subject to changes in the tax rate.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12 text-semibold">
+                                            <span class="h6 text-bold">6. Liability Damage Waiver “LDW” (Optional):</span>
+                                            NOTICE: THIS CONTRACT OFFERS, FOR AN ADDITIONAL
+                                            CHARGE, A LIABILITY DAMAGE WAIVER TO COVER YOUR RESPONSIBILITY FOR DAMAGE TO THE
+                                            PROPERTY. BEFORE DECIDING WHETHER TO PURCHASE THE LIABILITY DAMAGE WAIVER, YOU MAY
+                                            WISH TO DETERMINE WHETHER YHOUR OWN HOMEOWNER’S OR CASUALTY INSURANCE AFFORDS
+                                            YOU COVERAGE FOR DAMAGE TO THE RENTAL PROPERTY AND THE AMOUNT OF THE
+                                            DEDUCTIBLEUNDER YOU OWN INSURANCE COVERAGE. THE PURCHASE OF THIS LIABILITY DAMAGE
+                                            WAIVER IS NOT MANDATORY AND MAY BE DELCLINED.
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!--3rd Invoice template-->
+                                <div class="panel-body no-padding-bottom no-border mt-20">
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">7. </span>
+                                            By choosing this optional LDW, you will not be liable for any loss of or damage done to the Property from fire, flood, wind, hail or
+                                            other Act of God. To claim LDW due to theft, you must furnish us with a police report within 48 hours of the loss. You will still be
+                                            liable for loss due to mysterious disappearance, abandonment of the Property, or any other loss or damage that is intentionally
+                                            caused by you or that results from your willful or wanton misconduct. You must be current to claim LDW. If the Property is
+                                            damaged beyond repair or destroyed, you will be responsible for cleaning up the site. The monthly LDW fee is $<span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>
+                                            I this coverage.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">8. Late Fees:</span>
+                                            You must pay a late fee equal to the greater of 5% of the payment missed or $2.00 in addition to your renewal payment
+                                            if you make a rental payment over 10 days after the renewal date.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">9. Early Purchase Option:</span>
+                                            You can exercise an early purchase option at any time by paying the Cash Price less <span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span>% of all rental
+                                            payments made (not including any taxes or fees), plus any amount in Customer Reserve Account, plus sales tax for ownership. You
+                                            will not obtain ownership unless you pay the Total Cost or exercise your early purchase option. The Total Cost does not include
+                                            other fees and charges like sales tax, LDW, or late fees.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">10. Rental Term and Payment Schedule:</span>
+                                            This Agreement is for an initial term of <span class="pl-15 pr-15" style="border-bottom:1px solid #000;">123</span> month(s). After that, you have three options:
+                                            (a.) continue using the Property by making a rental renewal payment in advance; (b.) purchase the Property (see item 9); or (c.)
+                                            return the Property to us with no further obligation, except for any past due payments.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">11. Termination:</span>
+                                            You can terminate this Agreement at any time without penalty by returning the Property to us or making
+                                            arrangements for its return. If you fail to make a timely rental renewal payment, this Agreement terminates automatically and you
+                                            agree to return the Property to us.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">12. Reinstatement:</span>
+                                            If you fail to make a timely renewal payment, this Agreement expires. You can reinstate it without losing any
+                                            rights previously acquired by making all payments due or returning the Property within 7 business days after the renewal date. If
+                                            you return the Property during this time, you will have 90 days from the date of return to reinstate by making all payments due. If
+                                            you have paid 2/3 or more of the Total Cost, above, you will have 30 days from the date of return to reinstate by making
+                                            all payments due. If you reinstate, we will furnish you with the same Property or property of comparable quality and condition.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">13. Consent to Contact You About Your Account:</span>
+                                            You agree that we or our agents can contact you regarding your account with
+                                            us via telephone, including cell phones, or text message at any number you have given us or that you give us in the future, even if
+                                            you are charged for the call. You also agree that we can contact you using automatic dialing or with prerecorded messaging. You
+                                            acknowledge that the number(s) you have given us are for phone(s) that belong to you. You can cancel this consent to get
+                                            automatic dialing or prerecorded messaging calls by notifying us of your desire to do so.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">14. Use of the Property and Alterations:</span>
+                                            You cannot alter the Property in any manner without our prior written consent. This includes adding shelves, adding equipment or accessories or placing signs on the Property. You cannot affix the Property to real
+                                            estate so that it cannot be removed without damage. You cannot allow the Property to be used for any unlawful purpose, nor for
+                                            housing any animal(s). You cannot allow anyone to live in the Property. The Property must be accessible to us at all times.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">15. Maintenance:</span>
+                                            We are responsible for maintaining the Property in good condition while it is in your possession. We will not be
+                                            responsible for the costs or the results of any repairs or damage caused by improper use. You must notify us immediately if the
+                                            Property breaks and quit using it.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">16. Loss of or Damage to the Property:</span>
+                                            We do not carry insurance on the Property, and you are responsible for its safety until it is
+                                            returned to us. You are fully responsible for the fair market value of the Property due to its loss or destruction from all causes,
+                                            including, but not limited to, theft, vandalism, malicious mischief, acts of God, or mysterious disappearance. If the Property is
+                                            damaged, you agree to pay immediately for all repairs, not to exceed fair market value. You can cover some of your liability by
+                                            choosing our optional LDW, above.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">17. Contents:</span>
+                                            We will not be liable to you or to anyone else for any loss of or damage to any contents located in the Property. If this
+                                            Agreement terminates for any reason, you agree to remove all contents before returning it to us. We will not be responsible to
+                                            you or to anyone else for any loss of, damage to or destruction of any contents in the Property resulting from retrieval of the
+                                            Property after this Agreement terminates for any reason. We are not in the warehouse business, and we do not have custody or
+                                            control of the contents of the Property. We will not be responsible for any contents that are still in the Property when we retrieve
+                                            it. If the Property is not empty when we recover it, we will hold the contents at your sole risk for 15 days for you to claim them.
+                                            After that contents in Property will be considered abandoned by you and become our property and it will be our responsibility to
+                                            dispose of or discard them at our expense.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">18. Retrievals and Returns:</span>
+                                            If you do not renew this Agreement, you agree to give us permission to retrieve the Property immediately subject to your reinstatement rights. You also agree to remove all contents and leave us a clear path for access to retrieve
+                                            the Property. You agree to take full responsibility for ruts, tracks, or any damage done to yard due to retrieval of Property. If we
+                                            come to your house to pick up the Property and you choose to renew this Agreement instead, you agree to pay us $100.00 plus
+                                            all other amounts you owe as reimbursement for our expenses.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">19. </span>
+                                            Condition of Property and Warranty: You agree that you have examined the Property and have agreed to rent it "as is." You
+                                            understand that we are making no representations, warranties, or promises of any kind as to the condition, quality, or suitability of
+                                            the Property. If you obtain ownership of the Property we will transfer any unexpired manufacturer's warranty to you ifper-mitted by
+                                            the terms of the warranty.
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">20.</span>
+                                            Forbidden Acts: You cannot sell, mortgage, pawn, pledge, encumber, or dispose of the Property. You cannot move the Prop-erty
+                                            from the address above without our consent. If we consent, you must pay all costs of the move. You cannot assign your rights in this
+                                            Agreement without our prior written consent. Each of these acts is a breach of this Agreement.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-20 mb-20 pb-20 pt-20">
+                                    <div class="col-sm-12 mt-20 mb-20">
+                                        <span>&nbsp;&nbsp;</span>
+                                    </div>
+                                </div>
+
+                                <!--4th Invoice template-->
+                                <div class="panel-body no-padding-bottom no-border mt-20 mb-20 pt-20" style="height:1150px">
+                                    <div class="row mt-20 mb-20">
+                                        <div class="col-sm-12">
+                                            <span class="h6 text-bold">21.</span>
+                                            Entire Agreement: This Agreement sets forth the entire Agreement between you and us and may not be changed except in writ-ing
+                                            signed by both parties.
+                                            <h6 class="text-bold">
+                                                NOTICE TO CONSUMER: Do not sign this agreement before you read it or if it contains any blank spaces. You are
+                                                entitled to a copy of the agreement you sign.
+                                            </h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-5 no-padding">Customer Signature:</label>
+                                                <div class="col-sm-7 no-padding">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-1 no-padding">Date:</label>
+                                                <div class="col-sm-11">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-4 no-padding">Vendor Name:</label>
+                                                <div class="col-sm-8 no-padding">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label text-semibold col-sm-3">Representative:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /invoice template -->
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <!-- /content area -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+
+    <input type="hidden" id="Url" value="@ViewBag.Url" />
+    <input type="hidden" id="SalesId" value="@ViewBag.Sale.Id" />
+
+    <script>
+        (function () {
+            window.requestAnimFrame = (function (callback) {
+                return window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    window.oRequestAnimationFrame ||
+                    window.msRequestAnimaitonFrame ||
+                    function (callback) {
+                        window.setTimeout(callback, 1000 / 60);
+                    };
+            })();
+
+            var canvas = document.getElementById("sig-canvas");
+            var ctx = canvas.getContext("2d");
+            ctx.strokeStyle = "#222222";
+            ctx.lineWidth = 4;
+
+            var drawing = false;
+            var mousePos = {
+                x: 0,
+                y: 0
+            };
+            var lastPos = mousePos;
+
+            canvas.addEventListener("mousedown", function (e) {
+                drawing = true;
+                lastPos = getMousePos(canvas, e);
+            }, false);
+
+            canvas.addEventListener("mouseup", function (e) {
+                drawing = false;
+            }, false);
+
+            canvas.addEventListener("mousemove", function (e) {
+                mousePos = getMousePos(canvas, e);
+            }, false);
+
+            // Add touch event support for mobile
+            canvas.addEventListener("touchstart", function (e) {
+
+            }, false);
+
+            canvas.addEventListener("touchmove", function (e) {
+                var touch = e.touches[0];
+                var me = new MouseEvent("mousemove", {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(me);
+            }, false);
+
+            canvas.addEventListener("touchstart", function (e) {
+                mousePos = getTouchPos(canvas, e);
+                var touch = e.touches[0];
+                var me = new MouseEvent("mousedown", {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                canvas.dispatchEvent(me);
+            }, false);
+
+            canvas.addEventListener("touchend", function (e) {
+                var me = new MouseEvent("mouseup", {});
+                canvas.dispatchEvent(me);
+            }, false);
+
+            function getMousePos(canvasDom, mouseEvent) {
+                var rect = canvasDom.getBoundingClientRect();
+                return {
+                    x: mouseEvent.clientX - rect.left,
+                    y: mouseEvent.clientY - rect.top
+                }
+            }
+
+            function getTouchPos(canvasDom, touchEvent) {
+                var rect = canvasDom.getBoundingClientRect();
+                return {
+                    x: touchEvent.touches[0].clientX - rect.left,
+                    y: touchEvent.touches[0].clientY - rect.top
+                }
+            }
+
+            function renderCanvas() {
+                if (drawing) {
+                    ctx.moveTo(lastPos.x, lastPos.y);
+                    ctx.lineTo(mousePos.x, mousePos.y);
+                    ctx.stroke();
+                    lastPos = mousePos;
+                }
+            }
+
+            // Prevent scrolling when touching the canvas
+            document.body.addEventListener("touchstart", function (e) {
+                if (e.target == canvas) {
+                    e.preventDefault();
+                }
+            }, false);
+            document.body.addEventListener("touchend", function (e) {
+                if (e.target == canvas) {
+                    e.preventDefault();
+                }
+            }, false);
+            document.body.addEventListener("touchmove", function (e) {
+                if (e.target == canvas) {
+                    e.preventDefault();
+                }
+            }, false);
+
+            (function drawLoop() {
+                requestAnimFrame(drawLoop);
+                renderCanvas();
+            })();
+
+            function clearCanvas() {
+                canvas.width = canvas.width;
+            }
+
+            // Set up the UI
+            var sigText = document.getElementById("sig-dataUrl");
+            var sigImage = document.getElementById("sig-image");
+            var clearBtn = document.getElementById("sig-clearBtn");
+            var submitBtn = document.getElementById("sig-submitBtn");
+            clearBtn.addEventListener("click", function (e) {
+                clearCanvas();
+                sigText.innerHTML = "Data URL for your signature will go here!";
+                sigImage.setAttribute("src", "");
+            }, false);
+            submitBtn.addEventListener("click", function (e) {
+                var dataUrl = canvas.toDataURL();
+                sigText.innerHTML = dataUrl;
+                sigImage.setAttribute("src", dataUrl);
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: "../CustomerSales/PostAddSignature",
+                    dataType: "json",
+                    data: {
+                        CustomerSalesId: @ViewBag.Sale.Id,
+                        Signature: dataUrl
+                    },
+                    success: function (response) {
+                        var sigImage1 = document.getElementById("sig-image1");
+                        sigImage1.setAttribute("src", response.Signature);
+                        $("#SignatureDatabase").css({ display: "block" });
+                        $("#SignatureContainer").css({ display: "none" });
+                    },
+                    error: function () {
+                        alert("ajax Failed");
+                    }
+                });
+
+            }, false);
+
+        })();
+
+        function generatePDF() {
+            var Url = document.getElementById('Url').value;
+            $("#PrintButton").css({ display: "none" });
+            var SaleId = document.getElementById('SalesId').value;
+            const element = document.getElementById('invoice');
+
+            $.ajax({
+                type: 'POST',
+                url: "../CustomerSales/PostSavePdf",
+                dataType: "json",
+                data: {
+                    Id: SaleId,
+                    Url: Url
+                },
+                success: function (response) {
+                    $("#PrintButton").css({ display: "block" });
+                },
+                error: function () {
+                    $("#PrintButton").css({ display: "block" });
+                    alert("ajax Failed");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
+
