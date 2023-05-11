@@ -60,6 +60,7 @@
     <Property Name="CreatedAt" Type="datetime" />
     <Property Name="Quantity" Type="int" />
     <Property Name="OrderDate" Type="datetime" />
+    <Property Name="InvoiceId" Type="int" />
   </EntityType>
   <EntityType Name="Inventory">
     <Key>
@@ -93,6 +94,17 @@
     <Property Name="InventoryId" Type="int" />
     <Property Name="ImagePath" Type="nvarchar(max)" />
     <Property Name="ImageName" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="int" />
+    <Property Name="CreatedAt" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Invoice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InvoiceId" Type="nvarchar" MaxLength="255" />
+    <Property Name="GrandTotal" Type="nvarchar" MaxLength="255" />
+    <Property Name="CreatedBy" Type="int" />
     <Property Name="IsActive" Type="int" />
     <Property Name="CreatedAt" Type="datetime" />
   </EntityType>
@@ -240,6 +252,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_CreatedBy_Invoice">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_CreatedBy_NewOption">
     <End Role="User" Type="Self.User" Multiplicity="0..1" />
     <End Role="NewOption" Type="Self.NewOption" Multiplicity="*" />
@@ -312,6 +336,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_InvoiceId_CustomerSales">
+    <End Role="Invoice" Type="Self.Invoice" Multiplicity="0..1" />
+    <End Role="CustomerSales" Type="Self.CustomerSales" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSales">
+        <PropertyRef Name="InvoiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_ShoeStyle_Inventory">
     <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
     <End Role="Inventory" Type="Self.Inventory" Multiplicity="*" />
@@ -343,6 +379,7 @@
     <EntitySet Name="CustomerSales" EntityType="Self.CustomerSales" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Inventory" EntityType="Self.Inventory" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="InventoryImages" EntityType="Self.InventoryImages" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Invoice" EntityType="Self.Invoice" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="NewOption" EntityType="Self.NewOption" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Brand_Inventory" Association="Self.FK_Brand_Inventory">
@@ -381,6 +418,10 @@
       <End Role="User" EntitySet="User" />
       <End Role="Inventory" EntitySet="Inventory" />
     </AssociationSet>
+    <AssociationSet Name="FK_CreatedBy_Invoice" Association="Self.FK_CreatedBy_Invoice">
+      <End Role="User" EntitySet="User" />
+      <End Role="Invoice" EntitySet="Invoice" />
+    </AssociationSet>
     <AssociationSet Name="FK_CreatedBy_NewOption" Association="Self.FK_CreatedBy_NewOption">
       <End Role="User" EntitySet="User" />
       <End Role="NewOption" EntitySet="NewOption" />
@@ -404,6 +445,10 @@
     <AssociationSet Name="FK_InventoryImages_Property" Association="Self.FK_InventoryImages_Property">
       <End Role="Inventory" EntitySet="Inventory" />
       <End Role="InventoryImages" EntitySet="InventoryImages" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InvoiceId_CustomerSales" Association="Self.FK_InvoiceId_CustomerSales">
+      <End Role="Invoice" EntitySet="Invoice" />
+      <End Role="CustomerSales" EntitySet="CustomerSales" />
     </AssociationSet>
     <AssociationSet Name="FK_ShoeStyle_Inventory" Association="Self.FK_ShoeStyle_Inventory">
       <End Role="BSST" EntitySet="BSST" />

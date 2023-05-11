@@ -24,7 +24,7 @@ namespace ShoePOSProject.DL
                 de.SaveChanges();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 return false;
             }

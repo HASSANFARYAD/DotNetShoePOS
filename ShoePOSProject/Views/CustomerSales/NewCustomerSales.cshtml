@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="row" id="AddNewCustomerDiv">                
+            <div class="row" id="AddNewCustomerDiv">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label text-bold">Name: <span class="text-danger">*</span></label>
@@ -83,18 +83,33 @@
             </div>
 
             <div class="row">
+                <input type="hidden" name="CashPrice" id="CashPrice"/>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
-                        <select name="InventoryId" data-placeholder="Choose an Option..." class="select">
+                        <select name="InventoryId" onchange="GetQuantity(this.value, 0)" id="InventoryId" data-placeholder="Choose an Option..." class="select">
                         </select>
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
+                        <input type="number" name="Quantity" id="QuantityId" class="form-control">
+                    </div>
+                </div>
             </div>
+
+            <input type="hidden" name="count" id="count" value=0 />
+            <div id="NewOptions"></div>
+
+            <div class="col-md-6">
+                <button onclick="AddNewOption()" type="button" class="btn btn-success">Add New Option</button>
+            </div>
+
         </fieldset>
 
         <div class="form-wizard-actions">
-            @*<button class="btn btn-default" id="validation-back" type="reset">Back</button>*@
             <button class="btn btn-info" id="validation-next" type="submit">Add New Sales</button>
         </div>
     </form>
@@ -125,7 +140,7 @@
                 alert("There was an error retrieving the hierarchy; please reload the page.");
             },
             complete: function () {
-
+                GetInventory("", 0)
             }
         });
     }
@@ -173,4 +188,124 @@
             $("#CustomerDateofBirth").prop("disabled", false);
         }
     }
+</script>
+
+<script>
+    function GetInventory(value, count) {
+        $("#inventoriesLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/GetInventory',
+            data: {
+                InventoryId: value
+            },
+            success: function (data) {
+                var listAppend = "<option value=''>Select Inventory...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].SerialNumber + " </option>";
+                }
+                if (count == 0) {
+                    $("#InventoryId").append(listAppend);
+                }
+                else {
+                    $("#InventoryId" + count).append(listAppend);
+                }
+
+                $("#inventoriesLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+
+            }
+        });
+    }
+
+    function GetQuantity(value, count) {
+        $("#inventoriesLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Inventory/GetInventory',
+            data: {
+                InventoryId: value
+            },
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    if (count == 0) {
+                        $("#QuantityId").val(data[i].Quantity);
+                        $("#CashPrice").val(data[i].SalePrice);
+                    }
+                    else {
+                        $("#QuantityId" + count).val(data[i].Quantity);
+                        $("#CashPrice"+count).val(data[i].SalePrice);
+                    }
+                }
+            },
+            error: function () {
+                alert("please reload the page.");
+                location.reload();
+            },
+            complete: function () {
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+
+    var PCount = 1;
+    var headingCount = 2;
+
+    function AddNewOption() {
+
+        var objTo = document.getElementById('NewOptions');
+
+        var guestDiv = document.createElement("div");
+        guestDiv.setAttribute("class", "row removeclass" + PCount);
+
+        var removeGuestDiv = 'removeclass' + PCount;
+
+        var Heading = '<h3><strong>Option ' + headingCount + ':</strong></h3>';
+
+        var NewItems = '<div class="col-md-6">' +
+                '<div class="form-group">' +
+                    '<label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>' +
+                    '<select name="InventoryId'+PCount+'" onchange="GetQuantity(this.value, '+PCount+')" id="InventoryId'+PCount+'" data-placeholder="Choose an Option..." class="form-control">' +
+                    '</select>' +
+                '</div>' +
+            '</div>';
+
+        var NewQuantity = '<div class="col-md-6">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Quantity <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="number" name="QuantityId' + PCount + '" id="QuantityId' + PCount + '" placeholder="1" value="1" min="1" class="form-control" required>' +
+            '</div>' +
+            '</div>';
+
+        var cashPrice = '<input type="hidden" name="CashPrice' + PCount + '" id="CashPrice' + PCount + '" value="" />';
+        var hiddenGuestId = '<input type="hidden" name="option_no' + headingCount + '" id="option_no' + headingCount + '" value=' + headingCount + ' />';
+
+        var deleteGuest = '<div class="col-md-12 mt-10" style="margin-bottom:-36px;"><div class="form-group pull-right"><button onclick="removeDetails(' + PCount + ');" type="button" class="btn btn-danger">Remove Details</button></div></div>';
+
+        guestDiv.innerHTML = Heading + NewItems + NewQuantity + cashPrice
+            + hiddenGuestId + '<br />' + deleteGuest;
+
+        objTo.appendChild(guestDiv);
+
+        document.getElementById('count').value = PCount;
+
+        GetInventory("", PCount);
+        PCount++;
+        headingCount++;
+    }
+
+    function removeDetails(gid) {
+
+        $('.removeclass' + gid).remove();
+        PCount--;
+        headingCount--;
+        document.getElementById('count').value = PCount;
+    }
+
 </script>

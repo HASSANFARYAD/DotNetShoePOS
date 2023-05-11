@@ -31,6 +31,18 @@ namespace ShoePOSProject.BL
             }
         }
 
+        public int AddCustomer2(Customer _Customer, DatabaseEntities de)
+        {
+            if (_Customer.Name == null || _Customer.EmailAddress == null || _Customer.PrimaryPhone == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return new CustomerDL().AddCustomer2(_Customer, de);
+            }
+        }
+
         public bool UpdateCustomer(Customer _Customer, DatabaseEntities de)
         {
             if (_Customer.Name == "" || _Customer.EmailAddress == null || _Customer.PrimaryPhone == "")

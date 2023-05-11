@@ -158,9 +158,17 @@ namespace ShoePOSProject.Controllers
                 {
                     price = Convert.ToDecimal(u.Price).ToString("Rs.");
                 }
+                else
+                {
+                    price = "";
+                }
                 if (u.SalePrice != null)
                 {
                     salePrice = Convert.ToDecimal(u.SalePrice).ToString("Rs.");
+                }
+                else
+                {
+                    salePrice = "";
                 }
                 if(u.InventoryDate != null)
                 {
@@ -824,6 +832,92 @@ namespace ShoePOSProject.Controllers
                 return true;
             }
             return false;
+        }
+
+        public ActionResult GetInventory(int InventoryId = -1)
+        {
+            List<Inventory> IList = new List<Inventory>();
+
+            if (gp.validateUser().Role == 1)
+            {
+                IList = new InventoryBL().GetActiveInventoriesList(db).OrderByDescending(x => x.Id).ToList();
+            }
+            else
+            {
+                IList = new InventoryBL().GetActiveInventoriesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
+            }
+            if(InventoryId != -1)
+            {
+                IList = IList.Where(x => x.Id ==  InventoryId).ToList();
+            }
+            List<DTO> dto = new List<DTO>();
+            string price = "", Models = "", salePrice = "";
+            int Daysonlot = 0;
+            var TotalPrice = 0.0;
+            var TotalSalePrice = 0.0;
+
+            foreach (Inventory u in IList)
+            {
+                TotalPrice = TotalPrice + Convert.ToInt32(u.Price);
+                TotalSalePrice = TotalSalePrice + Convert.ToInt32(u.SalePrice);
+                if (u.Price != null)
+                {
+                    price = u.Price;
+                }
+                if (u.SalePrice != null)
+                {
+                    salePrice = u.SalePrice;
+                }
+                if (u.InventoryDate != null)
+                {
+                    DateTime dt = DateTime.Now;
+                    DateTime date = Convert.ToDateTime(u.InventoryDate);
+                    Daysonlot = (int)(dt - date).TotalDays;
+                }
+                DTO obj = new DTO()
+                {
+                    Id = u.Id,
+                    EncryptedId = StringCypher.Base64Encode(Convert.ToString(u.Id)),
+                    SerialNumber = u.BarcodeNo,
+                    InventoryDate = u.InventoryDate != null ? u.InventoryDate.Value.ToString("d") : "",
+                    DaysofLot = u.InventoryDate != null ? Convert.ToString(Daysonlot) : "",
+                    Address = u.AvailableAt,
+                    Price = price,
+                    SalePrice = salePrice,
+                    Role = gp.validateUser().Role,
+                    TotalPrice = TotalPrice,
+                    TotalSalePrice = TotalSalePrice,
+                    Discount = u.Discount,
+                    Quantity = u.extra1
+                };
+                if (u.BrandId != null)
+                {
+                    obj.Brand = u.BSST.Name;
+                }
+                if (u.SizeId != null)
+                {
+                    obj.Size = u.BSST5.Name;
+                }
+                if (u.CollectionId != null)
+                {
+                    obj.Collection = u.BSST1.Name;
+                }
+                if (u.ColorId != null)
+                {
+                    obj.Color = u.BSST2.Name;
+                }
+                if (u.GenderId != null)
+                {
+                    obj.Gender = u.BSST3.Name;
+                }
+                if (u.ShoeStyleId != null)
+                {
+                    obj.ShoeStyle = u.BSST4.Name;
+                }
+
+                dto.Add(obj);
+            }
+            return Json(dto, JsonRequestBehavior.AllowGet);
         }
     }
 }

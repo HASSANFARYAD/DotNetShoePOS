@@ -82,13 +82,6 @@
                         </div>
                     </div>
 
-                    @*<div class="col-md-4 col-lg-4">
-                        <div class="form-group">
-                            <label><strong>Serial #:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchSerial">
-                        </div>
-                    </div>*@
-
                     @{
                         if (gp.validateUser().Role == 1)
                         {
@@ -145,12 +138,10 @@
                     <table class="table text-md-nowrap table-striped table-bordered text-center" id="CustomerSalesTable">
                         <thead class="bg-purple">
                             <tr>
+                                <th class="text-center">Invoice #</th>
                                 <th class="text-center">Customer Name</th>
-                                <th class="text-center">Inventory Brand</th>
-                                <th class="text-center">Serial #</th>
                                 <th class="text-center">Cash Price</th>
-                                <th class="text-center">Ownership Term</th>
-                                <th class="text-center">Dealer Name</th>
+                                <th class="text-center">Sale By</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -166,17 +157,15 @@
     {
         "ajax":
         {
-            "url": '@Url.Action("GetCusomersSaleList", "CustomerSales")',
+            "url": '@Url.Action("GetCustomerOrdersList", "CustomerSales")',
             "type": "POST",
             "datatype": "json",
         },
         'columns':
             [
+                { "data": "CustomerSalesSerialNumber", "name": "InvoiceId" },
                 { "data": "CustomerName", "name": "CustomerId" },
-                { "data": "Brand", "name": "InventoryId" },
-                { "data": "CustomerSalesSerialNumber", "name": "CustomerId" },
-                { "data": "CustomerSalesCashPrice", "name": "CashPrice" },
-                { "data": "CustomerSalesOwnership", "name": "OwnershipTerm" },
+                { "data": "CustomerSalesCashPrice", "name": "GrandTotal" },
                 { "data": "CustomerSalesCreatedBy", "name": "CreatedBy" },
                 { "data": "Action", "name": "" }
             ],
@@ -186,46 +175,32 @@
                 "targets": 0,
                 'className': 'col-lg-2',
                 "render": function(data, type, full, meta) {
-                    return full.CustomerName;
+                    return full.CustomerSalesSerialNumber;
                 }
             },
             {
                 "targets": 1,
                 'className': 'col-lg-3',
                 "render": function (data, type, full, meta) {
-                    return full.Brand;
+                    return full.CustomerName;
                 }
             },
             {
                 "targets": 2,
                 'className': 'col-lg-4',
                 "render": function (data, type, full, meta) {
-                    return full.CustomerSalesSerialNumber;
+                    return full.CustomerSalesCashPrice;
                 }
             },
             {
                 "targets": 3,
                 'className': 'col-lg-2',
                 "render": function (data, type, full, meta) {
-                    return full.CustomerSalesCashPrice;
-                }
-            },
-            {
-                "targets": 4,
-                'className': 'col-lg-2',
-                "render": function (data, type, full, meta) {
-                    return full.CustomerSalesOwnership;
-                }
-            },
-            {
-                "targets": 5,
-                'className': 'col-lg-2',
-                "render": function (data, type, full, meta) {
                     return full.CustomerSalesCreatedBy;
                 }
             },
             {
-                "targets": 6,
+                "targets": 4,
                 'className': 'col-lg-1',
                 'searchable': false,
                 'orderable': false,

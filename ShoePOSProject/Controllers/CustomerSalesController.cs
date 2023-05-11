@@ -11,6 +11,10 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
+using System.Linq.Expressions;
+using ShoePOSProject.DL;
+using System.Xml.Linq;
 
 namespace ShoePOSProject.Controllers
 {
@@ -31,7 +35,8 @@ namespace ShoePOSProject.Controllers
                 return false;
             }
         }
-        // GET: CustomerSales
+        #region SalesProduct
+        
         public ActionResult NewCustomerSales(string message = "", string color = "")
         {
             if (!isLogedIn())
@@ -65,26 +70,96 @@ namespace ShoePOSProject.Controllers
             return View();
         }
 
-        public ActionResult PostAddCustomerSales(CustomerSale CustomerSales)
+        public ActionResult PostAddCustomerSales(CustomerSale CustomerSales,
+            FormCollection fc,
+            int count = -1,
+            int CustomerId = -1,
+            Customer customer = null)
         {
+            List<int> InventoryId = new List<int>();
+            List<int> Quantities = new List<int>();
+            double Price = 0;
             if (CustomerSales.CustomerId == null || CustomerSales.InventoryId == null)
             {
                 return RedirectToAction("NewCustomerSales", new { message = "Fill all The Required Fields", color = "red" });
             }
-
-
-            CustomerSales.CustomerId = CustomerSales.CustomerId;
-            CustomerSales.InventoryId = CustomerSales.InventoryId;
-            CustomerSales.CashPrice = CustomerSales.CashPrice;
-            CustomerSales.Quantity = CustomerSales.Quantity;
-            CustomerSales.OrderDate = CustomerSales.OrderDate;
-            CustomerSales.CreatedBy = gp.validateUser().Id;
-            CustomerSales.IsActive = 1;
-            CustomerSales.CreatedAt = gp.CurrentDateTime();
-            if (new CustomerSalesBL().AddCustomerSale(CustomerSales, db))
+            try
             {
+                if (CustomerId == -1)
+                {
+                    Customer customer1 = new Customer();
+                    customer1.Name = customer.Name;
+                    customer1.EmailAddress = customer.EmailAddress;
+                    customer1.DateOfBirth = customer.DateOfBirth;
+                    customer1.PrimaryPhone = customer.PrimaryPhone;
+                    CustomerSales.CustomerId = new CustomerBL().AddCustomer2(customer1, db);
+                    if (CustomerSales.CustomerId == -1)
+                    {
+                        throw new Exception();
+                    }
+                }
+                var getInoviceId = AddInvoice();
+                if (getInoviceId != -1)
+                {
+                    CustomerSales.CustomerId = CustomerSales.CustomerId;
+                    CustomerSales.InventoryId = CustomerSales.InventoryId;
+                    CustomerSales.CashPrice = CustomerSales.CashPrice;
+                    CustomerSales.Quantity = CustomerSales.Quantity;
+                    CustomerSales.OrderDate = gp.CurrentDateTime();
+                    CustomerSales.CreatedBy = gp.validateUser().Id;
+                    CustomerSales.IsActive = 1;
+                    CustomerSales.CreatedAt = gp.CurrentDateTime();
+                    CustomerSales.InvoiceId = getInoviceId;
+                    if (new CustomerSalesBL().AddCustomerSale(CustomerSales, db))
+                    {
+                        Price = Convert.ToDouble(CustomerSales.CashPrice);
+                        InventoryId.Add((int)CustomerSales.InventoryId);
+                        Quantities.Add((int)CustomerSales.Quantity);
+                        if (count > 0)
+                        {
+                            for (int z = 1; z <= count; z++)
+                            {
+                                CustomerSale optionInventory = new CustomerSale()
+                                {
+                                    CustomerId = CustomerSales.CustomerId,
+                                    InventoryId = Convert.ToInt32(fc["InventoryId" + z]),
+                                    Quantity = Convert.ToInt32(fc["QuantityId" + z]),
+                                    CashPrice = fc["CashPrice"+z],
+                                    OrderDate = gp.CurrentDateTime(),
+                                    CreatedBy = gp.validateUser().Id,
+                                    IsActive = 1,
+                                    CreatedAt = gp.CurrentDateTime(),
+                                    InvoiceId = getInoviceId
+                                };
+                                bool c = new CustomerSalesBL().AddCustomerSale(optionInventory, db);
+                                InventoryId.Add((int)optionInventory.InventoryId);
+                                Quantities.Add((int)optionInventory.Quantity);
+                                Price = Price + Convert.ToDouble(CustomerSales.CashPrice);
+                                if (c == false)
+                                {
+                                    throw new Exception();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                else
+                {
+                    throw new Exception();
+                }
+                removeQuantity(InventoryId, Quantities);
+                UpdateOrder(getInoviceId, (double)Price);
                 return RedirectToAction("ViewCustomerSales", new { message = "Record is Added Successfully", color = "green" });
             }
+            catch (Exception ex)
+            {
+
+            }
+
             return RedirectToAction("NewCustomerSales", new { message = "Something is Wrong", color = "red" });
         }
 
@@ -279,43 +354,195 @@ namespace ShoePOSProject.Controllers
             return RedirectToAction("ViewCustomerSales", new { message = "Something is Wrong", color = "red" });
         }
 
-        //[Validations(CheckLogin = false)]
-        //public ActionResult Invoice(string Id = "")
-        //{
+        public bool removeQuantity(List<int> InventoryIds = null, List<int> Quantities = null)
+        {
 
-        //    var getId = StringCypher.Base64Decode(Id);
-        //    CustomerSale customerSale = new CustomerSalesBL().GetActiveCustomerSaleById(Convert.ToInt32(getId), db);
-        //    CustomerInvoice invoice = new InvoiceBL().GetActiveInventoriesList(db).Where(x => x.CustomerSalesId == customerSale.Id).FirstOrDefault();
-        //    if (invoice != null)
-        //    {
-        //        ViewBag.Signature = invoice.Signature;
-        //    }
-        //    ViewBag.Sale = customerSale;
-        //    string BaseUrl = Request.Url.AbsoluteUri;
-        //    ViewBag.Url = BaseUrl;
-        //    return View();
-        //}
+            for(var i = 0; i < InventoryIds.Count; i++)
+            {
+                DatabaseEntities de = new DatabaseEntities();
+                var getInventory = new InventoryBL().GetActiveInventoryById((int)InventoryIds[i], db);
+                var getQuantity = Convert.ToInt32(getInventory.extra1);
+                getQuantity = getQuantity - Quantities[i];
+                Inventory inv = new Inventory();
+                inv.Id = getInventory.Id;
+                inv.BarcodeNo = getInventory.BarcodeNo;
+                inv.BrandId = getInventory.BrandId;
+                inv.SizeId = getInventory.SizeId;
+                inv.GenderId = getInventory.GenderId;
+                inv.CollectionId = getInventory.CollectionId;
+                inv.ShoeStyleId = getInventory.ShoeStyleId;
+                inv.ColorId = getInventory.ColorId;
+                inv.AvailableAt = getInventory.AvailableAt;
+                inv.Price = getInventory.Price;
+                inv.SalePrice = getInventory.SalePrice;
+                inv.extra1 = getQuantity.ToString();
+                inv.extra2 = getInventory.extra2;
+                inv.extra3 = getInventory.extra3;
+                inv.InventoryDate = getInventory.InventoryDate;
+                inv.IsActive = getInventory.IsActive;
+                inv.CreatedAt = getInventory.CreatedAt;
+                inv.CreatedBy = getInventory.CreatedBy;
+                if (!new InventoryBL().UpdateInventory(inv, de))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-        //public ActionResult PostAddSignature(int CustomerSalesId = -1, string Signature = "")
-        //{
-        //    CustomerInvoice invoice = new CustomerInvoice()
-        //    {
-        //        CustomerSalesId = CustomerSalesId,
-        //        CreatedBy = gp.validateUser().Id,
-        //        Signature = Signature,
-        //        IsActive = 1,
-        //        CreatedAt = gp.CurrentDateTime()
-        //    };
-        //    if (new InvoiceBL().AddCustomerInvoice(invoice, db))
-        //    {
-        //        //return RedirectToAction("DocuSign", new { CustomerId = CustomerId, InventoryId = InventoryId, CustomerSalesId = CustomerSalesId, message = "Signature Saved Successfully" });
-        //        return Json(invoice, JsonRequestBehavior.AllowGet);
-        //    }
-        //    return Json(JsonRequestBehavior.AllowGet);
-        //}
+        #endregion SalesProduct
 
-        //Spire Pdf
-        [Validations(CheckLogin = false)]
+        #region Orders
+        public int AddInvoice()
+        {
+            var getInvoice = new InvoiceBL().GetActiveInvoicesList(db).LastOrDefault();
+            Invoice invoice = new Invoice();
+            if(getInvoice == null)
+            {
+                invoice.InvoiceId = "1000000";
+            }
+            else
+            {
+                invoice.InvoiceId = getInvoice.InvoiceId;
+            }
+            var makeInvoiceId = Convert.ToDouble(invoice.InvoiceId) + 1;
+            invoice.InvoiceId = makeInvoiceId.ToString();
+            invoice.IsActive = 1;
+            invoice.CreatedAt = gp.CurrentDateTime();
+            invoice.CreatedBy = gp.validateUser().Id;
+            var getInvoiceId = new InvoiceBL().AddInvoice2(invoice, db);
+            if (getInvoiceId != -1)
+            {
+                return getInvoiceId;
+            }
+            return -1;
+        }
+
+        public bool UpdateOrder(int InvoiceId = -1, double GrandTotal = 0)
+        {
+            var invoice = new InvoiceBL().GetActiveInvoiceById((int)InvoiceId, db);
+            if(invoice != null)
+            {
+                invoice.Id = invoice.Id;
+                invoice.InvoiceId = invoice.InvoiceId;
+                invoice.GrandTotal = GrandTotal.ToString();
+                invoice.IsActive = invoice.IsActive;
+                invoice.CreatedAt = invoice.CreatedAt;
+                invoice.CreatedBy = invoice.CreatedBy;
+                if (new InvoiceBL().UpdateInvoice(invoice, db))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public ActionResult Invoice(string Id = "")
+        {
+            var getId = StringCypher.Base64Decode(Id);
+            var invoice = new InvoiceBL().GetActiveInvoiceById(Convert.ToInt32(getId), db);
+            var customerSale = new CustomerSalesBL().GetActiveCustomerSalesList(db).Where(x => x.InvoiceId == invoice.Id).ToList();
+            ViewBag.customerSale = customerSale;
+            ViewBag.Sale = invoice;
+
+            return View();
+        }
+
+        public ActionResult GetCustomerOrdersList(string Name = "", string Order = "", string OrderId = "")
+        {
+            List<Invoice> CList = new List<Invoice>();
+
+            if (gp.validateUser().Role == 1)
+            {
+                CList = new InvoiceBL().GetActiveInvoicesList(db).OrderByDescending(x => x.Id).ToList();
+            }
+            else
+            {
+                CList = new InvoiceBL().GetActiveInvoicesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
+            }
+
+            if (Name != "")
+            {
+                CList = CList.Where(x => x.InvoiceId.ToLower().Contains(OrderId.ToLower())).ToList();
+            }
+
+            int start = Convert.ToInt32(Request["start"]);
+            int length = Convert.ToInt32(Request["length"]);
+            string searchValue = Request["search[value]"];
+            string sortColumnName = Request["columns[" + Request["order[0][column]"] + "][name]"];
+            string sortDirection = Request["order[0][dir]"];
+
+            if (sortColumnName != "" && sortColumnName != null)
+            {
+                if (sortDirection == "asc")
+                {
+                    CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
+                }
+                else
+                {
+                    CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
+                }
+            }
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                CList = CList.Where(x => x.InvoiceId.ToLower().Contains(searchValue.ToLower())
+                ).ToList();
+            }
+            int totalrows = CList.Count();
+            int totalrowsafterfilterinig = CList.Count();
+            CList = CList.Skip(start).Take(length).ToList();
+
+            List<DTO> dto = new List<DTO>();
+            string customer = "", inventory = "", price = "", serialNumber = "";
+            foreach (Invoice u in CList)
+            {
+                var getCustomerSales = new CustomerSalesBL().GetActiveCustomerSalesList(db).
+                    Where(x => x.InvoiceId == u.Id).FirstOrDefault();
+                if(getCustomerSales != null)
+                {
+                    if(getCustomerSales.CustomerId != null)
+                    {
+                        customer = getCustomerSales.Customer.Name;
+                    }
+                    else
+                    {
+                        customer = "";
+                    }
+                    DTO obj = new DTO()
+                    {
+                        CustomerSalesSerialNumber = u.InvoiceId,
+                        CustomerName = customer,
+                        CustomerSalesCashPrice = u.GrandTotal,
+                        CustomerSalesCreatedBy = u.User.Name,
+                        CustomerSalesId = u.Id,
+                        CustomerSalesEncryptedId = StringCypher.Base64Encode(Convert.ToString(u.Id)),
+                        Role = gp.validateUser().Id
+                    };
+                    dto.Add(obj);
+                }
+            }
+            return Json(new { data = dto, draw = Request["draw"], recordsTotal = totalrows, recordsFiltered = totalrowsafterfilterinig }, JsonRequestBehavior.AllowGet);
+        }
+        
+        public ActionResult Details(string Id = "")
+        {
+            var getId = StringCypher.Base64Decode(Id);
+            CustomerSale customerSale = new CustomerSalesBL().GetActiveCustomerSaleById(Convert.ToInt32(getId), db);
+            Customer c = new CustomerBL().GetActiveCustomersList(db).Where(x => x.Id == customerSale.CustomerId).OrderByDescending(x => x.Id).FirstOrDefault();
+            Inventory i = new InventoryBL().GetActiveInventoriesList(db).Where(y => y.Id == customerSale.InventoryId).OrderByDescending(x => x.Id).FirstOrDefault();
+            if (i != null)
+            {
+                List<InventoryImage> images = new InventoryImageBL().GetActiveInventoriesList(db).Where(z => z.InventoryId == i.Id).ToList();
+                ViewBag.IImage = images;
+            }
+
+            ViewBag.CustomerSales = customerSale;
+            ViewBag.customers = c;
+            ViewBag.inventory = i;
+            return View();
+        }
+        
         public ActionResult PostSavePdf(int Id = -1, string Url = "")
         {
             //CustomerInvoice customerInvoice = new InvoiceBL().GetActiveCustomerInvoiceById(Id, db);
@@ -345,23 +572,6 @@ namespace ShoePOSProject.Controllers
 
             return Json(JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult Details(string Id = "")
-        {
-            var getId = StringCypher.Base64Decode(Id);
-            CustomerSale customerSale = new CustomerSalesBL().GetActiveCustomerSaleById(Convert.ToInt32(getId), db);
-            Customer c = new CustomerBL().GetActiveCustomersList(db).Where(x => x.Id == customerSale.CustomerId).OrderByDescending(x => x.Id).FirstOrDefault();
-            Inventory i = new InventoryBL().GetActiveInventoriesList(db).Where(y => y.Id == customerSale.InventoryId).OrderByDescending(x => x.Id).FirstOrDefault();
-            if (i != null)
-            {
-                List<InventoryImage> images = new InventoryImageBL().GetActiveInventoriesList(db).Where(z => z.InventoryId == i.Id).ToList();
-                ViewBag.IImage = images;
-            }
-
-            ViewBag.CustomerSales = customerSale;
-            ViewBag.customers = c;
-            ViewBag.inventory = i;
-            return View();
-        }
+        #endregion Orders
     }
 }

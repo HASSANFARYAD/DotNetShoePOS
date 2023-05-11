@@ -29,6 +29,21 @@ namespace ShoePOSProject.DL
                 return false;
             }
         }
+
+        public int AddCustomer2(Customer _Customer, DatabaseEntities de)
+        {
+            try
+            {
+                de.Customers.Add(_Customer);
+                de.SaveChanges();
+                return _Customer.Id;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+
         public bool UpdateCustomer(Customer _Customer, DatabaseEntities de)
         {
             try

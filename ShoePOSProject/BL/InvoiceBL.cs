@@ -7,45 +7,57 @@ using System.Web;
 
 namespace ShoePOSProject.BL
 {
-    //public class InvoiceBL
-    //{
-    //    public List<CustomerInvoice> GetActiveInventoriesList(DatabaseEntities de)
-    //    {
-    //        return new InvoiceDL().GetActiveCustomerInvoicesList(de);
-    //    }
+    public class InvoiceBL
+    {
+        public List<Invoice> GetActiveInvoicesList(DatabaseEntities de)
+        {
+            return new InvoiceDL().GetActiveInvoicesList(de);
+        }
 
-    //    public CustomerInvoice GetActiveCustomerInvoiceById(int _Id, DatabaseEntities de)
-    //    {
-    //        return new InvoiceDL().GeteActiveCustomerInvoiceById(_Id, de);
-    //    }
+        public Invoice GetActiveInvoiceById(int _Id, DatabaseEntities de)
+        {
+            return new InvoiceDL().GeteActiveInvoiceById(_Id, de);
+        }
 
-    //    public bool AddCustomerInvoice(CustomerInvoice _CustomerInvoice, DatabaseEntities de)
-    //    {
-    //        if (_CustomerInvoice.IsActive == null || _CustomerInvoice.CreatedAt == null)
-    //        {
-    //            return false;
-    //        }
-    //        else
-    //        {
-    //            return new InvoiceDL().AddCustomerInvoice(_CustomerInvoice, de);
-    //        }
-    //    }
+        public bool AddInvoice(Invoice _Invoice, DatabaseEntities de)
+        {
+            if (_Invoice.IsActive == null || _Invoice.CreatedAt == null)
+            {
+                return false;
+            }
+            else
+            {
+                return new InvoiceDL().AddInvoice(_Invoice, de);
+            }
+        }
 
-    //    public bool UpdateCustomerInvoice(CustomerInvoice _CustomerInvoice, DatabaseEntities de)
-    //    {
-    //        if (_CustomerInvoice.IsActive == null || _CustomerInvoice.CreatedAt == null)
-    //        {
-    //            return false;
-    //        }
-    //        else
-    //        {
-    //            return new InvoiceDL().UpdateCustomerInvoice(_CustomerInvoice, de);
-    //        }
-    //    }
+        public int AddInvoice2(Invoice _Invoice, DatabaseEntities de)
+        {
+            if (_Invoice.IsActive == null || _Invoice.CreatedAt == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return new InvoiceDL().AddInvoice2(_Invoice, de);
+            }
+        }
 
-    //    public bool DeleteCustomerInvoice(int _id, DatabaseEntities de)
-    //    {
-    //        return new InvoiceDL().DeleteCustomerInvoice(_id, de);
-    //    }
-    //}
+        public bool UpdateInvoice(Invoice _Invoice, DatabaseEntities de)
+        {
+            if (_Invoice.IsActive == null || _Invoice.CreatedAt == null)
+            {
+                return false;
+            }
+            else
+            {
+                return new InvoiceDL().UpdateInvoice(_Invoice, de);
+            }
+        }
+
+        public bool DeleteInvoice(int _id, DatabaseEntities de)
+        {
+            return new InvoiceDL().DeleteInvoice(_id, de);
+        }
+    }
 }

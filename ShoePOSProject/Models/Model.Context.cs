@@ -33,5 +33,6 @@ namespace ShoePOSProject.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<CustomerSale> CustomerSales { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
     }
 }

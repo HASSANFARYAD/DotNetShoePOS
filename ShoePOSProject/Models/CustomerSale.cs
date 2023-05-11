@@ -23,9 +23,11 @@ namespace ShoePOSProject.Models
         public Nullable<System.DateTime> CreatedAt { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<System.DateTime> OrderDate { get; set; }
+        public Nullable<int> InvoiceId { get; set; }
     
         public virtual Customer Customer { get; set; }
         public virtual User User { get; set; }
         public virtual Inventory Inventory { get; set; }
+        public virtual Invoice Invoice { get; set; }
     }
 }

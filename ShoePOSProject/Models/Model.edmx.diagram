@@ -30,6 +30,9 @@
         <AssociationConnector Association="DatabaseModel.FK_CustomerId_CustomerSales" />
         <AssociationConnector Association="DatabaseModel.FK_CreatedBy_CustomerSales" />
         <AssociationConnector Association="DatabaseModel.FK_InventoryId_CustomerSales" />
+        <EntityTypeShape EntityType="DatabaseModel.Invoice" Width="1.5" PointX="3" PointY="0.75" />
+        <AssociationConnector Association="DatabaseModel.FK_CreatedBy_Invoice" />
+        <AssociationConnector Association="DatabaseModel.FK_InvoiceId_CustomerSales" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
