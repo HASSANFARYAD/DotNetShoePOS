@@ -117,8 +117,6 @@ D:\Nodlays Other Projects\Practice\ShoePOSProject\obj\Debug\ShoePOSProject.cspro
 D:\Nodlays Other Projects\Practice\ShoePOSProject\obj\Debug\ShoePOSProject.csproj.CopyComplete
 D:\Nodlays Other Projects\Practice\ShoePOSProject\obj\Debug\ShoePOSProject.dll
 D:\Nodlays Other Projects\Practice\ShoePOSProject\obj\Debug\ShoePOSProject.pdb
-D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.csproj.AssemblyReference.cache
-D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.csproj.CoreCompileInputs.cache
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\ShoePOSProject.dll.config
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\ShoePOSProject.dll
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\ShoePOSProject.pdb
@@ -239,6 +237,8 @@ D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\System.Web.WebPag
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\Newtonsoft.Json.xml
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\Antlr3.Runtime.pdb
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.csproj.AssemblyReference.cache
+D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.csproj.CoreCompileInputs.cache
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.csproj.CopyComplete
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.dll
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Debug\ShoePOSProject.pdb

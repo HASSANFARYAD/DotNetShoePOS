@@ -107,6 +107,8 @@
     <Property Name="CreatedBy" Type="int" />
     <Property Name="IsActive" Type="int" />
     <Property Name="CreatedAt" Type="datetime" />
+    <Property Name="Discount" Type="int" />
+    <Property Name="PriceAfterDiscount" Type="nvarchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="NewOption">
     <Key>

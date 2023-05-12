@@ -110,8 +110,8 @@
                 <input type="hidden" id="Quantity" name="extra1" value="@ViewBag.Inventory.extra1" />
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label text-bold">Serial #: <span class="text-danger">*</span></label>
-                        <input type="text" name="BarcodeNo" class="form-control required" required="required" value="@ViewBag.Inventory.BarcodeNo" placeholder="Serial Number">
+                        <label class="control-label text-bold">Article #: <span class="text-danger">*</span></label>
+                        <input type="text" name="BarcodeNo" class="form-control required" disabled value="@ViewBag.Inventory.BarcodeNo" placeholder="Serial Number">
                     </div>
                 </div>
 
@@ -183,7 +183,7 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label text-bold">Inventory Date: <span class="text-danger">*</span></label>
+                        <label class="control-label text-bold">Entry Date: <span class="text-danger">*</span></label>
                         <input type="date" value="@ViewBag.Inventory.InventoryDate.ToString("yyyy-MM-dd")" name="InventoryDate" class="form-control required" required="required">
                     </div>
                 </div>

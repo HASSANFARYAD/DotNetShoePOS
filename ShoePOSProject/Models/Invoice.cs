@@ -26,6 +26,8 @@ namespace ShoePOSProject.Models
         public Nullable<int> CreatedBy { get; set; }
         public Nullable<int> IsActive { get; set; }
         public Nullable<System.DateTime> CreatedAt { get; set; }
+        public Nullable<int> Discount { get; set; }
+        public string PriceAfterDiscount { get; set; }
     
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

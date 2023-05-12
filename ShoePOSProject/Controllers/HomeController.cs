@@ -39,17 +39,19 @@ namespace ShoePOSProject.Controllers
                 ViewBag.Brand = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1).ToList().Count;
                 ViewBag.Size = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2).ToList().Count;
                 ViewBag.Color = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4).ToList().Count;
+                ViewBag.Customer = new CustomerBL().GetActiveCustomersList(db).Count;
+                ViewBag.Products = new InventoryBL().GetActiveInventoriesList(db).Count;
             }
             else
             {
                 ViewBag.Brand = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
                 ViewBag.Size = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
                 ViewBag.Color = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
+                ViewBag.Customer = new CustomerBL().GetActiveCustomersList(db).Where(x => x.CreatedBy== LoggedInUser.Id).ToList().Count;
+                ViewBag.Products = new InventoryBL().GetActiveInventoriesList(db).Where(x => x.CreatedBy == LoggedInUser.Id).ToList().Count;
             }
             
-            var y = DateTime.Now.ToString("M");
             ViewBag.Role = gp.validateUser().Role;
-            var xx = DateTime.Now.ToString("MM");
             return View();
         }
 

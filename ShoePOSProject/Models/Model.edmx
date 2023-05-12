@@ -112,6 +112,8 @@
           <Property Name="CreatedBy" Type="int" />
           <Property Name="IsActive" Type="int" />
           <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="Discount" Type="int" />
+          <Property Name="PriceAfterDiscount" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="NewOption">
           <Key>
@@ -940,6 +942,8 @@
           <Property Name="CreatedAt" Type="DateTime" Precision="3" />
           <NavigationProperty Name="User" Relationship="DatabaseModel.FK_CreatedBy_Invoice" FromRole="Invoice" ToRole="User" />
           <NavigationProperty Name="CustomerSales" Relationship="DatabaseModel.FK_InvoiceId_CustomerSales" FromRole="Invoice" ToRole="CustomerSale" />
+          <Property Name="Discount" Type="Int32" />
+          <Property Name="PriceAfterDiscount" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_CreatedBy_Invoice">
           <End Type="DatabaseModel.User" Role="User" Multiplicity="0..1" />
@@ -1115,6 +1119,8 @@
           <EntitySetMapping Name="Invoices">
             <EntityTypeMapping TypeName="DatabaseModel.Invoice">
               <MappingFragment StoreEntitySet="Invoice">
+                <ScalarProperty Name="PriceAfterDiscount" ColumnName="PriceAfterDiscount" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
                 <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />

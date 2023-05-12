@@ -540,6 +540,8 @@ namespace ShoePOSProject.Controllers
                                         claim.GenderId = GenderId;
                                         claim.ShoeStyleId = ShoeStyleId;
                                         claim.extra1 = workSheet.Cells[rowIterator, 8].Value == null ? string.Empty : workSheet.Cells[rowIterator, 8].Value.ToString();
+                                        claim.Price = workSheet.Cells[rowIterator, 12].Value == null ? string.Empty : workSheet.Cells[rowIterator, 12].Value.ToString();
+                                        claim.SalePrice = workSheet.Cells[rowIterator, 13].Value == null ? string.Empty : workSheet.Cells[rowIterator, 13].Value.ToString();
                                         claim.InventoryDate = gp.CurrentDateTime();
                                         claim.IsActive = 1;
                                         claim.CreatedAt = DateTime.Now;

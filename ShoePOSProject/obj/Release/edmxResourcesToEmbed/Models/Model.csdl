@@ -63,6 +63,7 @@
     <NavigationProperty Name="BSST5" Relationship="Self.FK_Size_Inventory" FromRole="Inventory" ToRole="BSST" />
     <NavigationProperty Name="User" Relationship="Self.FK_CreatedBy_Inventory" FromRole="Inventory" ToRole="User" />
     <NavigationProperty Name="InventoryImages" Relationship="Self.FK_InventoryImages_Property" FromRole="Inventory" ToRole="InventoryImages" />
+    <NavigationProperty Name="CustomerSales" Relationship="DatabaseModel.FK_InventoryId_CustomerSales" FromRole="Inventory" ToRole="CustomerSale" />
   </EntityType>
   <EntityType Name="InventoryImage">
     <Key>
@@ -118,6 +119,9 @@
     <NavigationProperty Name="NewOptions" Relationship="Self.FK_CreatedBy_NewOption" FromRole="User" ToRole="NewOption" />
     <NavigationProperty Name="User1" Relationship="Self.FK_CreatedBy_User" FromRole="User" ToRole="User1" />
     <NavigationProperty Name="User2" Relationship="Self.FK_CreatedBy_User" FromRole="User1" ToRole="User" />
+    <NavigationProperty Name="Customers" Relationship="DatabaseModel.FK_CreatedBy_Cutomer" FromRole="User" ToRole="Customer" />
+    <NavigationProperty Name="CustomerSales" Relationship="DatabaseModel.FK_CreatedBy_CustomerSales" FromRole="User" ToRole="CustomerSale" />
+    <NavigationProperty Name="Invoices" Relationship="DatabaseModel.FK_CreatedBy_Invoice" FromRole="User" ToRole="Invoice" />
   </EntityType>
   <Association Name="FK_Brand_Inventory">
     <End Role="BSST" Type="Self.BSST" Multiplicity="0..1" />
@@ -334,5 +338,165 @@
       <End Role="User" EntitySet="Users" />
       <End Role="User1" EntitySet="Users" />
     </AssociationSet>
+    <EntitySet Name="Customers" EntityType="DatabaseModel.Customer" />
+    <EntitySet Name="CustomerSales" EntityType="DatabaseModel.CustomerSale" />
+    <AssociationSet Name="FK_CreatedBy_Cutomer" Association="DatabaseModel.FK_CreatedBy_Cutomer">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Customer" EntitySet="Customers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CustomerId_CustomerSales" Association="DatabaseModel.FK_CustomerId_CustomerSales">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="CustomerSale" EntitySet="CustomerSales" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CreatedBy_CustomerSales" Association="DatabaseModel.FK_CreatedBy_CustomerSales">
+      <End Role="User" EntitySet="Users" />
+      <End Role="CustomerSale" EntitySet="CustomerSales" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InventoryId_CustomerSales" Association="DatabaseModel.FK_InventoryId_CustomerSales">
+      <End Role="Inventory" EntitySet="Inventories" />
+      <End Role="CustomerSale" EntitySet="CustomerSales" />
+    </AssociationSet>
+    <EntitySet Name="Invoices" EntityType="DatabaseModel.Invoice" />
+    <AssociationSet Name="FK_CreatedBy_Invoice" Association="DatabaseModel.FK_CreatedBy_Invoice">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Invoice" EntitySet="Invoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InvoiceId_CustomerSales" Association="DatabaseModel.FK_InvoiceId_CustomerSales">
+      <End Role="Invoice" EntitySet="Invoices" />
+      <End Role="CustomerSale" EntitySet="CustomerSales" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="EmailAddress" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PrimaryPhone" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="SecondaryPhone" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="State" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Zip" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PhysicalAddress" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PhysicalState" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="PhysicalZip" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="DateOfBirth" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ReferenceName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ReferencePhone" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="extra1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="extra2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="extra3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="DatabaseModel.FK_CreatedBy_Cutomer" FromRole="Customer" ToRole="User" />
+    <NavigationProperty Name="CustomerSales" Relationship="DatabaseModel.FK_CustomerId_CustomerSales" FromRole="Customer" ToRole="CustomerSale" />
+  </EntityType>
+  <EntityType Name="CustomerSale">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerId" Type="Int32" />
+    <Property Name="InventoryId" Type="Int32" />
+    <Property Name="CashPrice" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Customer" Relationship="DatabaseModel.FK_CustomerId_CustomerSales" FromRole="CustomerSale" ToRole="Customer" />
+    <NavigationProperty Name="User" Relationship="DatabaseModel.FK_CreatedBy_CustomerSales" FromRole="CustomerSale" ToRole="User" />
+    <NavigationProperty Name="Inventory" Relationship="DatabaseModel.FK_InventoryId_CustomerSales" FromRole="CustomerSale" ToRole="Inventory" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="OrderDate" Type="DateTime" Precision="3" />
+    <Property Name="InvoiceId" Type="Int32" />
+    <NavigationProperty Name="Invoice" Relationship="DatabaseModel.FK_InvoiceId_CustomerSales" FromRole="CustomerSale" ToRole="Invoice" />
+  </EntityType>
+  <Association Name="FK_CreatedBy_Cutomer">
+    <End Type="DatabaseModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="DatabaseModel.Customer" Role="Customer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Customer">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CustomerId_CustomerSales">
+    <End Type="DatabaseModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="DatabaseModel.CustomerSale" Role="CustomerSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSale">
+        <PropertyRef Name="CustomerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CreatedBy_CustomerSales">
+    <End Type="DatabaseModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="DatabaseModel.CustomerSale" Role="CustomerSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSale">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InventoryId_CustomerSales">
+    <End Type="DatabaseModel.Inventory" Role="Inventory" Multiplicity="0..1" />
+    <End Type="DatabaseModel.CustomerSale" Role="CustomerSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Inventory">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSale">
+        <PropertyRef Name="InventoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Invoice">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InvoiceId" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="GrandTotal" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedBy" Type="Int32" />
+    <Property Name="IsActive" Type="Int32" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="DatabaseModel.FK_CreatedBy_Invoice" FromRole="Invoice" ToRole="User" />
+    <NavigationProperty Name="CustomerSales" Relationship="DatabaseModel.FK_InvoiceId_CustomerSales" FromRole="Invoice" ToRole="CustomerSale" />
+    <Property Name="Discount" Type="Int32" />
+    <Property Name="PriceAfterDiscount" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK_CreatedBy_Invoice">
+    <End Type="DatabaseModel.User" Role="User" Multiplicity="0..1" />
+    <End Type="DatabaseModel.Invoice" Role="Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Invoice">
+        <PropertyRef Name="CreatedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InvoiceId_CustomerSales">
+    <End Type="DatabaseModel.Invoice" Role="Invoice" Multiplicity="0..1" />
+    <End Type="DatabaseModel.CustomerSale" Role="CustomerSale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Invoice">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="CustomerSale">
+        <PropertyRef Name="InvoiceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

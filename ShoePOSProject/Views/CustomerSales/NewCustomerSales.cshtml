@@ -68,13 +68,6 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label text-bold">Date of Birth: <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" value="@DateTime.Now.ToString("MM/dd/yyyy")" id="CustomerDateofBirth" name="DateOfBirth" required>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
                         <label class="control-label text-bold">Primary Phone <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" data-mask="(999) 999-9999" placeholder="Enter your phone #" id="CustomerPhone" name="PrimaryPhone" required>
                         <span class="help-block">(999) 999-9999</span>
@@ -94,7 +87,7 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
+                        <label class="control-label text-bold">Quantity <span class="text-danger">*</span></label>
                         <input type="number" name="Quantity" id="QuantityId" class="form-control">
                     </div>
                 </div>
@@ -107,6 +100,17 @@
                 <button onclick="AddNewOption()" type="button" class="btn btn-success">Add New Option</button>
             </div>
 
+        </fieldset>
+
+        <fieldset class="step" id="validation-step1">
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Dicount(%) <span class="text-danger">*</span></label>
+                        <input type="number" min="0" placeholder="0" value="" class="form-control" name="Discount" required />
+                    </div>
+                </div>
+            </div>
         </fieldset>
 
         <div class="form-wizard-actions">

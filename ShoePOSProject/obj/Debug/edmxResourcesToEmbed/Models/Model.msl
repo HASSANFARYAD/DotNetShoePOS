@@ -145,6 +145,8 @@
     <EntitySetMapping Name="Invoices">
       <EntityTypeMapping TypeName="DatabaseModel.Invoice">
         <MappingFragment StoreEntitySet="Invoice">
+          <ScalarProperty Name="PriceAfterDiscount" ColumnName="PriceAfterDiscount" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
           <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
           <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />

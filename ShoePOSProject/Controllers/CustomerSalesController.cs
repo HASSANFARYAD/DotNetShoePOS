@@ -35,6 +35,7 @@ namespace ShoePOSProject.Controllers
                 return false;
             }
         }
+        
         #region SalesProduct
         
         public ActionResult NewCustomerSales(string message = "", string color = "")
@@ -79,7 +80,7 @@ namespace ShoePOSProject.Controllers
             List<int> InventoryId = new List<int>();
             List<int> Quantities = new List<int>();
             double Price = 0;
-            if (CustomerSales.CustomerId == null || CustomerSales.InventoryId == null)
+            if (CustomerSales.InventoryId == null)
             {
                 return RedirectToAction("NewCustomerSales", new { message = "Fill all The Required Fields", color = "red" });
             }
@@ -98,7 +99,7 @@ namespace ShoePOSProject.Controllers
                         throw new Exception();
                     }
                 }
-                var getInoviceId = AddInvoice();
+                var getInoviceId = AddInvoice(Convert.ToInt32(fc["Discount"]));
                 if (getInoviceId != -1)
                 {
                     CustomerSales.CustomerId = CustomerSales.CustomerId;
@@ -134,7 +135,7 @@ namespace ShoePOSProject.Controllers
                                 bool c = new CustomerSalesBL().AddCustomerSale(optionInventory, db);
                                 InventoryId.Add((int)optionInventory.InventoryId);
                                 Quantities.Add((int)optionInventory.Quantity);
-                                Price = Price + Convert.ToDouble(CustomerSales.CashPrice);
+                                Price = Price + Convert.ToDouble(optionInventory.CashPrice);
                                 if (c == false)
                                 {
                                     throw new Exception();
@@ -393,7 +394,7 @@ namespace ShoePOSProject.Controllers
         #endregion SalesProduct
 
         #region Orders
-        public int AddInvoice()
+        public int AddInvoice(int discount = -1)
         {
             var getInvoice = new InvoiceBL().GetActiveInvoicesList(db).LastOrDefault();
             Invoice invoice = new Invoice();
@@ -407,6 +408,7 @@ namespace ShoePOSProject.Controllers
             }
             var makeInvoiceId = Convert.ToDouble(invoice.InvoiceId) + 1;
             invoice.InvoiceId = makeInvoiceId.ToString();
+            invoice.Discount = discount;
             invoice.IsActive = 1;
             invoice.CreatedAt = gp.CurrentDateTime();
             invoice.CreatedBy = gp.validateUser().Id;
@@ -528,18 +530,12 @@ namespace ShoePOSProject.Controllers
         public ActionResult Details(string Id = "")
         {
             var getId = StringCypher.Base64Decode(Id);
-            CustomerSale customerSale = new CustomerSalesBL().GetActiveCustomerSaleById(Convert.ToInt32(getId), db);
-            Customer c = new CustomerBL().GetActiveCustomersList(db).Where(x => x.Id == customerSale.CustomerId).OrderByDescending(x => x.Id).FirstOrDefault();
-            Inventory i = new InventoryBL().GetActiveInventoriesList(db).Where(y => y.Id == customerSale.InventoryId).OrderByDescending(x => x.Id).FirstOrDefault();
-            if (i != null)
-            {
-                List<InventoryImage> images = new InventoryImageBL().GetActiveInventoriesList(db).Where(z => z.InventoryId == i.Id).ToList();
-                ViewBag.IImage = images;
-            }
+            var invoice = new InvoiceBL().GetActiveInvoiceById(Convert.ToInt32(getId), db);
+            var customerSale = new CustomerSalesBL().GetActiveCustomerSalesList(db).Where(x => x.InvoiceId == invoice.Id).ToList();
+            
 
             ViewBag.CustomerSales = customerSale;
-            ViewBag.customers = c;
-            ViewBag.inventory = i;
+            ViewBag.invoice = invoice;
             return View();
         }
         
