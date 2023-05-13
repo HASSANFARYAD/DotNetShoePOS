@@ -41,240 +41,64 @@
                 <small class="display-block">Customer Sales</small>
             </h6>
 
-            <input type="hidden" name="Id" value="@ViewBag.CustomerSales.Id" />
+            <input type="hidden" name="Id" value="@ViewBag.invoice.Id" />
 
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Customers <span class="text-danger">*</span></label>
-                        <select name="CustomerId" data-placeholder="Select Loading Instructions..." class="select required" required="required">
-                            <option value="">Select Loading Instructions... </option>
-                            @if (ViewBag.customers != null)
-                            {
-                                foreach (var x in ViewBag.customers)
-                                {
-                                    if (ViewBag.CustomerSales.CustomerId == x.Id)
-                                    {
-                                        <option value="@x.Id" selected>@x.Name</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@x.Id" selected>@x.Name</option>
-                                    }
-                                }
-                            }
-                        </select>
+                <div class="" id="AddNewCustomerDiv">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Customers <span class="text-danger">*</span></label>
+                            <select name="CustomerId" id="CustomerId" data-placeholder="Select Customers..." class="select required" onchange="GetCustomerId()">
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
-                        <select name="InventoryId" data-placeholder="Choose an Option..." class="select required" required="required">
-                            <option value="">Choose an Option... </option>
-                            @if (ViewBag.inventory != null)
-                            {
-                                foreach (var x in ViewBag.inventory)
-                                {
-                                    if (ViewBag.CustomerSales.InventoryId == x.Id)
-                                    {
-                                        <option value="@x.Id" selected>@x.Brand</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@x.Id" selected>@x.Brand</option>
-                                    }
-                                }
-                            }
-                        </select>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Name: <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" placeholder="Customers Name" id="CustomerName" name="Name" required>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">CashPrice: <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="btn btn-default input-group-addon">$</span>
-                            <input type="number" step="0.01" class="form-control required" min="1" name="CashPrice" value="@ViewBag.CustomerSales.CashPrice">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Email: <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" placeholder="Customers Email" id="CustomerEmail" name="EmailAddress" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Primary Phone <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" data-mask="(999) 999-9999" placeholder="Enter your phone #" id="CustomerPhone" name="PrimaryPhone" required>
+                            <span class="help-block">(999) 999-9999</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Condition <span class="text-danger">*</span></label>
-                        <select name="Condition" data-placeholder="Choose an Option..." class="form-control required">
-                            <option value="">Choose an Option... </option>
-                            @if (ViewBag.CustomerSales.Condition == "New")
-                            {
-                                <option value="New" selected>New</option>
-                                <option value="Used">Used</option>
-                            }
-                            else if (ViewBag.CustomerSales.Condition == "Used")
-                            {
-                                <option value="New">New</option>
-                                <option value="Used" selected>Used</option>
-                            }
-                            else
-                            {
-                                <option value="New">New</option>
-                                <option value="Used">Used</option>
-                            }
-                        </select>
+                <div class="">
+                    <input type="hidden" name="CashPrice" id="CashPrice" />
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
+                            <select name="InventoryId" onchange="GetQuantity(this.value, 0)" id="InventoryId" data-placeholder="Choose an Option..." class="select">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label text-bold">Quantity <span class="text-danger">*</span></label>
+                            <input type="number" name="Quantity" id="QuantityId" class="form-control">
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">(if used, note any damages) <span class="text-danger">*</span></label>
-                        <input type="text" name="UsedDamage" class="form-control required" value="@ViewBag.CustomerSales.UsedDamage">
-                    </div>
-                </div>
+                <input type="hidden" name="count" id="count" value=0 />
+                <div id="NewOptions"></div>
 
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Rental Ownership Term <span class="text-danger">*</span></label>
-                        <select name="OwnershipTerm" data-placeholder="Choose an Option..." class="select required">
-                            <option value="">Choose an Option... </option>
-                            @if (ViewBag.CustomerSales.OwnershipTerm == "24 Months")
-                            {
-                                <option value="24 Month" selected>24 Months</option>
-                                <option value="36 Months">36 Months</option>
-                                <option value="48 Months">48 Months</option>
-                                <option value="60 Months">60 Months</option>
-                            }
-                            else if (ViewBag.CustomerSales.OwnershipTerm == "36 Months")
-                            {
-                                <option value="24 Months">24 Months</option>
-                                <option value="36 Months" selected>36 Months</option>
-                                <option value="48 Months">48 Months</option>
-                                <option value="60 Months">60 Months</option>
-                            }
-                            else if (ViewBag.CustomerSales.OwnershipTerm == "48 Months")
-                            {
-                                <option value="24 Months">24 Months</option>
-                                <option value="36 Months">36 Months</option>
-                                <option value="48 Months" selected>48 Months</option>
-                                <option value="60 Months">60 Months</option>
-                            }
-                            else if (ViewBag.CustomerSales.OwnershipTerm == "60 Months")
-                            {
-                                <option value="24 Months">24 Months</option>
-                                <option value="36 Months">36 Months</option>
-                                <option value="48 Months">48 Months</option>
-                                <option value="60 Months" selected>60 Months</option>
-                            }
-                            else
-                            {
-                                <option value="24 Months">24 Months</option>
-                                <option value="36 Months">36 Months</option>
-                                <option value="48 Months">48 Months</option>
-                                <option value="60 Months">60 Months</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Loading Instructions <span class="text-danger">*</span></label>
-                        <select name="Loading" data-placeholder="Select Loading Instructions..." class="form-control" required="required" id="LoadingInstructions">
-                            @if (ViewBag.CustomerSales.Loading == "Doors on Passenger Side")
-                            {
-                                <option value="">Select Loading Instructions... </option>
-                                <option value="Doors on Passenger Side" selected>Doors on Passenger Side</option>
-                                <option value="Doors on Driver Side">Doors on Driver Side</option>
-                                <option value="Doors Facing Cab">Doors Facing Cab</option>
-                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
-                            }
-                            else if (ViewBag.CustomerSales.Loading == "Doors on Driver Side")
-                            {
-                                <option value="">Select Loading Instructions... </option>
-                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
-                                <option value="Doors on Driver Side" selected>Doors on Driver Side</option>
-                                <option value="Doors Facing Cab">Doors Facing Cab</option>
-                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
-                            }
-                            else if (ViewBag.CustomerSales.Loading == "Doors Facing Cab")
-                            {
-                                <option value="">Select Loading Instructions... </option>
-                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
-                                <option value="Doors on Driver Side">Doors on Driver Side</option>
-                                <option value="Doors Facing Cab" selected>Doors Facing Cab</option>
-                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
-                            }
-                            else if (ViewBag.CustomerSales.Loading == "Doors at Back End of Trailer")
-                            {
-                                <option value="">Select Loading Instructions... </option>
-                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
-                                <option value="Doors on Driver Side">Doors on Driver Side</option>
-                                <option value="Doors Facing Cab">Doors Facing Cab</option>
-                                <option value="Doors at Back End of Trailer" selected>Doors at Back End of Trailer</option>
-                            }
-                            else
-                            {
-                                <option value="">Select Loading Instructions... </option>
-                                <option value="Doors on Passenger Side">Doors on Passenger Side</option>
-                                <option value="Doors on Driver Side">Doors on Driver Side</option>
-                                <option value="Doors Facing Cab">Doors Facing Cab</option>
-                                <option value="Doors at Back End of Trailer">Doors at Back End of Trailer</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Is there a fence around your property? <span class="text-danger">*</span></label>
-                        <select name="Fence" data-placeholder="Choose an Option..." class="form-control" required="required" id="HouseFence">
-                            @if (ViewBag.CustomerSales.Fence == "No")
-                            {
-                                <option value="">Choose an Option... </option>
-                                <option value="No" selected>No</option>
-                                <option value="Yes">Yes</option>
-                            }
-                            else if (ViewBag.CustomerSales.Fence == "Yes")
-                            {
-                                <option value="">Choose an Option... </option>
-                                <option value="No">No</option>
-                                <option value="Yes" selected>Yes</option>
-                            }
-                            else
-                            {
-                                <option value="">Choose an Option... </option>
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="control-label text-bold">Do you have concerns about access? <span class="text-danger">*</span></label>
-                        <select name="Access" data-placeholder="Choose an Option..." class="form-control" required="required" id="HouseAccess">
-                            @if (ViewBag.CustomerSales.Access == "No")
-                            {
-                                <option value="">Choose an Option... </option>
-                                <option value="No" selected>No</option>
-                                <option value="Yes">Yes</option>
-                            }
-                            else if (ViewBag.CustomerSales.Access == "Yes")
-                            {
-                                <option value="">Choose an Option... </option>
-                                <option value="No">No</option>
-                                <option value="Yes" selected>Yes</option>
-                            }
-                            else
-                            {
-                                <option value="">Choose an Option... </option>
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            }
-                        </select>
-                    </div>
+                    <button onclick="AddNewOption()" type="button" class="btn btn-success">Add New Option</button>
                 </div>
 
             </div>
@@ -288,3 +112,83 @@
 </div>
 
 <!-- /wizard with validation -->
+
+<script>
+    var getCustomerId = '@ViewBag.CustomerId';
+    GetCustomers();
+    function GetCustomers() {
+        $("#customersLoader").show();
+        $.ajax({
+            type: "GET",
+            url: '../Customer/GetCustomers',
+            data: {
+
+            },
+            success: function (data) {
+                var listAppend = "<option value=''>Select Customers...</option>";
+                for (var i = 0; i < data.length; i++) {
+                    if (getCustomerId == data[i].CustomerId) {
+                        listAppend += "<option value = '" + data[i].CustomerId + "' selected>" + data[i].CustomerName + " </option>";
+                    }
+                    else {
+                        listAppend += "<option value = '" + data[i].CustomerId + "'>" + data[i].CustomerName + " </option>";
+                    }
+                }
+                $("#CustomerId").append(listAppend);
+
+                $("#customersLoader").hide();
+            },
+            error: function () {
+                alert("There was an error retrieving the hierarchy; please reload the page.");
+            },
+            complete: function () {
+                GetCustomerId(getCustomerId);
+                GetInventory("", 0)
+            }
+        });
+    }
+
+    function GetCustomerId(value) {
+        var CustomerId = $("#CustomerId").val();
+        $("#CustomerName").val("");
+        $("#CustomerEmail").val("");
+        $("#CustomerPhone").val("");
+        $("#CustomerDateofBirth").val("");
+        if (value != "AddNewCustomer") {
+            $("#getCustomersLoader").show();
+            var CustomerId = $("#CustomerId").val();
+            $.ajax({
+                type: "GET",
+                url: '../Customer/GetCustomers',
+                data: {
+                    CustomerId: CustomerId
+                },
+                success: function (data) {
+                    for (var item in data) {
+                        $("#CustomerName").val(data[item].CustomerName);
+                        $("#CustomerEmail").val(data[item].CustomerMailingAddress);
+                        $("#CustomerPhone").val(data[item].CustomerPrimaryPhone);
+                        $("#CustomerDateofBirth").val(data[item].CustomerDateofBirth);
+                    }
+                },
+                error: function () {
+                    alert("There was an error retrieving the hierarchy; please reload the page.");
+                },
+                complete: function () {
+                    $("#getCustomersLoader").hide();
+                }
+            });
+        }
+        else {
+
+            $("#CustomerName").prop("required", true);
+            $("#CustomerEmail").prop("required", true);
+            $("#CustomerPhone").prop("required", true);
+            $("#CustomerDateofBirth").prop("required", true);
+            $("#CustomerName").prop("disabled", false);
+            $("#CustomerEmail").prop("disabled", false);
+            $("#CustomerPhone").prop("disabled", false);
+            $("#CustomerDateofBirth").prop("disabled", false);
+        }
+    }
+</script>

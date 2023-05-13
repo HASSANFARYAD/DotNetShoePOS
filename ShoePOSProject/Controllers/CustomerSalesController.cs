@@ -290,17 +290,10 @@ namespace ShoePOSProject.Controllers
             List<Customer> c = new List<Customer>();
             List<Inventory> i = new List<Inventory>();
             var getId = StringCypher.Base64Decode(Id);
-            CustomerSale customerSale = new CustomerSalesBL().GetActiveCustomerSaleById(Convert.ToInt32(getId), db);
-            if (gp.validateUser().Role == 1)
-            {
-                c = new CustomerBL().GetActiveCustomersList(db).OrderByDescending(x => x.Id).ToList();
-                i = new InventoryBL().GetActiveInventoriesList(db).OrderByDescending(x => x.Id).ToList();
-            }
-            else
-            {
-                c = new CustomerBL().GetActiveCustomersList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                i = new InventoryBL().GetActiveInventoriesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-            }
+            Invoice invoice = new InvoiceBL().GetActiveInvoiceById(Convert.ToInt32(getId), db);
+            List<CustomerSale> customerSale = new CustomerSalesBL().GetActiveCustomerSalesList(db).
+                Where(x => x.InvoiceId == invoice.Id).ToList();
+
             if (color == "red")
             {
                 ViewBag.errormessage = message;
@@ -311,9 +304,9 @@ namespace ShoePOSProject.Controllers
                 ViewBag.successfullmessage = message;
                 ViewBag.color = color;
             }
-            ViewBag.customers = c;
-            ViewBag.inventory = i;
+            ViewBag.invoice = invoice;
             ViewBag.CustomerSales = customerSale;
+            ViewBag.CustomerId = customerSale.FirstOrDefault().CustomerId;
             return View();
         }
 
@@ -427,10 +420,15 @@ namespace ShoePOSProject.Controllers
             {
                 invoice.Id = invoice.Id;
                 invoice.InvoiceId = invoice.InvoiceId;
+                invoice.Discount = invoice.Discount;
                 invoice.GrandTotal = GrandTotal.ToString();
                 invoice.IsActive = invoice.IsActive;
                 invoice.CreatedAt = invoice.CreatedAt;
                 invoice.CreatedBy = invoice.CreatedBy;
+                double DiscountedPrice = 100 - (double)invoice.Discount;
+                DiscountedPrice = DiscountedPrice / 100;
+                DiscountedPrice = DiscountedPrice * GrandTotal;
+                invoice.PriceAfterDiscount = Math.Round(DiscountedPrice).ToString();
                 if (new InvoiceBL().UpdateInvoice(invoice, db))
                 {
                     return true;

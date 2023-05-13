@@ -118,7 +118,6 @@
                                 <th class="text-center">Name</th>
                                 <th class="text-center">Email</th>
                                 <th class="text-center">Primary Phone</th>
-                                <th class="text-center">Secondary Phone</th>
                                 <th class="text-center">Address</th>
                                 <th class="text-center">Action</th>
                             </tr>
@@ -149,7 +148,6 @@
                         { "data": "CustomerName", "name": "Name" },
                         { "data": "CustomerMailingAddress", "name": "EmailAddress" },
                         { "data": "CustomerPrimaryPhone", "name": "PrimaryPhone" },
-                        { "data": "CustomerSecondaryPhone", "name": "SecondaryPhone" },
                         { "data": "CustomerPhysicalAddress", "name": "PhysicalAddress" },
                         { "data": "Action", "name": "" }
                     ],
@@ -180,18 +178,11 @@
                             "targets": 3,
                             'className': 'col-lg-2',
                             "render": function (data, type, full, meta) {
-                                return full.CustomerSecondaryPhone;
-                            }
-                        },
-                        {
-                            "targets": 4,
-                            'className': 'col-lg-2',
-                            "render": function (data, type, full, meta) {
                                 return full.CustomerPhysicalAddress;
                             }
                         },
                         {
-                            "targets": 5,
+                            "targets": 4,
                             'className': 'col-lg-1',
                             'searchable': false,
                             'orderable': false,

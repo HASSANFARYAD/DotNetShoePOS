@@ -4,16 +4,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <History>True|2023-05-11T19:54:52.6004142Z;True|2023-05-06T17:35:53.9965243+05:00;True|2023-05-06T17:32:01.4109885+05:00;True|2023-05-06T17:08:03.2840579+05:00;False|2023-05-06T17:05:05.1455594+05:00;False|2023-05-06T17:04:34.6489178+05:00;False|2023-05-06T17:03:21.3029615+05:00;</History>
+    <History>True|2023-05-13T13:31:19.7584056Z;True|2023-05-12T00:54:52.6004142+05:00;True|2023-05-06T17:35:53.9965243+05:00;True|2023-05-06T17:32:01.4109885+05:00;True|2023-05-06T17:08:03.2840579+05:00;False|2023-05-06T17:05:05.1455594+05:00;False|2023-05-06T17:04:34.6489178+05:00;False|2023-05-06T17:03:21.3029615+05:00;</History>
     <LastFailureDetails />
     <_PublishTargetUrl>D:\Published\Published ShoePOS</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Data/Database.mdf">
-      <publishTime>05/12/2023 00:54:26</publishTime>
+      <publishTime>05/13/2023 16:10:05</publishTime>
     </File>
     <File Include="App_Data/Database_log.ldf">
-      <publishTime>05/12/2023 00:54:26</publishTime>
+      <publishTime>05/13/2023 16:10:05</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/10/2013 16:29:20</publishTime>
@@ -226,10 +226,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>08/08/2018 12:18:16</publishTime>
     </File>
     <File Include="bin/ShoePOSProject.dll">
-      <publishTime>05/12/2023 00:54:26</publishTime>
+      <publishTime>05/13/2023 18:31:12</publishTime>
     </File>
     <File Include="bin/ShoePOSProject.pdb">
-      <publishTime>05/12/2023 00:54:26</publishTime>
+      <publishTime>05/13/2023 18:31:12</publishTime>
     </File>
     <File Include="bin/Spire.Pdf.dll">
       <publishTime>04/24/2023 15:37:38</publishTime>
@@ -9076,28 +9076,28 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/05/2023 11:04:56</publishTime>
     </File>
     <File Include="Views/Customer/NewCustomer.cshtml">
-      <publishTime>05/07/2023 17:02:52</publishTime>
+      <publishTime>05/13/2023 00:10:50</publishTime>
     </File>
     <File Include="Views/Customer/UpdateCustomer.cshtml">
-      <publishTime>05/07/2023 17:10:24</publishTime>
+      <publishTime>05/13/2023 00:10:37</publishTime>
     </File>
     <File Include="Views/Customer/ViewCustomer.cshtml">
-      <publishTime>05/09/2023 00:05:52</publishTime>
+      <publishTime>05/13/2023 00:11:44</publishTime>
     </File>
     <File Include="Views/CustomerSales/Details.cshtml">
       <publishTime>05/11/2023 23:41:10</publishTime>
     </File>
     <File Include="Views/CustomerSales/Invoice.cshtml">
-      <publishTime>05/12/2023 00:54:00</publishTime>
+      <publishTime>05/13/2023 16:09:53</publishTime>
     </File>
     <File Include="Views/CustomerSales/NewCustomerSales.cshtml">
-      <publishTime>05/12/2023 00:24:46</publishTime>
+      <publishTime>05/13/2023 15:57:34</publishTime>
     </File>
     <File Include="Views/CustomerSales/UpdateCustomerSales.cshtml">
-      <publishTime>05/03/2023 16:55:18</publishTime>
+      <publishTime>05/13/2023 15:44:15</publishTime>
     </File>
     <File Include="Views/CustomerSales/ViewCustomerSales.cshtml">
-      <publishTime>05/11/2023 22:30:00</publishTime>
+      <publishTime>05/13/2023 16:08:36</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>05/03/2023 17:34:49</publishTime>
@@ -9109,16 +9109,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/03/2023 17:34:49</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>05/07/2023 10:57:11</publishTime>
+      <publishTime>05/13/2023 00:17:13</publishTime>
     </File>
     <File Include="Views/Inventory/Details.cshtml">
       <publishTime>05/04/2023 15:53:25</publishTime>
     </File>
     <File Include="Views/Inventory/NewInventory.cshtml">
-      <publishTime>05/06/2023 15:46:52</publishTime>
+      <publishTime>05/13/2023 00:13:13</publishTime>
     </File>
     <File Include="Views/Inventory/UpdateInventory.cshtml">
-      <publishTime>05/11/2023 13:23:28</publishTime>
+      <publishTime>05/13/2023 00:13:57</publishTime>
     </File>
     <File Include="Views/Inventory/UploadExcel.cshtml">
       <publishTime>05/06/2023 18:17:46</publishTime>
@@ -9145,7 +9145,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/03/2023 17:34:49</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/12/2023 00:54:36</publishTime>
+      <publishTime>05/13/2023 18:31:14</publishTime>
     </File>
   </ItemGroup>
 </Project>

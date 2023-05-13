@@ -79,7 +79,7 @@
                 <input type="hidden" name="CashPrice" id="CashPrice"/>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>
+                        <label class="control-label text-bold">Article No. <span class="text-danger">*</span></label>
                         <select name="InventoryId" onchange="GetQuantity(this.value, 0)" id="InventoryId" data-placeholder="Choose an Option..." class="select">
                         </select>
                     </div>
@@ -206,7 +206,9 @@
             success: function (data) {
                 var listAppend = "<option value=''>Select Inventory...</option>";
                 for (var i = 0; i < data.length; i++) {
-                    listAppend += "<option value = '" + data[i].Id + "'>" + data[i].SerialNumber + " </option>";
+                    if (data[i].Quantity >= 1) {
+                        listAppend += "<option value = '" + data[i].Id + "'>" + data[i].SerialNumber + " </option>";
+                    }
                 }
                 if (count == 0) {
                     $("#InventoryId").append(listAppend);
@@ -274,7 +276,7 @@
 
         var NewItems = '<div class="col-md-6">' +
                 '<div class="form-group">' +
-                    '<label class="control-label text-bold">Inventory <span class="text-danger">*</span></label>' +
+                    '<label class="control-label text-bold">Article No. <span class="text-danger">*</span></label>' +
                     '<select name="InventoryId'+PCount+'" onchange="GetQuantity(this.value, '+PCount+')" id="InventoryId'+PCount+'" data-placeholder="Choose an Option..." class="form-control">' +
                     '</select>' +
                 '</div>' +

@@ -159,18 +159,18 @@
 
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <h6 class="text-bold">Building</h6>
+                                            <h6 class="text-bold">Products</h6>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered border-dark text-center">
                                                     <tr>
-                                                        <th class="text-center">Serial #</th>
-                                                        <th class="text-center">Brand</th>
-                                                        <th class="text-center">Style</th>
-                                                        <th class="text-center">Gender</th>
-                                                        <th class="text-center">Size</th>
-                                                        <th class="text-center">Color</th>
-                                                        <th class="text-center">Price</th>
-                                                        <th class="text-center">Quantity</th>
+                                                        <th class="text-center text-bold">Article #</th>
+                                                        <th class="text-center text-bold">Brand</th>
+                                                        <th class="text-center text-bold">Style</th>
+                                                        <th class="text-center text-bold">Gender</th>
+                                                        <th class="text-center text-bold">Size</th>
+                                                        <th class="text-center text-bold">Color</th>
+                                                        <th class="text-center text-bold">Price</th>
+                                                        <th class="text-center text-bold">Quantity</th>
                                                     </tr>
                                                     @if (ViewBag.customerSale.Count > 0)
                                                     {
@@ -203,13 +203,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan="6" class="text-right text-bold">Total After Discount</td>
-                                                        <td colspan="2">
-                                                            @{ 
-                                                                var items = Convert.ToDouble(ViewBag.Sale.GrandTotal) * ViewBag.Sale.Discount;
-                                                                TotalPRice = Convert.ToDouble(ViewBag.Sale.GrandTotal) - items;
-                                                                TotalPRice.ToString();
-                                                            }
-                                                        </td>
+                                                        <td colspan="2">@ViewBag.Sale.PriceAfterDiscount</td>
                                                     </tr>
                                                 </table>
                                             </div>
