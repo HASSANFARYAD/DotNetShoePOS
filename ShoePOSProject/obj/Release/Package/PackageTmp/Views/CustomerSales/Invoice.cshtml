@@ -70,7 +70,18 @@
             line-height: 2;
         }
     </style>
+    <style media="print">
+        @@media print {
+            a[href]:after {
+                content: none !important;
+            }
+        }
 
+        @@page {
+            size: auto;
+            margin: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -220,42 +231,7 @@
 
                                         </div>
                                     </div>
-
-                                    <div class="row" style="visibility:hidden">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="control-label text-semibold col-sm-3">Customer:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="control-label text-semibold col-sm-3">Date:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="control-label text-semibold col-sm-3">Sales Rep:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label class="control-label text-semibold col-sm-3">Date:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" placeholder="" value="" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                                                }
+                                    }
                                 </div>
                             </div>
                             <!-- /invoice template -->
@@ -436,27 +412,33 @@
         })();
 
         function generatePDF() {
-            var Url = document.getElementById('Url').value;
-            $("#PrintButton").css({ display: "none" });
-            var SaleId = document.getElementById('SalesId').value;
-            const element = document.getElementById('invoice');
+            //var Url = document.getElementById('Url').value;
+            //$("#PrintButton").css({ display: "none" });
+            //var SaleId = document.getElementById('SalesId').value;
+            //const element = document.getElementById('invoice');
 
-            $.ajax({
-                type: 'POST',
-                url: "../CustomerSales/PostSavePdf",
-                dataType: "json",
-                data: {
-                    Id: SaleId,
-                    Url: Url
-                },
-                success: function (response) {
-                    $("#PrintButton").css({ display: "block" });
-                },
-                error: function () {
-                    $("#PrintButton").css({ display: "block" });
-                    alert("ajax Failed");
-                }
-            });
+            //$.ajax({
+            //    type: 'POST',
+            //    url: "../CustomerSales/PostSavePdf",
+            //    dataType: "json",
+            //    data: {
+            //        Id: SaleId,
+            //        Url: Url
+            //    },
+            //    success: function (response) {
+            //        $("#PrintButton").css({ display: "block" });
+            //    },
+            //    error: function () {
+            //        $("#PrintButton").css({ display: "block" });
+            //        alert("ajax Failed");
+            //    }
+            //});
+            var printContents = document.getElementById("invoice").innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+
         }
     </script>
 </body>
