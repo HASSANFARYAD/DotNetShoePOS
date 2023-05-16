@@ -4,16 +4,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <History>True|2023-05-15T14:01:39.4708845Z;True|2023-05-15T18:57:58.7978306+05:00;True|2023-05-13T18:31:19.7584056+05:00;True|2023-05-12T00:54:52.6004142+05:00;True|2023-05-06T17:35:53.9965243+05:00;True|2023-05-06T17:32:01.4109885+05:00;True|2023-05-06T17:08:03.2840579+05:00;False|2023-05-06T17:05:05.1455594+05:00;False|2023-05-06T17:04:34.6489178+05:00;False|2023-05-06T17:03:21.3029615+05:00;</History>
+    <History>True|2023-05-16T19:29:14.9829840Z;True|2023-05-16T23:39:34.7911047+05:00;True|2023-05-15T19:01:39.4708845+05:00;True|2023-05-15T18:57:58.7978306+05:00;True|2023-05-13T18:31:19.7584056+05:00;True|2023-05-12T00:54:52.6004142+05:00;True|2023-05-06T17:35:53.9965243+05:00;True|2023-05-06T17:32:01.4109885+05:00;True|2023-05-06T17:08:03.2840579+05:00;False|2023-05-06T17:05:05.1455594+05:00;False|2023-05-06T17:04:34.6489178+05:00;False|2023-05-06T17:03:21.3029615+05:00;</History>
     <LastFailureDetails />
     <_PublishTargetUrl>D:\Published\Published ShoePOS</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Data/Database.mdf">
-      <publishTime>05/15/2023 18:57:25</publishTime>
+      <publishTime>05/16/2023 23:33:31</publishTime>
     </File>
     <File Include="App_Data/Database_log.ldf">
-      <publishTime>05/15/2023 18:57:25</publishTime>
+      <publishTime>05/16/2023 23:33:31</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/10/2013 16:29:20</publishTime>
@@ -226,10 +226,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/14/2023 17:46:53</publishTime>
     </File>
     <File Include="bin/ShoePOSProject.dll">
-      <publishTime>05/15/2023 19:01:34</publishTime>
+      <publishTime>05/17/2023 00:29:09</publishTime>
     </File>
     <File Include="bin/ShoePOSProject.pdb">
-      <publishTime>05/15/2023 19:01:34</publishTime>
+      <publishTime>05/17/2023 00:29:09</publishTime>
     </File>
     <File Include="bin/Spire.Pdf.dll">
       <publishTime>04/24/2023 15:37:38</publishTime>
@@ -8616,6 +8616,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Content/assets/ckeditor/styles.js">
       <publishTime>05/03/2023 16:55:18</publishTime>
     </File>
+    <File Include="Content/assets/DownloadExampleFile.xlsx">
+      <publishTime>05/16/2023 23:37:34</publishTime>
+    </File>
     <File Include="Content/assets/ReferenceFile.xlsx">
       <publishTime>05/06/2023 18:16:57</publishTime>
     </File>
@@ -9121,7 +9124,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/13/2023 00:13:57</publishTime>
     </File>
     <File Include="Views/Inventory/UploadExcel.cshtml">
-      <publishTime>05/06/2023 18:17:46</publishTime>
+      <publishTime>05/16/2023 23:38:13</publishTime>
     </File>
     <File Include="Views/Inventory/ViewInventory.cshtml">
       <publishTime>05/14/2023 17:46:52</publishTime>
@@ -9136,7 +9139,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/03/2023 16:55:18</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>05/08/2023 23:35:44</publishTime>
+      <publishTime>05/16/2023 23:13:00</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>05/03/2023 17:34:49</publishTime>
@@ -9145,7 +9148,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/03/2023 17:34:49</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/15/2023 18:57:54</publishTime>
+      <publishTime>05/16/2023 23:39:24</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
+using System.Web.Helpers;
 
 namespace ShoePOSProject.HelpingClasses
 {
@@ -14,6 +15,7 @@ namespace ShoePOSProject.HelpingClasses
         {
             try
             {
+                string Subject = "Forgot Password (Shoe POS)";
                 string MailBody = "<html>" +
                     "<head></head>" +
                     "<body>" +
@@ -34,24 +36,14 @@ namespace ShoePOSProject.HelpingClasses
                     "</div>" + "</center>" +
                             "<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' ></ script ></ body ></ html >";
 
-
-                MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("muhammad.hassan93b@gmail.com");
-                msg.To.Add("muhammad.hassan93b@gmail.com");
-                msg.Subject = "POS - Forgot Password";
-                msg.IsBodyHtml = true;
-                msg.Body = MailBody;
-                using (SmtpClient client = new SmtpClient())
+                if (SendEmail(email, Subject, MailBody))
                 {
-                    client.EnableSsl = true;
-                    client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "qwerty_123!@#");
-                    client.Host = "smtp.gmail.com";
-                    client.Port = 587;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.Send(msg);
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             catch
             {
@@ -63,32 +55,23 @@ namespace ShoePOSProject.HelpingClasses
         public bool EmailSend(Exception e)
         {
             MailMessage msg = new MailMessage();
+            string Subject = "Exception (Shoe POS)";
             string text = "<link href='https://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet'><style>  * {";
             text += "  font-family: 'Bree Serif', serif; }";
             text += " .list-group-item {       border: none;  }    .hor {      border-bottom: 5px solid black;   }";
             text += " .line {       margin-bottom: 20px; }";
-            msg.From = new MailAddress("madeyes1122@gmail.com");
-            msg.To.Add("muhammad.hassan93b@gmail.com");
-            msg.Subject = "Storage Shed Project Error";
-            msg.IsBodyHtml = true;
+            
             string temp = "Error" + e ;
             temp += "<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' ></ script ></ body ></ html >";
 
-            string link = "Storage Shed";
-            link = link.Replace("+", "%20");
-            temp = temp.Replace("LINKFORFORGOTPASSWORD", link);
-            msg.Body = temp;
-            using (SmtpClient client = new SmtpClient())
+            if (SendEmail(ProjectVariables.ToEmail, Subject, temp))
             {
-                client.EnableSsl = true;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "qwerty_123!@#");
-                client.Host = "smtp.gmail.com";
-                client.Port = 25;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.Send(msg);
+                return true;
             }
-            return true;
+            else
+            {
+                return false;
+            }
         }
 
         //Email Verification
@@ -96,6 +79,7 @@ namespace ShoePOSProject.HelpingClasses
         {
             try
             {
+                string Subject = "Verification Email";
                 string MailBody = "<html>" +
                     "<head></head>" +
                     "<body>" +
@@ -117,26 +101,14 @@ namespace ShoePOSProject.HelpingClasses
                             "<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' ></ script ></ body ></ html >";
 
 
-                MailMessage msg = new MailMessage();
-                msg.From = new MailAddress("madeyes1122@gmail.com");
-                msg.To.Add("muhammad.hassan93b@gmail.com");
-                msg.Subject = "Storage Shed Project Error";
-                msg.IsBodyHtml = true;
-                
-                string link = "Storage Shed";
-                link = link.Replace("+", "%20");
-                msg.Body = MailBody;
-                using (SmtpClient client = new SmtpClient())
+                if (SendEmail(email, Subject, MailBody))
                 {
-                    client.EnableSsl = true;
-                    client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "qwerty_123!@#");
-                    client.Host = "smtp.gmail.com";
-                    client.Port = 25;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.Send(msg);
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
 
             }
             catch
@@ -156,7 +128,14 @@ namespace ShoePOSProject.HelpingClasses
                     msg +
                     "</body></html>";
 
-                return SendEmail(ProjectVariables.ToEmail, SubjectBody, MailBody);
+                if(SendEmail(ProjectVariables.ToEmail, SubjectBody, MailBody))
+                {
+                    return true; 
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch
             {
@@ -178,9 +157,9 @@ namespace ShoePOSProject.HelpingClasses
                 {
                     client.EnableSsl = true;
                     client.UseDefaultCredentials = false;
-                    client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "qwerty_123!@#");
+                    client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "cduldnlpwqzxaxxd");
                     client.Host = "smtp.gmail.com";
-                    client.Port = 587;
+                    client.Port = 25;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.Send(msg);
                 }
