@@ -70,15 +70,8 @@
                 <div class="row">
                     <div class="col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label><strong>Customer Name:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchName">
-                        </div>
-                    </div>
-
-                    <div class="col-md-4 col-lg-4">
-                        <div class="form-group">
-                            <label><strong>Inventory Brand:</strong></label>
-                            <input type="text" placeholder="" class="form-control" id="searchBrand">
+                            <label><strong>Invoice #:</strong></label>
+                            <input type="text" placeholder="" class="form-control" id="searchInvoice">
                         </div>
                     </div>
 
@@ -88,7 +81,7 @@
 
                             <div class="col-md-4 col-lg-4">
                                 <div class="form-group">
-                                    <label><strong>Delaer Name:</strong></label>
+                                    <label><strong>Sales Person:</strong></label>
                                     <select class="select" id="searchDealer" data-placeholder="Choose Dealer...">
                                         <option value="">Choose Dealer...</option>
                                         @foreach (var x in ViewBag.users)
@@ -100,6 +93,38 @@
                             </div>
                         }
                     }
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label><strong>By Period:</strong></label>
+                            <select class="form-control select" id="searchDate" onchange="searchDate(this.value)">
+                                <option value="">Select Period</option>
+                                <option value="Today">Today</option>
+                                <option value="Yesterday">Yesterday</option>
+                                <option value="CurrentWeek">This Week</option>
+                                <option value="LastWeek">Last Week</option>
+                                <option value="CurrentMonth">This Month</option>
+                                <option value="LastMonth">Last Month</option>
+                                <option value="Custom">Custom</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="" id="CustomSearchFilter" style="display:none">
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label><strong>Start Date:</strong></label>
+                                <input type="date" class="form-control" id="searchStartDate">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label><strong>End Date:</strong></label>
+                                <input type="date" class="form-control" id="searchEndDate">
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <div class="row">
@@ -153,191 +178,82 @@
 </div>
 
 <script>
-    $('#CustomerSalesTable').DataTable(
-    {
-        "ajax":
-        {
-            "url": '@Url.Action("GetCustomerOrdersList", "CustomerSales")',
-            "type": "POST",
-            "datatype": "json",
-        },
-        'columns':
-            [
-                { "data": "CustomerSalesSerialNumber", "name": "InvoiceId" },
-                { "data": "CustomerName", "name": "CustomerId" },
-                { "data": "CustomerSalesCashPrice", "name": "GrandTotal" },
-                { "data": "CustomerSalesCreatedBy", "name": "CreatedBy" },
-                { "data": "Action", "name": "" }
-            ],
-        'columnDefs':
-        [
-            {
-                "targets": 0,
-                'className': 'col-lg-2',
-                "render": function(data, type, full, meta) {
-                    return full.CustomerSalesSerialNumber;
-                }
-            },
-            {
-                "targets": 1,
-                'className': 'col-lg-3',
-                "render": function (data, type, full, meta) {
-                    return full.CustomerName;
-                }
-            },
-            {
-                "targets": 2,
-                'className': 'col-lg-4',
-                "render": function (data, type, full, meta) {
-                    return full.CustomerSalesCashPrice;
-                }
-            },
-            {
-                "targets": 3,
-                'className': 'col-lg-2',
-                "render": function (data, type, full, meta) {
-                    return full.CustomerSalesCreatedBy;
-                }
-            },
-            {
-                "targets": 4,
-                'className': 'col-lg-1',
-                'searchable': false,
-                'orderable': false,
-                "render": function (data, type, full, meta)
-                {
-                    if (full.Role == 1) {
-                        return '<ul class="icons-list text-center">' +
-                                '<li class="dropdown"> ' +
-                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
-                                        '<i class="icon-menu9"></i >' +
-                                    '</a >' +
-                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
-                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.CustomerSalesId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
-                                        '<li><a class="text-danger" href="../CustomerSales/Invoice?Id=' + full.CustomerSalesEncryptedId + '" target="_blank"><i class="icon-file-pdf"></i> Details/Invoice</a></li>' +
-                                    '</ul>' +
-                                '</li>' +
-                            '</ul>';
-                    }
-                    else {
-                        return '<ul class="icons-list text-center">' +
-                                '<li class="dropdown"> ' +
-                                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
-                                        '<i class="icon-menu9"></i >' +
-                                    '</a >' +
-                                    '<ul class="dropdown-menu dropdown-menu-right"> ' +
-                            '<li><a class="text-danger" href="../CustomerSales/Invoice?Id=' + full.CustomerSalesEncryptedId + '" target="_blank"><i class="icon-file-pdf"></i> Details/Invoice</a></li>' +
-                                    '</ul>' +
-                                '</li>' +
-                            '</ul>';
-                    }
-                }
-            }
-        ],
-       "serverSide": "true",
-        "processing": "true",
-        "language":
-        {
-            "processing": "<i class='icon-spinner spinner icon-3x'></i>",
-            "search": "<span>Search :</span> _INPUT_",
-            "searchPlaceholder": "Type to Filter",
-            "lengthMenu": "<span>Show :</span> _MENU_",
-            "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-        },
-    });
-
-
-    function SearchSales()
+    var LoggedInUserRole = '@gp.validateUser().Role';
+    List();
+    function List(Invoice, SalesPerson, Custom, StartDate, EndDate)
     {
         $('#CustomerSalesTable').DataTable().clear();
         $('#CustomerSalesTable').DataTable().destroy();
-        var Name = $('#searchName').val();
-        var Brand = $('#searchBrand').val();
-        var Serial = $('#searchSerial').val();
-        var Dealer = $('#searchDealer').val();
         $('#CustomerSalesTable').DataTable(
         {
             "ajax":
             {
-                "url": '@Url.Action("GetCusomersSaleList", "CustomerSales")',
+                "url": '@Url.Action("GetCustomerOrdersList", "CustomerSales")',
                 "type": "Post",
                 "datatype": "json",
                 "data": {
-                    Name: Name,
-                    Brand: Brand,
-                    Serial: Serial,
-                    Dealer: Dealer
+                    Invoice: Invoice,
+                    SalesPerson: SalesPerson,
+                    Custom: Custom,
+                    StartDate: StartDate,
+                    EndDate: EndDate
                 }
             },
-        'columns':
+            'columns':
             [
-                { "data": "CustomerName", "name": "CustomerId" },
-                { "data": "Brand", "name": "InventoryId" },
-                { "data": "CustomerSalesSerialNumber", "name": "SerialNumber" },
-                { "data": "CustomerSalesCashPrice", "name": "CashPrice" },
-                { "data": "CustomerSalesOwnership", "name": "OwnershipTerm" },
+                { "data": "CustomerSalesSerialNumber", "name": "InvoiceId" },
+                { "data": "CustomerName", "name": "customer" },
+                { "data": "CustomerSalesCashPrice", "name": "GrandTotal" },
                 { "data": "CustomerSalesCreatedBy", "name": "CreatedBy" },
                 { "data": "Action", "name": "" }
             ],
-        'columnDefs':
+            'columnDefs':
             [
                 {
                     "targets": 0,
                     'className': 'col-lg-2',
                     "render": function (data, type, full, meta) {
-                        return full.CustomerName;
+                        return full.CustomerSalesSerialNumber;
                     }
                 },
                 {
                     "targets": 1,
                     'className': 'col-lg-3',
                     "render": function (data, type, full, meta) {
-                        return full.Brand;
+                        return full.CustomerName;
                     }
                 },
                 {
                     "targets": 2,
                     'className': 'col-lg-4',
                     "render": function (data, type, full, meta) {
-                        return full.CustomerSalesSerialNumber;
+                        return full.CustomerSalesCashPrice;
                     }
                 },
                 {
                     "targets": 3,
                     'className': 'col-lg-2',
                     "render": function (data, type, full, meta) {
-                        return full.CustomerSalesCashPrice;
-                    }
-                },
-                {
-                    "targets": 4,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.CustomerSalesOwnership;
-                    }
-                },
-                {
-                    "targets": 5,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
                         return full.CustomerSalesCreatedBy;
                     }
                 },
                 {
-                    "targets": 6,
+                    "targets": 4,
                     'className': 'col-lg-1',
                     'searchable': false,
                     'orderable': false,
                     "render": function (data, type, full, meta) {
+                        var getDetails = "";
+                        if (LoggedInUserRole == "1") {
+                            getDetails = '<li><a class="text-success" href="../CustomerSales/Details?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-design"></i> Details</a></li>';
+                        }
                         return '<ul class="icons-list text-center">' +
                             '<li class="dropdown"> ' +
                             '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
                             '<i class="icon-menu9"></i >' +
                             '</a >' +
                             '<ul class="dropdown-menu dropdown-menu-right"> ' +
-                            '<li><a class="text-primary" href="../CustomerSales/UpdateCustomerSales?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
-                            '<li><a class="text-success" href="../CustomerSales/Details?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
-                            '<li><a class="text-danger" onclick="deleteFunction(' + full.CustomerSalesId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                            getDetails +
                             '<li><a class="text-danger" href="../CustomerSales/Invoice?Id=' + full.CustomerSalesEncryptedId + '"><i class="icon-file-pdf"></i> Invoice</a></li>' +
                             '</ul>' +
                             '</li>' +
@@ -358,9 +274,26 @@
         });
     }
 
+    function SearchSales() {
+        var Invoice = $('#searchInvoice').val();
+        var SalesPerson = $('#searchDealer').val();
+        var Custom = $('#searchDate').val();
+        var StartDate = $("#searchStartDate").val();
+        var EndDate = $("#searchEndDate").val();
+        List(Invoice, SalesPerson, Custom, StartDate, EndDate);
+    }
+
     function deleteFunction(id) {
         $("#CustomerDeleteId").val(id);
         $("#DeleteModal").modal('show');
     }
 
+    function searchDate(value) {
+        if (value == "Custom") {
+            $("#CustomSearchFilter").css("display", "block");
+        }
+        else {
+            $("#CustomSearchFilter").css("display", "none");
+        }
+    }
 </script>

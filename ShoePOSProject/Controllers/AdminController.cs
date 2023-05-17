@@ -542,6 +542,8 @@ namespace ShoePOSProject.Controllers
                                         claim.extra1 = workSheet.Cells[rowIterator, 8].Value == null ? string.Empty : workSheet.Cells[rowIterator, 8].Value.ToString();
                                         claim.Price = workSheet.Cells[rowIterator, 12].Value == null ? string.Empty : workSheet.Cells[rowIterator, 12].Value.ToString();
                                         claim.SalePrice = workSheet.Cells[rowIterator, 13].Value == null ? string.Empty : workSheet.Cells[rowIterator, 13].Value.ToString();
+                                        //var dat = workSheet.Cells[rowIterator, 14].Value == null ? string.Empty : workSheet.Cells[rowIterator, 14].Value.ToString();
+                                        //claim.InventoryDate = Convert.ToDateTime(dat);
                                         claim.InventoryDate = gp.CurrentDateTime();
                                         claim.IsActive = 1;
                                         claim.CreatedAt = DateTime.Now;

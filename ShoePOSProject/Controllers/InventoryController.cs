@@ -24,10 +24,11 @@ namespace ShoePOSProject.Controllers
         DatabaseEntities db = new DatabaseEntities();
         GeneralPurpose gp = new GeneralPurpose();
         MailSender ms = new MailSender();
-
+        User LoggedInUser = new User();
         private bool isLogedIn()
         {
-            if (gp.validateUser() != null)
+            LoggedInUser = gp.validateUser();
+            if (LoggedInUser != null)
             {
                 return true;
             }
@@ -53,23 +54,67 @@ namespace ShoePOSProject.Controllers
                 ViewBag.successfullmessage = message;
                 ViewBag.color = color;
             }
+            ViewBag.UserRole = LoggedInUser.Role;
             return View();
         }
 
         [HttpPost]
         public ActionResult GetInventoryList(string Serial = "", int Style = -1,
             int Brand = -1, int Color = -1, int Collection = -1, int Gender = -1, int Size = -1,
-            string Price = "", string SalePrice = "", string Date = "", int Discount = -1)
+            string Price = "", string SalePrice = "", string Date = "", int Discount = -1,
+            string Custom = "", string StartDate = "", string EndDate = "")
         {
             List<Inventory> IList = new List<Inventory>();
+            DateTime currentDateTime = gp.CurrentDateTime().Date;
+            bool isSunday = currentDateTime.DayOfWeek == 0;
+            var dayOfweek = isSunday == false ? (int)currentDateTime.DayOfWeek : 7;
 
-            if(gp.validateUser().Role == 1)
+            DateTime Today = currentDateTime;
+            DateTime yesterday = currentDateTime.AddDays(-1);
+            DateTime CurrentWeekStartDate = currentDateTime.AddDays(((int)dayOfweek * -1) + 1);
+            DateTime CurrentWeekEndDate = CurrentWeekStartDate.AddDays(7).AddSeconds(-1);
+            DateTime LastWeekStartDate = CurrentWeekStartDate.AddDays(-7);
+            DateTime LastWeekEndDate = CurrentWeekStartDate.AddSeconds(-1);
+            DateTime thisMonthStart = currentDateTime.AddDays(1 - currentDateTime.Day);
+            DateTime thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+            DateTime lastMonthStart = thisMonthStart.AddMonths(-1);
+            DateTime lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+            IList = new InventoryBL().GetActiveInventoriesList(db).OrderByDescending(x => x.Id).ToList();
+            
+
+            if (Custom == "Yesterday")
             {
-                IList = new InventoryBL().GetActiveInventoriesList(db).OrderByDescending(x => x.Id).ToList();
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date == Convert.ToDateTime(yesterday).Date).ToList();
             }
-            else
+            if (Custom == "Today")
             {
-                IList = new InventoryBL().GetActiveInventoriesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date == Convert.ToDateTime(Today).Date).ToList();
+            }
+            if (Custom == "CurrentWeek")
+            {
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date >= Convert.ToDateTime(CurrentWeekStartDate).Date &&
+                Convert.ToDateTime(x.InventoryDate).Date <= Convert.ToDateTime(CurrentWeekEndDate).Date).ToList();
+            }
+            if (Custom == "LastWeek")
+            {
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date >= Convert.ToDateTime(LastWeekStartDate).Date &&
+                Convert.ToDateTime(x.InventoryDate).Date <= Convert.ToDateTime(LastWeekEndDate).Date).ToList();
+            }
+            if (Custom == "CurrentMonth")
+            {
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date >= Convert.ToDateTime(thisMonthStart).Date &&
+                Convert.ToDateTime(x.InventoryDate).Date <= Convert.ToDateTime(thisMonthEnd).Date).ToList();
+            }
+            if (Custom == "LastMonth")
+            {
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date >= Convert.ToDateTime(lastMonthStart).Date &&
+                Convert.ToDateTime(x.InventoryDate).Date <= Convert.ToDateTime(lastMonthEnd).Date).ToList();
+            }
+            if (!string.IsNullOrEmpty(StartDate) && !string.IsNullOrEmpty(EndDate))
+            {
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date >= Convert.ToDateTime(StartDate).Date &&
+                Convert.ToDateTime(x.InventoryDate).Date <= Convert.ToDateTime(EndDate).Date).ToList();
             }
 
             if (Serial != "")
@@ -110,7 +155,7 @@ namespace ShoePOSProject.Controllers
             }
             if (Date != "")
             {
-                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).ToShortDateString() == Convert.ToDateTime(Date).ToShortDateString()).ToList();
+                IList = IList.Where(x => Convert.ToDateTime(x.InventoryDate).Date == Convert.ToDateTime(Date).Date).ToList();
             }
             if (Discount != -1)
             {
@@ -172,9 +217,8 @@ namespace ShoePOSProject.Controllers
                 }
                 if(u.InventoryDate != null)
                 {
-                    DateTime dt = DateTime.Now;
                     DateTime date = Convert.ToDateTime(u.InventoryDate);
-                    Daysonlot = (int)(dt - date).TotalDays;
+                    Daysonlot = (int)(currentDateTime - date).TotalDays;
                 }
                 DTO obj = new DTO()
                 {
@@ -739,8 +783,7 @@ namespace ShoePOSProject.Controllers
         public async Task<ActionResult> getBsst(int categoryName = -1)
         {
             List<BSST> list = new BsstBL().GetActiveBSSTsList(db).OrderByDescending(x => x.Id).ToList();
-            if (gp.validateUser().Role == 1)
-            {
+            
                 if (categoryName == 1)
                 {
                     list = list.Where(x => x.BsstCategoryId == 1).ToList();
@@ -765,34 +808,6 @@ namespace ShoePOSProject.Controllers
                 {
                     list = list.Where(x => x.BsstCategoryId == 4).ToList();
                 }
-            }
-            else
-            {
-                if (categoryName == 1)
-                {
-                    list = list.Where(x => x.BsstCategoryId == 1 && x.CreatedBy == gp.validateUser().Id).ToList();
-                }
-                if (categoryName == 2)
-                {
-                    list = list.Where(x => x.BsstCategoryId == 2 && x.CreatedBy == gp.validateUser().Id).ToList();
-                }
-                if (categoryName == 3)
-                {
-                    list = list.Where(x => x.BsstCategoryId == 3 && x.CreatedBy == gp.validateUser().Id).ToList();
-                }
-                if (categoryName == 5)
-                {
-                    list = list.Where(x => x.BsstCategoryId == 5 && x.CreatedBy == gp.validateUser().Id).ToList();
-                }
-                if (categoryName == 6)
-                {
-                    list = list.Where(x => x.BsstCategoryId == 6 && x.CreatedBy == gp.validateUser().Id).ToList();
-                }
-                if (categoryName == 4)
-                {
-                    list = list.Where(x => x.BsstCategoryId == 4 && x.CreatedBy == gp.validateUser().Id).ToList();
-                }
-            }
 
             List<DTO> bsstDto = new List<DTO>();
             foreach(var item in list)
@@ -837,15 +852,8 @@ namespace ShoePOSProject.Controllers
         public ActionResult GetInventory(int InventoryId = -1)
         {
             List<Inventory> IList = new List<Inventory>();
-
-            if (gp.validateUser().Role == 1)
-            {
-                IList = new InventoryBL().GetActiveInventoriesList(db).OrderByDescending(x => x.Id).ToList();
-            }
-            else
-            {
-                IList = new InventoryBL().GetActiveInventoriesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-            }
+            IList = new InventoryBL().GetActiveInventoriesList(db).OrderByDescending(x => x.Id).ToList();
+            
             if(InventoryId != -1)
             {
                 IList = IList.Where(x => x.Id ==  InventoryId).ToList();

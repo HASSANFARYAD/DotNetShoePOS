@@ -21,7 +21,7 @@ namespace ShoePOSProject.BL
 
         public bool AddCustomer(Customer _Customer, DatabaseEntities de)
         {
-            if (_Customer.Name == null || _Customer.EmailAddress == null || _Customer.PrimaryPhone == null)
+            if (_Customer.IsActive == null)
             {
                 return false;
             }
@@ -33,7 +33,7 @@ namespace ShoePOSProject.BL
 
         public int AddCustomer2(Customer _Customer, DatabaseEntities de)
         {
-            if (_Customer.Name == null || _Customer.EmailAddress == null || _Customer.PrimaryPhone == null)
+            if (_Customer.IsActive == null)
             {
                 return -1;
             }
@@ -45,7 +45,7 @@ namespace ShoePOSProject.BL
 
         public bool UpdateCustomer(Customer _Customer, DatabaseEntities de)
         {
-            if (_Customer.Name == "" || _Customer.EmailAddress == null || _Customer.PrimaryPhone == "")
+            if (_Customer.IsActive == null)
             {
                 return false;
             }

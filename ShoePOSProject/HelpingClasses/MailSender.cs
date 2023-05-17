@@ -159,7 +159,7 @@ namespace ShoePOSProject.HelpingClasses
                     client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential("muhammad.hassan93b@gmail.com", "cduldnlpwqzxaxxd");
                     client.Host = "smtp.gmail.com";
-                    client.Port = 25;
+                    client.Port = 587;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.Send(msg);
                 }

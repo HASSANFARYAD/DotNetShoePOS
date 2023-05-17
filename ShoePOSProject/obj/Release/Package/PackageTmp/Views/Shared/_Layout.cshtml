@@ -110,15 +110,7 @@
     <!-- Main navbar -->
     <div class="navbar navbar-default header-highlight">
         <div class="navbar-header">
-            @if (loggedInUser.Profile != null)
-            {
-                <a class="navbar-brand" href="@Url.Action("Index","Home")"><img src="@loggedInUser.Profile" alt="" style="width:150px; height:20px;"></a>
-            }
-            else
-            {
-                <a class="navbar-brand" href="@Url.Action("Index","Home")"><img src="" alt=""></a>
-            }
-
+            <a class="navbar-brand" href="@Url.Action("Index","Home")"><img src="" alt=""></a>
             <ul class="nav navbar-nav visible-xs-block">
                 <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
                 <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
@@ -168,7 +160,16 @@
                     <div class="sidebar-user">
                         <div class="category-content">
                             <div class="media">
-                                <a href="#" class="media-left"><img src="~/Content/assets/assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
+                                <a href="#" class="media-left">
+                                    @if (loggedInUser.Profile == null)
+                                    {
+                                        <img src="~/Content/assets/assets/images/placeholder.jpg" class="img-circle img-sm" alt="">
+                                    }
+                                    else
+                                    {
+                                        <img src="@loggedInUser.Profile" class="img-circle img-sm" alt="">
+                                    }
+                                </a>
                                 <div class="media-body">
                                     <span class="media-heading text-semibold">@loggedInUser.Name</span>
                                     <div class="text-size-mini text-muted">
@@ -209,7 +210,7 @@
                                 <li>
                                     <a href="#"><i class="icon-people"></i> <span>Manage Customer</span></a>
                                     <ul>
-                                        <li><a href="@Url.Action("NewCustomer","Customer")">Add New Customer</a></li>
+                                        @*<li><a href="@Url.Action("NewCustomer","Customer")">Add New Customer</a></li>*@
                                         <li><a href="@Url.Action("ViewCustomer","Customer")">View Customers</a></li>
                                     </ul>
                                 </li>
@@ -226,8 +227,11 @@
                                     <a href="#"><i class="icon-droplet2"></i> <span>Sales</span></a>
                                     <ul>
                                         <li><a href="@Url.Action("NewCustomerSales","CustomerSales")">Add New Sales</a></li>
-                                        <li><a href="@Url.Action("ViewCustomerSales","CustomerSales")">View Sales</a></li>
-                                    </ul>
+                                        @if (loggedInUser.Role == 1)
+                                        {
+                                            <li><a href="@Url.Action("ViewCustomerSales", "CustomerSales")">View Sales</a></li>
+                                        }
+                                        </ul>
                                 </li>
                                 <li>
                                     <a href="@Url.Action("Index","Bsst")"><i class="icon-tree5"></i> <span>Category</span></a>
@@ -235,40 +239,6 @@
                                 @*<li>
                                     <a href="@Url.Action("Index","Option")"><i class="icon-opt"></i> <span>New Options</span></a>
                                 </li>*@
-                                @*<li>
-                                        <a href="#"><i class="icon-stack"></i> <span>Starter kit</span></a>
-                                        <ul>
-                                            <li><a href="starters/horizontal_nav.html">Horizontal navigation</a></li>
-                                            <li><a href="starters/1_col.html">1 column</a></li>
-                                            <li><a href="starters/2_col.html">2 columns</a></li>
-                                            <li>
-                                                <a href="#">3 columns</a>
-                                                <ul>
-                                                    <li><a href="starters/3_col_dual.html">Dual sidebars</a></li>
-                                                    <li><a href="starters/3_col_double.html">Double sidebars</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="starters/4_col.html">4 columns</a></li>
-                                            <li>
-                                                <a href="#">Detached layout</a>
-                                                <ul>
-                                                    <li><a href="starters/detached_left.html">Left sidebar</a></li>
-                                                    <li><a href="starters/detached_right.html">Right sidebar</a></li>
-                                                    <li><a href="starters/detached_sticky.html">Sticky sidebar</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="starters/layout_boxed.html">Boxed layout</a></li>
-                                            <li class="navigation-divider"></li>
-                                            <li><a href="starters/layout_navbar_fixed_main.html">Fixed main navbar</a></li>
-                                            <li><a href="starters/layout_navbar_fixed_secondary.html">Fixed secondary navbar</a></li>
-                                            <li><a href="starters/layout_navbar_fixed_both.html">Both navbars fixed</a></li>
-                                            <li><a href="starters/layout_fixed.html">Fixed layout</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="changelog.html"><i class="icon-list-unordered"></i> <span>Changelog <span class="label bg-blue-400">1.6</span></span></a></li>
-                                    <li><a href="../../RTL/default/index.html"><i class="icon-width"></i> <span>RTL version</span></a></li>*@
-                                <!-- /main -->
-
                             </ul>
                         </div>
                     </div>

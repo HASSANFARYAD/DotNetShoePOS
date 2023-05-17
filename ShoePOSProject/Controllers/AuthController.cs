@@ -230,10 +230,7 @@ namespace ShoePOSProject.Controllers
                 return RedirectToAction("Login", "Auth");
             }
             User user = new UserBL().GetActiveUsersList(db).Where(x => x.Id == newData.Id).FirstOrDefault();
-            if (newData.Name == user.Name && newData.Email == user.Email && newData.Phone == user.Phone && newData.Address == user.Address)
-            {
-                return RedirectToAction("EditProfile", new { msg = "No change to update!", color = "red" });
-            }
+            
             if (new UserBL().GetActiveUsersList(db).Where(x => x.Email == newData.Email && x.Id != newData.Id).FirstOrDefault() != null)
             {
                 return RedirectToAction("EditProfile", new { msg = "Email has already been taken!", color = "red" });
@@ -263,7 +260,7 @@ namespace ShoePOSProject.Controllers
                         int width = img.Width;
                         if (height != 70 && width != 200)
                         {
-                            return RedirectToAction("AddUser", new { msg = "Width and Height of Image/Logo should be 200 x 70", color = "red" });
+                            //return RedirectToAction("AddUser", new { msg = "Width and Height of Image/Logo should be 200 x 70", color = "red" });
                         }
                         filenamenoext = "_" + DateTime.Now.ToString("yymmddfff") + "_" + Profile.FileName;
                         string path = Path.Combine(Server.MapPath("~/Content/UserPictures"), filenamenoext);

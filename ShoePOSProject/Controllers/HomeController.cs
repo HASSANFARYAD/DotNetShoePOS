@@ -13,10 +13,11 @@ namespace ShoePOSProject.Controllers
     {
         DatabaseEntities db = new DatabaseEntities();
         GeneralPurpose gp = new GeneralPurpose();
-
+        User LoggedInUser = new User();
         private bool isLogedIn()
         {
-            if (gp.validateUser() != null)
+            LoggedInUser = gp.validateUser();
+            if (LoggedInUser != null)
             {
                 return true;
             }
@@ -32,26 +33,11 @@ namespace ShoePOSProject.Controllers
             {
                 return RedirectToAction("Login", "Auth");
             }
-            User LoggedInUser = gp.validateUser();
             //For Admin
-            if(LoggedInUser.Role == 1)
-            {
-                ViewBag.Brand = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1).ToList().Count;
-                ViewBag.Size = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2).ToList().Count;
-                ViewBag.Color = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4).ToList().Count;
-                ViewBag.Customer = new CustomerBL().GetActiveCustomersList(db).Count;
-                ViewBag.Products = new InventoryBL().GetActiveInventoriesList(db).Count;
-            }
-            else
-            {
-                ViewBag.Brand = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
-                ViewBag.Size = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
-                ViewBag.Color = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4 && x.CreatedBy == LoggedInUser.Id).ToList().Count;
-                ViewBag.Customer = new CustomerBL().GetActiveCustomersList(db).Where(x => x.CreatedBy== LoggedInUser.Id).ToList().Count;
-                ViewBag.Products = new InventoryBL().GetActiveInventoriesList(db).Where(x => x.CreatedBy == LoggedInUser.Id).ToList().Count;
-            }
-            
-            ViewBag.Role = gp.validateUser().Role;
+            ViewBag.Customer = new CustomerBL().GetActiveCustomersList(db).Count;
+            ViewBag.Products = new InventoryBL().GetActiveInventoriesList(db).Count;
+
+            ViewBag.Role = LoggedInUser.Role;
             return View();
         }
 

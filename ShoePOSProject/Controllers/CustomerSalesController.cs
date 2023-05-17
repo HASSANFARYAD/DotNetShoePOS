@@ -15,6 +15,7 @@ using System.Data.Entity;
 using System.Linq.Expressions;
 using ShoePOSProject.DL;
 using System.Xml.Linq;
+using System.Collections;
 
 namespace ShoePOSProject.Controllers
 {
@@ -93,6 +94,9 @@ namespace ShoePOSProject.Controllers
                     customer1.EmailAddress = customer.EmailAddress;
                     customer1.DateOfBirth = customer.DateOfBirth;
                     customer1.PrimaryPhone = customer.PrimaryPhone;
+                    customer1.IsActive = 1;
+                    customer1.CreatedAt = gp.CurrentDateTime();
+                    customer1.CreatedBy = gp.validateUser().Id;
                     CustomerSales.CustomerId = new CustomerBL().AddCustomer2(customer1, db);
                     if (CustomerSales.CustomerId == -1)
                     {
@@ -113,7 +117,7 @@ namespace ShoePOSProject.Controllers
                     CustomerSales.InvoiceId = getInoviceId;
                     if (new CustomerSalesBL().AddCustomerSale(CustomerSales, db))
                     {
-                        Price = Convert.ToDouble(CustomerSales.CashPrice);
+                        Price = Convert.ToDouble(CustomerSales.CashPrice) * Convert.ToDouble(CustomerSales.Quantity);
                         InventoryId.Add((int)CustomerSales.InventoryId);
                         Quantities.Add((int)CustomerSales.Quantity);
                         if (count > 0)
@@ -135,7 +139,8 @@ namespace ShoePOSProject.Controllers
                                 bool c = new CustomerSalesBL().AddCustomerSale(optionInventory, db);
                                 InventoryId.Add((int)optionInventory.InventoryId);
                                 Quantities.Add((int)optionInventory.Quantity);
-                                Price = Price + Convert.ToDouble(optionInventory.CashPrice);
+                                var OtherInventoriesSales = Convert.ToDouble(optionInventory.CashPrice) * Convert.ToDouble(optionInventory.Quantity);
+                                Price = Price + OtherInventoriesSales;
                                 if (c == false)
                                 {
                                     throw new Exception();
@@ -186,9 +191,24 @@ namespace ShoePOSProject.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCusomersSaleList(string Name = "", string Brand = "", string Serial = "", int Dealer = -1)
+        public ActionResult GetCusomersSaleList(string Invoice = "", int SalesPerson = -1,
+            string Custom = "", string StartDate = "", string EndDate = "")
         {
             List<CustomerSale> CList = new List<CustomerSale>();
+            DateTime currentDateTime = gp.CurrentDateTime().Date;
+            bool isSunday = currentDateTime.DayOfWeek == 0;
+            var dayOfweek = isSunday == false ? (int)currentDateTime.DayOfWeek : 7;
+
+            DateTime Today = currentDateTime;
+            DateTime yesterday = currentDateTime.AddDays(-1);
+            DateTime CurrentWeekStartDate = currentDateTime.AddDays(((int)dayOfweek * -1) + 1);
+            DateTime CurrentWeekEndDate = CurrentWeekStartDate.AddDays(7).AddSeconds(-1);
+            DateTime LastWeekStartDate = CurrentWeekStartDate.AddDays(-7);
+            DateTime LastWeekEndDate = CurrentWeekStartDate.AddSeconds(-1);
+            DateTime thisMonthStart = currentDateTime.AddDays(1 - currentDateTime.Day);
+            DateTime thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+            DateTime lastMonthStart = thisMonthStart.AddMonths(-1);
+            DateTime lastMonthEnd = thisMonthStart.AddSeconds(-1);
 
             if (gp.validateUser().Role == 1)
             {
@@ -199,19 +219,48 @@ namespace ShoePOSProject.Controllers
                 CList = new CustomerSalesBL().GetActiveCustomerSalesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
             }
 
-            if (Name != "")
+            if (Custom == "Yesterday")
             {
-                CList = CList.Where(x => x.Customer.Name.ToLower().Contains(Name.ToLower())).ToList();
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date == Convert.ToDateTime(yesterday).Date).ToList();
+            }
+            if (Custom == "Today")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date == Convert.ToDateTime(Today).Date).ToList();
+            }
+            if (Custom == "CurrentWeek")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date >= Convert.ToDateTime(CurrentWeekStartDate).Date &&
+                Convert.ToDateTime(x.OrderDate).Date <= Convert.ToDateTime(CurrentWeekEndDate).Date).ToList();
+            }
+            if (Custom == "LastWeek")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date >= Convert.ToDateTime(LastWeekStartDate).Date &&
+                Convert.ToDateTime(x.OrderDate).Date <= Convert.ToDateTime(LastWeekEndDate).Date).ToList();
+            }
+            if (Custom == "CurrentMonth")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date >= Convert.ToDateTime(thisMonthStart).Date &&
+                Convert.ToDateTime(x.OrderDate).Date <= Convert.ToDateTime(thisMonthEnd).Date).ToList();
+            }
+            if (Custom == "LastMonth")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date >= Convert.ToDateTime(lastMonthStart).Date &&
+                Convert.ToDateTime(x.OrderDate).Date <= Convert.ToDateTime(lastMonthEnd).Date).ToList();
+            }
+            if (!string.IsNullOrEmpty(StartDate) && !string.IsNullOrEmpty(EndDate))
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.OrderDate).Date >= Convert.ToDateTime(StartDate).Date &&
+                Convert.ToDateTime(x.OrderDate).Date <= Convert.ToDateTime(EndDate).Date).ToList();
             }
 
-            if (Serial != "")
+            if (Invoice != "")
             {
-                CList = CList.Where(x => x.Inventory.BarcodeNo.ToLower().Contains(Serial.ToLower())).ToList();
+                CList = CList.Where(x => x.InvoiceId.ToString().ToLower().Contains(Invoice.ToLower())).ToList();
             }
 
-            if (Dealer != -1)
+            if (SalesPerson != -1)
             {
-                CList = CList.Where(x => x.CreatedBy == Dealer).ToList();
+                CList = CList.Where(x => x.CreatedBy == SalesPerson).ToList();
             }
 
             int start = Convert.ToInt32(Request["start"]);
@@ -222,14 +271,36 @@ namespace ShoePOSProject.Controllers
 
             if (sortColumnName != "" && sortColumnName != null)
             {
-                if (sortDirection == "asc")
-                {
-                    CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
-                }
-                else
-                {
-                    CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
-                }
+                //if (sortDirection == "asc")
+                //{
+                //    if(sortColumnName == "BarcodeNo")
+                //    {
+                //        CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x.InventoryId)).ToList();
+                //    }
+                //    else if(sortColumnName == "customer")
+                //    {
+                //        CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x.Customer.Name)).ToList();
+                //    }
+                //    else
+                //    {
+                //        CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
+                //    }
+                //}
+                //else
+                //{
+                //    if (sortColumnName == "BarcodeNo")
+                //    {
+                //        CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x.InventoryId)).ToList();
+                //    }
+                //    else if (sortColumnName == "customer")
+                //    {
+                //        CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x.Customer.Name)).ToList();
+                //    }
+                //    else
+                //    {
+                //        CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
+                //    }
+                //}
             }
 
             if (!string.IsNullOrEmpty(searchValue))
@@ -448,7 +519,8 @@ namespace ShoePOSProject.Controllers
             return View();
         }
 
-        public ActionResult GetCustomerOrdersList(string Name = "", string Order = "", string OrderId = "")
+        public ActionResult GetCustomerOrdersList(string Invoice = "", int SalesPerson = -1,
+            string Custom = "", string StartDate = "", string EndDate = "")
         {
             List<Invoice> CList = new List<Invoice>();
 
@@ -461,9 +533,63 @@ namespace ShoePOSProject.Controllers
                 CList = new InvoiceBL().GetActiveInvoicesList(db).Where(x => x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
             }
 
-            if (Name != "")
+            DateTime currentDateTime = gp.CurrentDateTime().Date;
+            bool isSunday = currentDateTime.DayOfWeek == 0;
+            var dayOfweek = isSunday == false ? (int)currentDateTime.DayOfWeek : 7;
+
+            DateTime Today = currentDateTime;
+            DateTime yesterday = currentDateTime.AddDays(-1);
+            DateTime CurrentWeekStartDate = currentDateTime.AddDays(((int)dayOfweek * -1) + 1);
+            DateTime CurrentWeekEndDate = CurrentWeekStartDate.AddDays(7).AddSeconds(-1);
+            DateTime LastWeekStartDate = CurrentWeekStartDate.AddDays(-7);
+            DateTime LastWeekEndDate = CurrentWeekStartDate.AddSeconds(-1);
+            DateTime thisMonthStart = currentDateTime.AddDays(1 - currentDateTime.Day);
+            DateTime thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+            DateTime lastMonthStart = thisMonthStart.AddMonths(-1);
+            DateTime lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+            if (Custom == "Yesterday")
             {
-                CList = CList.Where(x => x.InvoiceId.ToLower().Contains(OrderId.ToLower())).ToList();
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date == Convert.ToDateTime(yesterday).Date).ToList();
+            }
+            if (Custom == "Today")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date == Convert.ToDateTime(Today).Date).ToList();
+            }
+            if (Custom == "CurrentWeek")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date >= Convert.ToDateTime(CurrentWeekStartDate).Date &&
+                Convert.ToDateTime(x.CreatedAt).Date <= Convert.ToDateTime(CurrentWeekEndDate).Date).ToList();
+            }
+            if (Custom == "LastWeek")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date >= Convert.ToDateTime(LastWeekStartDate).Date &&
+                Convert.ToDateTime(x.CreatedAt).Date <= Convert.ToDateTime(LastWeekEndDate).Date).ToList();
+            }
+            if (Custom == "CurrentMonth")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date >= Convert.ToDateTime(thisMonthStart).Date &&
+                Convert.ToDateTime(x.CreatedAt).Date <= Convert.ToDateTime(thisMonthEnd).Date).ToList();
+            }
+            if (Custom == "LastMonth")
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date >= Convert.ToDateTime(lastMonthStart).Date &&
+                Convert.ToDateTime(x.CreatedAt).Date <= Convert.ToDateTime(lastMonthEnd).Date).ToList();
+            }
+            if (!string.IsNullOrEmpty(StartDate) && !string.IsNullOrEmpty(EndDate))
+            {
+                CList = CList.Where(x => Convert.ToDateTime(x.CreatedAt).Date >= Convert.ToDateTime(StartDate).Date &&
+                Convert.ToDateTime(x.CreatedAt).Date <= Convert.ToDateTime(EndDate).Date).ToList();
+            }
+
+            if (Invoice != "")
+            {
+                CList = CList.Where(x => x.InvoiceId.ToString().ToLower().Contains(Invoice.ToLower())).ToList();
+            }
+
+            if (SalesPerson != -1)
+            {
+                CList = CList.Where(x => x.CreatedBy == SalesPerson).ToList();
             }
 
             int start = Convert.ToInt32(Request["start"]);
@@ -474,14 +600,36 @@ namespace ShoePOSProject.Controllers
 
             if (sortColumnName != "" && sortColumnName != null)
             {
-                if (sortDirection == "asc")
-                {
-                    CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
-                }
-                else
-                {
-                    CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
-                }
+                //if (sortDirection == "asc")
+                //{
+                //    if (sortColumnName == "BarcodeNo")
+                //    {
+                //        CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x.CustomerSal)).ToList();
+                //    }
+                //    else if (sortColumnName == "customer")
+                //    {
+                //        CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x.Customer.Name)).ToList();
+                //    }
+                //    else
+                //    {
+                //        CList = CList.OrderByDescending(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
+                //    }
+                //}
+                //else
+                //{
+                //    if (sortColumnName == "BarcodeNo")
+                //    {
+                //        CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x.InventoryId)).ToList();
+                //    }
+                //    else if (sortColumnName == "customer")
+                //    {
+                //        CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x.Customer.Name)).ToList();
+                //    }
+                //    else
+                //    {
+                //        CList = CList.OrderBy(x => x.GetType().GetProperty(sortColumnName).GetValue(x)).ToList();
+                //    }
+                //}
             }
 
             if (!string.IsNullOrEmpty(searchValue))
@@ -529,12 +677,14 @@ namespace ShoePOSProject.Controllers
         {
             var getId = StringCypher.Base64Decode(Id);
             var invoice = new InvoiceBL().GetActiveInvoiceById(Convert.ToInt32(getId), db);
-            var customerSale = new CustomerSalesBL().GetActiveCustomerSalesList(db).Where(x => x.InvoiceId == invoice.Id).ToList();
-            
-
-            ViewBag.CustomerSales = customerSale;
-            ViewBag.invoice = invoice;
-            return View();
+            if (invoice != null)
+            {
+                var customerSale = new CustomerSalesBL().GetActiveCustomerSalesList(db).Where(x => x.InvoiceId == invoice.Id).ToList();
+                ViewBag.customerSale = customerSale;
+                ViewBag.Sale = invoice;
+                return View();
+            }
+            return RedirectToAction("ViewCustomerSales");
         }
         
         public ActionResult PostSavePdf(int Id = -1, string Url = "")

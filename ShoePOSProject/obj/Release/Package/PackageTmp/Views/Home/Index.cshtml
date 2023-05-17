@@ -10,11 +10,10 @@
 </style>
 
 <div class="row">
-    @if (ViewBag.Role == 1)
-    {
+
         <div class="col-md-12">
             <div class="text-center">
-                <h1 class="text-bold"><u>Admin Dashboard</u></h1>
+                <h1 class="text-bold"><u>Dashboard</u></h1>
             </div>
 
             <div class="row m-5">
@@ -33,36 +32,6 @@
             </div>
         </div>
 
-    }
-    else
-    {
-        <div class="col-md-12">
-            <div class="text-center">
-                <h1 class="text-bold"><u>User's Dashboard</u></h1>
-            </div>
-
-            <div class="row m-5">
-                <div class="col-lg-offset-1 col-lg-3 col-md-offset-1 col-md-3 col-xs-6">
-                    <div class="text-center text-white box" style="padding: 25px; background: #196f9c">
-                        <h3 class="text-semibold">Total Brand</h3>
-                        <h2 class="text-bold"> @ViewBag.Brand</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-xs-6">
-                    <div class="bg-danger text-center text-white box" style="padding: 25px; background: #37acdb ">
-                        <h3 class="text-semibold">Total Size</h3>
-                        <h2 class="text-bold"> @ViewBag.Size</h2>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-xs-6">
-                    <div class="bg-danger text-center text-white box" style="padding: 25px; background: #37acdb ">
-                        <h3 class="text-semibold">Total Color</h3>
-                        <h2 class="text-bold"> @ViewBag.Color</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
 
     <!--<div class="panel panel-flat mt-20">
         <div class="panel-heading">

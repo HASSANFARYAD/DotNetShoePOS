@@ -5,245 +5,172 @@
 
 <style>
     .col-md-6, .col-md-12 {
-       padding:5px;
+        padding: 5px;
     }
 </style>
 
-<div class="container-fluid">
-    <!-- Simple lists -->
-    <div id="printableArea">
-        <div class="row">
-            <center>
-                <h5 class="text-muted">Dealer Name</h5>
-                <h3 class="media-heading text-semibold">ViewBag.CustomerSales.User.Name</h3>
-            </center>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <!-- Simple list -->
-                <div class="panel panel-flat">
-                    <div class="panel-heading" style="padding-top: 30px">
-                        <center><h3 class="panel-title"><b>Customer Information</b></h3></center>
-                    </div>
+<!-- Content area -->
+<div class="content">
 
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <span class="text-muted">Name</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.Name</div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="text-muted">Email</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.Email</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">D.O.B</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.DateOfBirth</div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="text-muted">Social Security</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.SocialSecurity</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Primary Phone</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.PrimaryPhone</div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="text-muted">Secondary Phone</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.secondaryPhone</div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <h6 class="text-bold">Mailing Address</h6>
-                            </div>
-
-                            <div class="col-md-12">
-                                <span class="text-muted">Address</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.MailingAddress</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">City</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.City</div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="text-muted">State</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.State</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Zip</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.Zip</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">County</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.County</div><br>
-                            </div>
-
-                            <div class="col-md-12">
-                                <h6 class="text-bold">Physical Address</h6>
-                            </div>
-
-                            <div class="col-md-12">
-                                <span class="text-muted">Address</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.PhysicalAddress</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">State</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.PhysicalState</div><br>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Zip</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.PhysicalZip</div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <h6 class="text-bold"></h6>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Reference Name</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.ReferenceName</div><br>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Reference Phone</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Customer.ReferencePhone</div>
-                            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Invoice template -->
+            <div class="panel panel-white">
+                <div class="panel-heading" id="PrintButton">
+                    <h6 class="panel-title">Admins Invoice</h6>
+                    @*<div class="heading-elements">
+                        <button type="button" class="btn btn-default btn-xs heading-btn" onclick="generatePDF()"><i class="icon-file-check position-left"></i> Print</button>
+                    </div>*@
+                </div>
+                <!--1st Page-->
+                <div class="panel-body no-padding-bottom" id="invoice">
+                    <div class="row">
+                        <div class="col-sm-12 content-group text-center" style="">
+                            <img src="~/Content/assets/assets/images/pdf-logo1.jpg" class="mt-10" alt="" style="">
+                            <h4 class="text-bold text-success">Sheds, Garages, Cabins, & More</h4>
+                            <ul class="list-condensed list-unstyled text-semibold text-center">
+                                <li>PO Box 344, Campbellsville KY 42719</li>
+                                <li>(270) 789-4236 or 1-866-902-2129</li>
+                                <li>Fax: 270-789-0075</li>
+                            </ul>
                         </div>
                     </div>
-                </div>
-                <!-- /simple list -->
-
-            </div>
-
-            <div class="col-md-6">
-                <!-- Simple list -->
-                <div class="panel panel-flat">
-                    <div class="panel-heading" style="padding-top: 30px">
-                        <center><h3 class="panel-title"><b>Inventory Information</b></h3></center>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <span class="text-muted">Model</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Style</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Serial #</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.extra1</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Brand</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Brand</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Size</span>
-                                <div class="media-heading text-semibold"> ViewBag.CustomerSales.Inventory.Size</div>
-                            </div>
-
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Type</span>
-                                <div class="media-heading text-semibold"> ViewBag.CustomerSales.Inventory.Type</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Roof Color</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Roof</div>
-                            </div>
-                            <div class="col-md-6">
-                                <span class="text-muted">Trim Color</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Trim</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Sides Color</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Sides</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Address </span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Address</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">City </span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.City</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">State </span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.State</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Zip </span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.Zip</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Price </span>
-                                if (ViewBag.CustomerSales.Inventory.Price != null)
-                                {
-                                    string price = Convert.ToDecimal(ViewBag.CustomerSales.Inventory.Price).ToString("c");
-                                    <div class="media-heading text-semibold">price</div>
-                                }
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Inventory Date</span>
-                                <div class="media-heading text-semibold">ViewBag.CustomerSales.Inventory.extra4</div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="text-muted">Days on Lot</span>
-                                if(ViewBag.CustomerSales.Inventory.extra4 != null)
-                                {
-                                    DateTime dt = DateTime.Now;
-                                    DateTime date = Convert.ToDateTime(ViewBag.CustomerSales.Inventory.extra4);
-                                    int Daysonlot = (int)(dt - date).TotalDays;
-                                <div class="media-heading text-semibold">Daysonlot</div>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /simple list -->
-
-            </div>
-        </div>
-
-        @*<div class="row">
-            @if (ViewBag.IImages != null)
-            {
-                if (ViewBag.IImage.Count >= 1)
-                {
-                    foreach (var i in ViewBag.IImage)
+                    @if (ViewBag.Sale != null)
                     {
-                        <div class="col-md-3">
+                        double TotalPRice = 0;
+                        <div class="row">
+                            <div class="col-sm-6 content-group" style="">
+                                <h6 class="text-bold">Order</h6>
 
-                            <div class="panel panel-flat">
-                                <div class="panel-body">
-                                    <a href="@i.ImagePath" data-popup="lightbox" target="_blank">
-                                        <img src="@i.ImagePath" id="@i.ImagePath" style="height:150px; width:100%" alt="@i.ImageName" />
-                                    </a>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered border-dark text-left">
+                                        <tr>
+                                            <td class="text-grey-300">Sale By</td>
+                                            <td>@ViewBag.Sale.User.Name</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-grey-300">
+                                                Order Number
+                                            </td>
+                                            <td>@ViewBag.Sale.InvoiceId</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-grey-300">
+                                                Shop Address
+                                            </td>
+                                            <td>
+                                                @ViewBag.Sale.User.Address
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-grey-300">
+                                                Phone 1
+                                            </td>
+                                            <td>@ViewBag.Sale.User.Phone</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-grey-300">
+                                                Order Date
+                                            </td>
+                                            <td>@ViewBag.Sale.CreatedAt.ToString("D")</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6 content-group">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h6 class="text-bold">Products</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered border-dark text-center">
+                                        <tr>
+                                            <th class="text-center text-bold">Article #</th>
+                                            <th class="text-center text-bold">Brand</th>
+                                            <th class="text-center text-bold">Style</th>
+                                            <th class="text-center text-bold">Gender</th>
+                                            <th class="text-center text-bold">Size</th>
+                                            <th class="text-center text-bold">Color</th>
+                                            <th class="text-center text-bold">Price(PQ)</th>
+                                            <th class="text-center text-bold">Quantity</th>
+                                            <th class="text-center text-bold">Purchase Price(PQ)</th>
+                                            @*<th class="text-center text-bold">Profit</th>*@
+                                        </tr>
+                                        @if (ViewBag.customerSale.Count > 0)
+                                        {
+                                            foreach (var item in ViewBag.customerSale)
+                                            {
+                                                <tr>
+                                                    <td>@item.Inventory.BarcodeNo</td>
+                                                    <td>@item.Inventory.BSST.Name</td>
+                                                    <td>@item.Inventory.BSST4.Name</td>
+                                                    <td>@item.Inventory.BSST3.Name</td>
+                                                    <td>@item.Inventory.BSST5.Name</td>
+                                                    <td>@item.Inventory.BSST2.Name</td>
+                                                    <td>@item.CashPrice</td>
+                                                    <td>@item.Quantity</td>
+                                                    <td>@item.Inventory.Price</td>
+                                                    @*<td>
+                                                        @{
+                                                            var Profit = Convert.ToDouble(item.Inventory.Price) * Convert.ToDouble(item.Quantity);
+                                                            Profit = Convert.ToDouble(item.CashPrice) - Profit;
+                                                        }
+                                                        @Profit
+                                                    </td>*@
+                                                </tr>
+                                                if (item.Quantity >= 1)
+                                                {
+                                                    var getTotalPRice = Convert.ToDouble(item.Inventory.Price) * item.Quantity;
+                                                    TotalPRice = TotalPRice + getTotalPRice;
+                                                }
+                                            }
+                                        }
+                                        <tr>
+                                            <td colspan="7" class="text-right text-bold">Grand Total</td>
+                                            <td colspan="2">@ViewBag.Sale.GrandTotal</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" class="text-right text-bold">Discount %</td>
+                                            <td colspan="2">@ViewBag.Sale.Discount</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" class="text-right text-bold">Total After Discount</td>
+                                            <td colspan="2">@ViewBag.Sale.PriceAfterDiscount</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7" class="text-right text-bold">Total Profit</td>
+                                            <td colspan="2">
+                                                @{
+                                                    var getFinalProfit = Convert.ToDouble(ViewBag.Sale.PriceAfterDiscount) - TotalPRice;
+                                                }
+                                                @getFinalProfit
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row mt-20 mb-20">
+                            <div class="col-sm-12" style="visibility:hidden">
+                                <span class="text-bold">LAWN,LANDSCAPE & PROPERTY WAIVER</span> By signing below, I agree that Premier Rentals will have no liability for any damage to lawns, landscaping,
+                                fencing, or any other property that may occur during delivery or pick up of the building. In addition. I guarantee that I will receive or have received permission to use
+                                any adjacent property necessary for access to mine for the delivery, and I assume all responsibility for any damage to adjacent property that may occur
+                                during delivery or pick up of the building. I agree that I am responsible for any code restraints or permits relating to the building. I understand that additional terms
+                                and conditions may apply, based on the building and terms of possession that I have chosen.
+
+                            </div>
+                        </div>
                     }
-                }
-            }
-        </div>*@
+                </div>
+            </div>
+            <!-- /invoice template -->
+        </div>
     </div>
+
+
 </div>
 

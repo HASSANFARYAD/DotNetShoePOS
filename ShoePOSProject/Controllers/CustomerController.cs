@@ -13,10 +13,11 @@ namespace ShoePOSProject.Controllers
     {
         DatabaseEntities db = new DatabaseEntities();
         GeneralPurpose gp = new GeneralPurpose();
-
+        User LoggedInUser = new User();
         private bool isLogedIn()
         {
-            if (gp.validateUser() != null)
+            LoggedInUser = gp.validateUser();
+            if (LoggedInUser != null)
             {
                 return true;
             }
@@ -102,6 +103,7 @@ namespace ShoePOSProject.Controllers
                 ViewBag.successfullmessage = message;
                 ViewBag.color = color;
             }
+            ViewBag.UserRole = LoggedInUser.Role;
             return View();
         }
 

@@ -182,10 +182,36 @@
 
                     <div class="col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label><strong>Inventory Date:</strong></label>
-                            <input type="date" placeholder="" class="form-control" id="searchDate">
+                            <label><strong>By Period:</strong></label>
+                            <select class="form-control select" id="searchCustom" onchange="searchDate(this.value)">
+                                <option value="">Select Period</option>
+                                <option value="Today">Today</option>
+                                <option value="Yesterday">Yesterday</option>
+                                <option value="CurrentWeek">This Week</option>
+                                <option value="LastWeek">Last Week</option>
+                                <option value="CurrentMonth">This Month</option>
+                                <option value="LastMonth">Last Month</option>
+                                <option value="Custom">Custom</option>
+                            </select>
                         </div>
                     </div>
+
+                    <div class="" id="CustomSearchFilter" style="display:none">
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label><strong>Start Date:</strong></label>
+                                <input type="date" class="form-control" id="searchStartDate">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label><strong>End Date:</strong></label>
+                                <input type="date" class="form-control" id="searchEndDate">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="row">
                     <div class="col-md-3 col-sm-12 col-xs-12">
@@ -228,218 +254,398 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-body">
-                <div class="">
-                    <span class="h5">Total Price Of Current Records are: Rs <span class="h3 text-bold" id="TotalPrice"></span></span><br />
-                    <span class="h5">Total Sale Price Of Current Records are: Rs <span class="h3 text-bold" id="TotalSalePrice"></span></span>
+            @if (ViewBag.UserRole == 1)
+            {
+                <div class="panel-body">
+                    <div class="">
+                        <span class="h5">Total Price Of Current Records are: Rs <span class="h3 text-bold" id="TotalPrice"></span></span><br />
+                        <span class="h5">Total Sale Price Of Current Records are: Rs <span class="h3 text-bold" id="TotalSalePrice"></span></span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-md-nowrap table-striped table-bordered text-center" id="InventoryTable">
+                            <thead class="bg-purple">
+                                <tr>
+                                    <th class="text-center">Serial #</th>
+                                    <th class="text-center">Brand</th>
+                                    <th class="text-center">Style</th>
+                                    <th class="text-center">Gender</th>
+                                    <th class="text-center">Size</th>
+                                    <th class="text-center">Color</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Sale Price</th>
+                                    <th class="text-center">Inventory Date</th>
+                                    <th class="text-center">Days on Lot</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Discount Percentage</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table text-md-nowrap table-striped table-bordered text-center" id="InventoryTable">
-                        <thead class="bg-purple">
-                            <tr>
-                                <th class="text-center">Serial #</th>
-                                <th class="text-center">Brand</th>
-                                <th class="text-center">Style</th>
-                                <th class="text-center">Gender</th>
-                                <th class="text-center">Size</th>
-                                <th class="text-center">Color</th>
-                                <th class="text-center">Price</th>
-                                <th class="text-center">Sale Price</th>
-                                <th class="text-center">Inventory Date</th>
-                                <th class="text-center">Days on Lot</th>
-                                <th class="text-center">Quantity</th>
-                                <th class="text-center">Discount Percentage</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
-                    </table>
+            }
+            else
+            {
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table text-md-nowrap table-striped table-bordered text-center" id="InventoryTable">
+                            <thead class="bg-purple">
+                                <tr>
+                                    <th class="text-center">Serial #</th>
+                                    <th class="text-center">Brand</th>
+                                    <th class="text-center">Style</th>
+                                    <th class="text-center">Gender</th>
+                                    <th class="text-center">Size</th>
+                                    <th class="text-center">Color</th>
+                                    <th class="text-center">Sale Price</th>
+                                    <th class="text-center">Inventory Date</th>
+                                    <th class="text-center">Days on Lot</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Discount Percentage</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
     <!--/div-->
 </div>
 <!-- row closed -->
+<script>
+    var LoggedInUserRole = '@ViewBag.UserRole';
+</script>
+
+@if (ViewBag.UserRole == 1) {
+    <script>
+        LoadInventory();
+        function LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice,
+            Discount, Custom, StartDate, EndDate) {
+            $('#InventoryTable').DataTable(
+                {
+                    "ajax":
+                    {
+                        "url": '@Url.Action("GetInventoryList", "Inventory")',
+                        "type": "POST",
+                        "datatype": "json",
+                        "data": {
+                            Serial: Serial,
+                            Style: Style,
+                            Brand: Brand,
+                            Color: Color,
+                            Size: Size,
+                            Price: Price,
+                            SalePrice: SalePrice,
+                            Discount: Discount,
+                            Custom: Custom,
+                            StartDate: StartDate,
+                            EndDate: EndDate
+                        }
+                    },
+                    'columns':
+                        [
+                            { "data": "SerialNumber", "name": "BarcodeNo" },
+                            { "data": "Brand", "name": "Brand" },
+                            { "data": "ShoeStyle", "name": "ShoeStyle" },
+                            { "data": "Gender", "name": "Gender" },
+                            { "data": "Size", "name": "Size" },
+                            { "data": "Color", "name": "Color" },
+                            { "data": "Price", "name": "Price" },
+                            { "data": "SalePrice", "name": "SalePrice" },
+                            { "data": "InventoryDate", "name": "InventoryDate" },
+                            { "data": "DaysofLot", "name": "InventoryDate" },
+                            { "data": "Quantity", "name": "extra1" },
+                            { "data": "Discount", "name": "Discount" },
+                            { "data": "Action", "name": "" }
+                        ],
+                    'columnDefs':
+                        [
+                            {
+                                "targets": 0,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.SerialNumber;
+                                }
+                            },
+                            {
+                                "targets": 1,
+                                'className': 'col-lg-3',
+                                "render": function (data, type, full, meta) {
+                                    return full.Brand;
+                                }
+                            },
+                            {
+                                "targets": 2,
+                                'className': 'col-lg-4',
+                                "render": function (data, type, full, meta) {
+                                    return full.ShoeStyle;
+                                }
+                            },
+                            {
+                                "targets": 3,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Gender;
+                                }
+                            },
+                            {
+                                "targets": 4,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Size;
+                                }
+                            },
+                            {
+                                "targets": 5,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Color;
+                                }
+                            },
+                            {
+                                "targets": 6,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Price;
+                                }
+                            },
+                            {
+                                "targets": 7,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.SalePrice;
+                                }
+                            },
+                            {
+                                "targets": 8,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.InventoryDate;
+                                }
+                            },
+                            {
+                                "targets": 9,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.DaysofLot;
+                                }
+                            },
+                            {
+                                "targets": 10,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Quantity;
+                                }
+                            },
+                            {
+                                "targets": 11,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Discount;
+                                }
+                            },
+                            {
+                                "targets": 12,
+                                'className': 'col-lg-1',
+                                'searchable': false,
+                                'orderable': false,
+                                "render": function (data, type, full, meta) {
+
+                                    $("#TotalPrice").text(full.TotalPrice);
+                                    $("#TotalSalePrice").text(full.TotalSalePrice);
+                                    return '<ul class="icons-list text-center">' +
+                                        '<li class="dropdown"> ' +
+                                        '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                        '<i class="icon-menu9"></i >' +
+                                        '</a >' +
+                                        '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                        '<li><a class="text-primary" href="../Inventory/UpdateInventory?Id=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                        '<li><a class="text-danger" onclick="deleteFunction(' + full.Id + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                        '</ul>' +
+                                        '</li>' +
+                                        '</ul>';
+
+                                }
+                            }
+                        ],
+                    "serverSide": "true",
+                    "processing": "true",
+                    "language":
+                    {
+                        "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                        "search": "<span>Search :</span> _INPUT_",
+                        "searchPlaceholder": "Type to Filter",
+                        "lengthMenu": "<span>Show :</span> _MENU_",
+                        "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                    },
+                    "initComplete": function (settings, json) {
+
+                    }
+                });
+        }
+    </script>
+}
+else {
+    <script>
+        LoadInventory();
+        function LoadInventory(Serial, Style, Brand, Color, Size, SalePrice,
+            Discount, Custom, StartDate, EndDate) {
+            $('#InventoryTable').DataTable(
+                {
+                    "ajax":
+                    {
+                        "url": '@Url.Action("GetInventoryList", "Inventory")',
+                        "type": "POST",
+                        "datatype": "json",
+                        "data": {
+                            Serial: Serial,
+                            Style: Style,
+                            Brand: Brand,
+                            Color: Color,
+                            Size: Size,
+                            SalePrice: SalePrice,
+                            Discount: Discount,
+                            Custom: Custom,
+                            StartDate: StartDate,
+                            EndDate: EndDate
+                        }
+                    },
+                    'columns':
+                        [
+                            { "data": "SerialNumber", "name": "BarcodeNo" },
+                            { "data": "Brand", "name": "Brand" },
+                            { "data": "ShoeStyle", "name": "ShoeStyle" },
+                            { "data": "Gender", "name": "Gender" },
+                            { "data": "Size", "name": "Size" },
+                            { "data": "Color", "name": "Color" },
+                            { "data": "SalePrice", "name": "SalePrice" },
+                            { "data": "InventoryDate", "name": "InventoryDate" },
+                            { "data": "DaysofLot", "name": "InventoryDate" },
+                            { "data": "Quantity", "name": "extra1" },
+                            { "data": "Discount", "name": "Discount" },
+                            { "data": "Action", "name": "" }
+                        ],
+                    'columnDefs':
+                        [
+                            {
+                                "targets": 0,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.SerialNumber;
+                                }
+                            },
+                            {
+                                "targets": 1,
+                                'className': 'col-lg-3',
+                                "render": function (data, type, full, meta) {
+                                    return full.Brand;
+                                }
+                            },
+                            {
+                                "targets": 2,
+                                'className': 'col-lg-4',
+                                "render": function (data, type, full, meta) {
+                                    return full.ShoeStyle;
+                                }
+                            },
+                            {
+                                "targets": 3,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Gender;
+                                }
+                            },
+                            {
+                                "targets": 4,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Size;
+                                }
+                            },
+                            {
+                                "targets": 5,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Color;
+                                }
+                            },
+                            {
+                                "targets": 6,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.SalePrice;
+                                }
+                            },
+                            {
+                                "targets": 7,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.InventoryDate;
+                                }
+                            },
+                            {
+                                "targets": 8,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.DaysofLot;
+                                }
+                            },
+                            {
+                                "targets": 9,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Quantity;
+                                }
+                            },
+                            {
+                                "targets": 10,
+                                'className': 'col-lg-2',
+                                "render": function (data, type, full, meta) {
+                                    return full.Discount;
+                                }
+                            },
+                            {
+                                "targets": 11,
+                                'className': 'col-lg-1',
+                                'searchable': false,
+                                'orderable': false,
+                                "render": function (data, type, full, meta) {
+
+                                    return '<ul class="icons-list text-center">' +
+                                        '<li class="dropdown"> ' +
+                                        '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                        '<i class="icon-menu9"></i >' +
+                                        '</a >' +
+                                        '<ul class="dropdown-menu dropdown-menu-right"> ' +
+                                            '<li><a class="text-primary" href="../Inventory/UpdateInventory?Id=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
+                                        '</ul>' +
+                                        '</li>' +
+                                        '</ul>';
+                                }
+                            }
+                        ],
+                    "serverSide": "true",
+                    "processing": "true",
+                    "language":
+                    {
+                        "processing": "<i class='icon-spinner spinner icon-3x'></i>",
+                        "search": "<span>Search :</span> _INPUT_",
+                        "searchPlaceholder": "Type to Filter",
+                        "lengthMenu": "<span>Show :</span> _MENU_",
+                        "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                    },
+                    "initComplete": function (settings, json) {
+
+                    }
+                });
+        }
+    </script>
+}
 
 <script>
-    LoadInventory();
-    function LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date, Discount) {
-        $('#InventoryTable').DataTable(
-        {
-            "ajax":
-            {
-                "url": '@Url.Action("GetInventoryList", "Inventory")',
-                "type": "POST",
-                "datatype": "json",
-                "data": {
-                    Serial: Serial,
-                    Style: Style,
-                    Brand: Brand,
-                    Color: Color,
-                    Size: Size,
-                    Price: Price,
-                    SalePrice: SalePrice,
-                    Date: Date,
-                    Discount: Discount
-                }
-            },
-            'columns':
-                [
-                    { "data": "SerialNumber", "name": "BarcodeNo" },
-                    { "data": "Brand", "name": "Brand" },
-                    { "data": "ShoeStyle", "name": "ShoeStyle" },
-                    { "data": "Gender", "name": "Gender" },
-                    { "data": "Size", "name": "Size" },
-                    { "data": "Color", "name": "Color" },
-                    { "data": "Price", "name": "Price" },
-                    { "data": "SalePrice", "name": "SalePrice" },
-                    { "data": "InventoryDate", "name": "InventoryDate" },
-                    { "data": "DaysofLot", "name": "InventoryDate" },
-                    { "data": "Quantity", "name": "extra1" },
-                    { "data": "Discount", "name": "Discount" },
-                    { "data": "Action", "name": "" }
-                ],
-            'columnDefs':
-            [
-                {
-                    "targets": 0,
-                    'className': 'col-lg-2',
-                    "render": function(data, type, full, meta) {
-                        return full.SerialNumber;
-                    }
-                },
-                {
-                    "targets": 1,
-                    'className': 'col-lg-3',
-                    "render": function (data, type, full, meta) {
-                        return full.Brand;
-                    }
-                },
-                {
-                    "targets": 2,
-                    'className': 'col-lg-4',
-                    "render": function (data, type, full, meta) {
-                        return full.ShoeStyle;
-                    }
-                },
-                {
-                    "targets": 3,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.Gender;
-                    }
-                },
-                {
-                    "targets": 4,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.Size;
-                    }
-                },
-                {
-                    "targets": 5,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.Color;
-                    }
-                },
-                {
-                    "targets": 6,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.Price;
-                    }
-                },
-                {
-                    "targets": 7,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.SalePrice;
-                    }
-                },
-                {
-                    "targets": 8,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.InventoryDate;
-                    }
-                },
-                {
-                    "targets": 9,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.DaysofLot;
-                    }
-                },
-                {
-                    "targets": 10,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.Quantity;
-                    }
-                },
-                {
-                    "targets": 11,
-                    'className': 'col-lg-2',
-                    "render": function (data, type, full, meta) {
-                        return full.Discount;
-                    }
-                },
-                {
-                    "targets": 12,
-                    'className': 'col-lg-1',
-                    'searchable': false,
-                    'orderable': false,
-                    "render": function (data, type, full, meta)
-                    {
-                        if (full.Role == 1) {
-                            $("#TotalPrice").text(full.TotalPrice);
-                            $("#TotalSalePrice").text(full.TotalSalePrice);
-                            return '<ul class="icons-list text-center">' +
-                                        '<li class="dropdown"> ' +
-                                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
-                                                '<i class="icon-menu9"></i >' +
-                                            '</a >' +
-                                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
-                                                '<li><a class="text-primary" href="../Inventory/UpdateInventory?Id=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
-                                                //'<li><a class="text-success" href="../Inventory/Details?Id=' + full.EncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
-                                                '<li><a class="text-danger" onclick="deleteFunction(' + full.Id + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
-                                            '</ul>' +
-                                        '</li>' +
-                                    '</ul>';
-                        }
-                        else {
-                            return '<ul class="icons-list text-center">' +
-                                        '<li class="dropdown"> ' +
-                                            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">'+
-                                                '<i class="icon-menu9"></i >' +
-                                            '</a >' +
-                                            '<ul class="dropdown-menu dropdown-menu-right"> ' +
-                                                '<li><a class="text-primary" href="../Inventory/UpdateInventory?Id=' + full.EncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
-                                                //'<li><a class="text-success" href="../Inventory/Details?Id=' + full.EncryptedId + '"><i class="icon-design"></i> Details</a></li>' +
-                                            '</ul>' +
-                                        '</li>' +
-                                    '</ul>';
-                        }
-                    }
-                }
-            ],
-            "serverSide": "true",
-            "processing": "true",
-            "language":
-            {
-                "processing": "<i class='icon-spinner spinner icon-3x'></i>",
-                "search": "<span>Search :</span> _INPUT_",
-                "searchPlaceholder": "Type to Filter",
-                "lengthMenu": "<span>Show :</span> _MENU_",
-                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
-            },
-            "initComplete": function (settings, json) {
-                
-            }
-        });
-    }
-
+    
     function SearchInventory()
     {
         var Serial = $('#searchSerial').val();
@@ -451,11 +657,14 @@
         var Style = $('#getShoeStyleOptions').val();
         var Price = $('#searchPrice').val();
         var SalePrice = $('#searchSalePrice').val();
-        var Date = $('#searchDate').val();
+        var Custom = $('#searchCustom').val();
+        var StartDate = $("#searchStartDate").val();
+        var EndDate = $("#searchEndDate").val();
         var Discount = -1;
         $('#InventoryTable').DataTable().clear();
         $('#InventoryTable').DataTable().destroy();
-        LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date, Discount);
+        LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Discount,
+            Custom, StartDate, EndDate);
 
     }
 
@@ -484,6 +693,15 @@
         $('#InventoryTable').DataTable().destroy();
         LoadInventory(Serial, Style, Brand, Color, Size, Price, SalePrice, Date, Discount);
         $("#DiscountPrice").modal('hide');
+    }
+
+    function searchDate(value) {
+        if (value == "Custom") {
+            $("#CustomSearchFilter").css("display", "block");
+        }
+        else {
+            $("#CustomSearchFilter").css("display", "none");
+        }
     }
 </script>
 

@@ -87,7 +87,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label class="control-label text-bold">Quantity <span class="text-danger">*</span></label>
-                        <input type="number" name="Quantity" id="QuantityId" class="form-control">
+                        <input type="number" name="Quantity" min="1" id="QuantityId" class="form-control">
                     </div>
                 </div>
             </div>
@@ -239,10 +239,12 @@
                 for (var i = 0; i < data.length; i++) {
                     if (count == 0) {
                         $("#QuantityId").val(data[i].Quantity);
+                        $("#QuantityId").attr("max", data[i].Quantity);
                         $("#CashPrice").val(data[i].SalePrice);
                     }
                     else {
                         $("#QuantityId" + count).val(data[i].Quantity);
+                        $("#QuantityId" + count).attr("max",data[i].Quantity);
                         $("#CashPrice"+count).val(data[i].SalePrice);
                     }
                 }

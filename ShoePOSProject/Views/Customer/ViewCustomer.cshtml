@@ -130,6 +130,7 @@
 </div>
 
 <script>
+    var LoggedInUserRole = '@ViewBag.UserRole';
     CustomerList("", "");
     function CustomerList(Name, Email) {
         $('#CustomerTable').DataTable().clear();
@@ -187,6 +188,10 @@
                             'searchable': false,
                             'orderable': false,
                             "render": function (data, type, full, meta) {
+                                var Delete = "";
+                                if (LoggedInUserRole == "1") {
+                                    Delete = '<li><a class="text-danger" onclick="deleteFunction(' + full.CustomerId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>';
+                                }
                                 return '<ul class="icons-list text-center">' +
                                     '<li class="dropdown"> ' +
                                     '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
@@ -194,7 +199,7 @@
                                     '</a >' +
                                     '<ul class="dropdown-menu dropdown-menu-right"> ' +
                                     '<li><a class="text-primary" href="../Customer/UpdateCustomer?Id=' + full.CustomerEncryptedId + '"><i class="icon-pencil"></i> Edit</a></li>' +
-                                    '<li><a class="text-danger" onclick="deleteFunction(' + full.CustomerId + ')"><i class="glyphicon glyphicon-floppy-remove"></i> Delete</a></li>' +
+                                    Delete +
                                     '</ul>' +
                                     '</li>' +
                                     '</ul>';

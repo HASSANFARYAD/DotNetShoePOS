@@ -14,9 +14,11 @@ namespace ShoePOSProject.Controllers
         DatabaseEntities db = new DatabaseEntities();
         GeneralPurpose gp = new GeneralPurpose();
         MailSender ms = new MailSender();
+        User LoggedInUser = new User();
         private bool isLogedIn()
         {
-            if (gp.validateUser() != null)
+            LoggedInUser = gp.validateUser();
+            if (LoggedInUser != null)
             {
                 return true;
             }
@@ -43,7 +45,8 @@ namespace ShoePOSProject.Controllers
                 ViewBag.successfullmessage = message;
                 ViewBag.color = color;
             }
-
+            ViewBag.UserRole = LoggedInUser.Role;
+            ViewBag.UserId = LoggedInUser.Id;
             return View();
         }
 
@@ -51,8 +54,7 @@ namespace ShoePOSProject.Controllers
         public ActionResult GetBSSTList(int CategoryName = -1, string Style = "")
         {
             List<BSST> list = new List<BSST>();
-            if (gp.validateUser().Role == 1)
-            {
+
                 if(CategoryName == 1)
                 {
                     list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1).OrderByDescending(x => x.Id).ToList();
@@ -77,34 +79,7 @@ namespace ShoePOSProject.Controllers
                 {
                     list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 6).OrderByDescending(x => x.Id).ToList();
                 }
-            }
-            else
-            {
-                if (CategoryName == 1)
-                {
-                    list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 1 && x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                }
-                if (CategoryName == 2)
-                {
-                    list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 2 && x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                }
-                if (CategoryName == 3)
-                {
-                    list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 3 && x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                }
-                if (CategoryName == 4)
-                {
-                    list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 4 && x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                }
-                if (CategoryName == 5)
-                {
-                    list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 5 && x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                }
-                if (CategoryName == 6)
-                {
-                    list = new BsstBL().GetActiveBSSTsList(db).Where(x => x.BsstCategoryId == 6 && x.CreatedBy == gp.validateUser().Id).OrderByDescending(x => x.Id).ToList();
-                }
-            }
+            
 
             int start = Convert.ToInt32(Request["start"]);
             int length = Convert.ToInt32(Request["length"]);
@@ -142,7 +117,8 @@ namespace ShoePOSProject.Controllers
                     BSSTEncryptedId = StringCypher.Base64Encode(Convert.ToString(u.Id)),
                     BSSTName = u.Name,
                     BSSTCategory = u.Category,
-                    Role = gp.validateUser().Role
+                    Role = gp.validateUser().Role,
+                    CreatedBy = u.CreatedBy.ToString()
                 };
 
                 udto.Add(obj);
