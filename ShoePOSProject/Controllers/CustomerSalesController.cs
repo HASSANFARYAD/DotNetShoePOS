@@ -16,6 +16,10 @@ using System.Linq.Expressions;
 using ShoePOSProject.DL;
 using System.Xml.Linq;
 using System.Collections;
+using iTextSharp.text.pdf;
+using static ShoePOSProject.HelpingClasses.GeneralPurpose;
+using iTextSharp.tool.xml;
+using PdfDocument = Spire.Pdf.PdfDocument;
 
 namespace ShoePOSProject.Controllers
 {
@@ -520,7 +524,7 @@ namespace ShoePOSProject.Controllers
         }
 
         public ActionResult GetCustomerOrdersList(string Invoice = "", int SalesPerson = -1,
-            string Custom = "", string StartDate = "", string EndDate = "")
+            string Custom = "", string StartDate = "", string EndDate = "", string path = "")
         {
             List<Invoice> CList = new List<Invoice>();
 
@@ -670,8 +674,13 @@ namespace ShoePOSProject.Controllers
                     dto.Add(obj);
                 }
             }
+            if (path == "print")
+            {
+                GeneratePdf(dto);
+            }
             return Json(new { data = dto, draw = Request["draw"], recordsTotal = totalrows, recordsFiltered = totalrowsafterfilterinig }, JsonRequestBehavior.AllowGet);
         }
+
         
         public ActionResult Details(string Id = "")
         {
@@ -715,6 +724,113 @@ namespace ShoePOSProject.Controllers
             System.Diagnostics.Process.Start(Server.MapPath("~/Content/PdfFiles/" + def));
 
             return Json(JsonRequestBehavior.AllowGet);
+        }
+
+        private ActionResult GeneratePdf(List<DTO> invoice)
+        {
+            string t = generate_contract_details(invoice);
+            DateTime time = DateTime.Now;
+            string htmlHeader = "<!DOCTYPE html>" +
+                "<html>" +
+                    "<body>" +
+                        "<table style=\"width: 100%; border: 2px solid #333333\">" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<h2 style=\" text-align: center;\">" +
+                                        "List of Sales Record " +
+                                    "</h2>" +
+                                "</td>" +
+                            "</tr>" +
+                        "</table>" +
+                    "</body>" +
+                "</html>";
+            string HtmlFragment = "";
+            using (MemoryStream stream = new System.IO.MemoryStream())
+            {
+                StringReader sr = new StringReader(t);
+                iTextSharp.text.Document pdfDoc = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4.Rotate());
+                pdfDoc.SetMargins(50, 50, 50, 50);
+                PdfWriter writer = PdfWriter.GetInstance(pdfDoc, stream);
+                writer.PageEvent = new HtmlPageEventHelper(htmlHeader);
+                writer.PageEvent = new HtmlPageEventHelperFooter(HtmlFragment);
+                pdfDoc.Open();
+                XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, sr);
+
+                pdfDoc.Close();
+                return File(stream.ToArray(), "application/pdf", "Contracts.pdf");
+            }
+        }
+
+        public string generate_contract_details(List<DTO> phs)
+        {
+
+            string phs_detail = "<style>" +
+                                    "table{ border: 1px solid black; }" +
+                                    "td, th { border: 1px solid #333333;} " +
+                                    "th{font-size:13px;}" +
+                                    "table { border-collapse: collapse; width: 100%;}" +
+                                    "td { height: 60px; vertical-align: bottom;}" +
+                                "</style>" +
+                "<table style=\"width:100%;\">" +
+                    "<thead>" +
+                        "<tr style=\"text-align:center;\">" +
+                            " <td> <strong>Order No </strong></td> " +
+                            " <td> <strong>Customer Name</strong></td>  " +
+                            " <td> <strong>Sale</strong></td>  " +
+                            " <td> <strong>Sale By</strong></td>  " +
+                        "</tr>" +
+                    "</thead>" +
+                    "<tbody style=\"text-align:center;\">";
+            string totalPdf = phs_detail;
+            int count = 1;
+            foreach (var item in phs)
+            {
+                string unmcci_content = "<tr>";
+
+                if (item.CustomerSalesSerialNumber == null)
+                {
+                    unmcci_content = unmcci_content + "<td>" + "N/A" + "</td>";
+                }
+                else
+                {
+                    unmcci_content = unmcci_content + "<td>" + new System.Xml.Linq.XText(item.CustomerSalesSerialNumber).ToString() + "</td>";
+                }
+
+                if (item.CustomerName != null)
+                {
+                    unmcci_content = unmcci_content + "<td>" + new System.Xml.Linq.XText(item.CustomerName).ToString() + "</td>";
+                }
+                else
+                {
+                    unmcci_content = unmcci_content + "<td>" + "N/A" + "</td>";
+                }
+
+                if (item.CustomerSalesCashPrice == null)
+                {
+                    unmcci_content = unmcci_content + "<td>" + "N/A" + "</td>";
+                }
+                else
+                {
+                    unmcci_content = unmcci_content + "<td>" + new System.Xml.Linq.XText(item.CustomerSalesCashPrice).ToString() + "</td>";
+                }
+
+                
+                if (item.CustomerSalesCreatedBy != null)
+                {
+                    unmcci_content = unmcci_content + "<td>" + new System.Xml.Linq.XText(item.CustomerSalesCreatedBy).ToString() + "</td>";
+                }
+                else
+                {
+                    unmcci_content = unmcci_content + "<td>" + " " + "</td>";
+                }
+
+                unmcci_content = unmcci_content + "</tr>";
+                totalPdf = totalPdf + unmcci_content;
+                count++;
+            }
+
+            totalPdf = totalPdf + "</tbody></table>";
+            return (totalPdf);
         }
         #endregion Orders
     }

@@ -133,8 +133,12 @@
                             <a href="@Url.Action("ViewCustomerSales","CustomerSales")" class="btn btn-danger btn-block">Reset</a><br />
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12"></div>
-
+                    <div class="col-md-3 col-sm-12 col-xs-12"></div>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="form-group text-right">
+                            <button onclick="PrintSales()" class="btn btn-success btn-block">Print</button><br />
+                        </div>
+                    </div>
                     <div class="col-md-3 col-sm-12 col-xs-12">
                         <div class="form-group text-right">
                             <button onclick="SearchSales()" class="btn btn-success btn-block">Search</button><br />
@@ -180,7 +184,7 @@
 <script>
     var LoggedInUserRole = '@gp.validateUser().Role';
     List();
-    function List(Invoice, SalesPerson, Custom, StartDate, EndDate)
+    function List(Invoice, SalesPerson, Custom, StartDate, EndDate, path)
     {
         $('#CustomerSalesTable').DataTable().clear();
         $('#CustomerSalesTable').DataTable().destroy();
@@ -196,7 +200,8 @@
                     SalesPerson: SalesPerson,
                     Custom: Custom,
                     StartDate: StartDate,
-                    EndDate: EndDate
+                    EndDate: EndDate,
+                    Path: path
                 }
             },
             'columns':
@@ -283,6 +288,15 @@
         List(Invoice, SalesPerson, Custom, StartDate, EndDate);
     }
 
+    function PrintSales() {
+        var Invoice = $('#searchInvoice').val();
+        var SalesPerson = $('#searchDealer').val();
+        var Custom = $('#searchDate').val();
+        var StartDate = $("#searchStartDate").val();
+        var EndDate = $("#searchEndDate").val();
+        List(Invoice, SalesPerson, Custom, StartDate, EndDate, "print");
+    }
+
     function deleteFunction(id) {
         $("#CustomerDeleteId").val(id);
         $("#DeleteModal").modal('show');
@@ -294,6 +308,8 @@
         }
         else {
             $("#CustomSearchFilter").css("display", "none");
+            $("#searchStartDate").val("");
+            $("#searchEndDate").val("");
         }
     }
 </script>

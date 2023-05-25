@@ -242,3 +242,7 @@ D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\Newtonsoft.Json.x
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\Antlr3.Runtime.pdb
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\obj\Release\ShoePOSProject.csproj.CopyComplete
+D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\BouncyCastle.Crypto.dll
+D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\itextsharp.dll
+D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\itextsharp.xmlworker.dll
+D:\Nodlays Other Projects\Practice\Shoe-POS\ShoePOSProject\bin\itextsharp.xml

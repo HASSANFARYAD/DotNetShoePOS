@@ -75,8 +75,8 @@
             </div>
 
             <div class="row">
-                <input type="hidden" name="CashPrice" id="CashPrice"/>
-                <div class="col-md-6">
+                
+                <div class="col-md-4">
                     <div class="form-group">
                         <label class="control-label text-bold">Article No. <span class="text-danger">*</span></label>
                         <select name="InventoryId" onchange="GetQuantity(this.value, 0)" id="InventoryId" data-placeholder="Choose an Option..." class="select">
@@ -84,10 +84,17 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label class="control-label text-bold">Quantity <span class="text-danger">*</span></label>
                         <input type="number" name="Quantity" min="1" id="QuantityId" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Price(PQ) <span class="text-danger">*</span></label>
+                        <input type="text" readonly name="CashPrice" id="CashPrice" class="form-control"/>
                     </div>
                 </div>
             </div>
@@ -106,13 +113,23 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="control-label text-bold">Dicount(%) <span class="text-danger">*</span></label>
-                        <input type="number" min="0" placeholder="0" value="" class="form-control" name="Discount" required />
+                        <input type="number" min="0" placeholder="0" value="" class="form-control" name="Discount" id="Dicount" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5" id="discountedPriceSection" style="display:none">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label text-bold">Price After Discounted <span class="text-danger">*</span></label>
+                        <input type="number" readonly min="0" placeholder="0" value="" class="form-control" name="DiscountedPrice" id="DicountPrice" />
                     </div>
                 </div>
             </div>
         </fieldset>
 
         <div class="form-wizard-actions">
+            <a class="btn btn-warning" id="CalculatedDiscountedPrice" onclick="CalculatedDiscountedPriceFunc()">Count Price After Discount</a>
             <button class="btn btn-info" id="validation-next" type="submit">Add New Sales</button>
         </div>
     </form>
@@ -263,7 +280,7 @@
 
     var PCount = 1;
     var headingCount = 2;
-
+    var PCountMatches = 0;
     function AddNewOption() {
 
         var objTo = document.getElementById('NewOptions');
@@ -275,7 +292,7 @@
 
         var Heading = '<h3><strong>Option ' + headingCount + ':</strong></h3>';
 
-        var NewItems = '<div class="col-md-6">' +
+        var NewItems = '<div class="col-md-4">' +
                 '<div class="form-group">' +
                     '<label class="control-label text-bold">Article No. <span class="text-danger">*</span></label>' +
                     '<select name="InventoryId'+PCount+'" onchange="GetQuantity(this.value, '+PCount+')" id="InventoryId'+PCount+'" data-placeholder="Choose an Option..." class="form-control">' +
@@ -283,14 +300,19 @@
                 '</div>' +
             '</div>';
 
-        var NewQuantity = '<div class="col-md-6">' +
+        var NewQuantity = '<div class="col-md-4">' +
             '<div class="form-group">' +
             '<label class="font-weight-bold">Quantity <i class="cke_required btn-outline-danger">*</i></label>' +
             '<input type="number" name="QuantityId' + PCount + '" id="QuantityId' + PCount + '" placeholder="1" value="1" min="1" class="form-control" required>' +
             '</div>' +
             '</div>';
 
-        var cashPrice = '<input type="hidden" name="CashPrice' + PCount + '" id="CashPrice' + PCount + '" value="" />';
+        var cashPrice = '<div class="col-md-4">' +
+            '<div class="form-group">' +
+            '<label class="font-weight-bold">Price(Per Quantity) <i class="cke_required btn-outline-danger">*</i></label>' +
+            '<input type="text" readonly class="form-control" name="CashPrice' + PCount + '" id="CashPrice' + PCount + '" value="" />';
+            '</div>' +
+            '</div>';
         var hiddenGuestId = '<input type="hidden" name="option_no' + headingCount + '" id="option_no' + headingCount + '" value=' + headingCount + ' />';
 
         var deleteGuest = '<div class="col-md-12 mt-10" style="margin-bottom:-36px;"><div class="form-group pull-right"><button onclick="removeDetails(' + PCount + ');" type="button" class="btn btn-danger">Remove Details</button></div></div>';
@@ -301,7 +323,7 @@
         objTo.appendChild(guestDiv);
 
         document.getElementById('count').value = PCount;
-
+        PCountMatches = PCount;
         GetInventory("", PCount);
         PCount++;
         headingCount++;
@@ -312,7 +334,31 @@
         $('.removeclass' + gid).remove();
         PCount--;
         headingCount--;
+        PCountMatches--;
         document.getElementById('count').value = PCount;
+    }
+
+    function CalculatedDiscountedPriceFunc()
+    {
+        var Dicount = $("#Dicount").val();
+        var Price = $("#CashPrice").val();
+        var Quantity = $("#QuantityId").val();
+        var getPrice = parseFloat(Price) * parseFloat(Quantity);
+        var getTotal = 0;
+        for (var i = 1; i <= PCountMatches; i++) {
+            var getSalePrice = $("#CashPrice" + i).val();
+            var getSaleQuantity = $("#QuantityId" + i).val();
+            var getSaleTotal = parseFloat(getSalePrice) * parseFloat(getSaleQuantity);
+            getTotal = parseFloat(getTotal) + parseFloat(getSaleTotal);
+            console.log(getTotal);
+        }
+        var Total = parseFloat(getPrice) + parseFloat(getTotal);
+        var percentage = 100 - parseFloat(Dicount);
+        percentage = parseFloat(percentage) / 100;
+        Total = parseFloat(percentage) * parseFloat(Total);
+        console.log(Total);
+        $("#discountedPriceSection").show();
+        $("#DicountPrice").val(Total);
     }
 
 </script>

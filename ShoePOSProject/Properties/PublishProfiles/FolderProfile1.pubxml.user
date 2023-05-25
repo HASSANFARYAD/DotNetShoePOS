@@ -4,22 +4,25 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <History>True|2023-05-17T21:40:03.6020536Z;True|2023-05-17T00:29:14.9829840+05:00;True|2023-05-16T23:39:34.7911047+05:00;True|2023-05-15T19:01:39.4708845+05:00;True|2023-05-15T18:57:58.7978306+05:00;True|2023-05-13T18:31:19.7584056+05:00;True|2023-05-12T00:54:52.6004142+05:00;True|2023-05-06T17:35:53.9965243+05:00;True|2023-05-06T17:32:01.4109885+05:00;True|2023-05-06T17:08:03.2840579+05:00;False|2023-05-06T17:05:05.1455594+05:00;False|2023-05-06T17:04:34.6489178+05:00;False|2023-05-06T17:03:21.3029615+05:00;</History>
+    <History>True|2023-05-25T06:53:47.7582451Z;True|2023-05-23T23:18:23.9001716+05:00;True|2023-05-18T02:40:03.6020536+05:00;True|2023-05-17T00:29:14.9829840+05:00;True|2023-05-16T23:39:34.7911047+05:00;True|2023-05-15T19:01:39.4708845+05:00;True|2023-05-15T18:57:58.7978306+05:00;True|2023-05-13T18:31:19.7584056+05:00;True|2023-05-12T00:54:52.6004142+05:00;True|2023-05-06T17:35:53.9965243+05:00;True|2023-05-06T17:32:01.4109885+05:00;True|2023-05-06T17:08:03.2840579+05:00;False|2023-05-06T17:05:05.1455594+05:00;False|2023-05-06T17:04:34.6489178+05:00;False|2023-05-06T17:03:21.3029615+05:00;</History>
     <LastFailureDetails />
     <_PublishTargetUrl>D:\Published\Published ShoePOS</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="App_Data/Database.mdf">
-      <publishTime>05/18/2023 02:12:01</publishTime>
+      <publishTime>05/25/2023 11:50:58</publishTime>
     </File>
     <File Include="App_Data/Database_log.ldf">
-      <publishTime>05/18/2023 02:12:01</publishTime>
+      <publishTime>05/25/2023 11:50:58</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.pdb">
       <publishTime>09/10/2013 16:29:20</publishTime>
+    </File>
+    <File Include="bin/BouncyCastle.Crypto.dll">
+      <publishTime>12/08/2020 23:05:32</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>05/14/2023 17:46:53</publishTime>
@@ -35,6 +38,12 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="bin/EPPlus.System.Drawing.dll">
       <publishTime>11/21/2022 17:51:06</publishTime>
+    </File>
+    <File Include="bin/itextsharp.dll">
+      <publishTime>02/24/2022 18:50:06</publishTime>
+    </File>
+    <File Include="bin/itextsharp.xmlworker.dll">
+      <publishTime>02/24/2022 18:50:08</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
       <publishTime>11/25/2019 15:57:50</publishTime>
@@ -52,7 +61,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/14/2023 17:46:53</publishTime>
     </File>
     <File Include="bin/Microsoft.mshtml.dll">
-      <publishTime>02/24/2023 17:05:43</publishTime>
+      <publishTime>05/24/2023 15:45:43</publishTime>
     </File>
     <File Include="bin/Microsoft.Owin.dll">
       <publishTime>05/11/2022 04:31:20</publishTime>
@@ -226,10 +235,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/14/2023 17:46:53</publishTime>
     </File>
     <File Include="bin/ShoePOSProject.dll">
-      <publishTime>05/18/2023 02:38:53</publishTime>
+      <publishTime>05/25/2023 11:53:36</publishTime>
     </File>
     <File Include="bin/ShoePOSProject.pdb">
-      <publishTime>05/18/2023 02:38:53</publishTime>
+      <publishTime>05/25/2023 11:53:36</publishTime>
     </File>
     <File Include="bin/Spire.Pdf.dll">
       <publishTime>04/24/2023 15:37:38</publishTime>
@@ -9088,19 +9097,19 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/18/2023 00:22:02</publishTime>
     </File>
     <File Include="Views/CustomerSales/Details.cshtml">
-      <publishTime>05/18/2023 01:48:46</publishTime>
+      <publishTime>05/25/2023 10:49:38</publishTime>
     </File>
     <File Include="Views/CustomerSales/Invoice.cshtml">
-      <publishTime>05/15/2023 18:56:57</publishTime>
+      <publishTime>05/25/2023 10:49:26</publishTime>
     </File>
     <File Include="Views/CustomerSales/NewCustomerSales.cshtml">
-      <publishTime>05/17/2023 22:42:05</publishTime>
+      <publishTime>05/21/2023 21:32:42</publishTime>
     </File>
     <File Include="Views/CustomerSales/UpdateCustomerSales.cshtml">
       <publishTime>05/15/2023 14:29:05</publishTime>
     </File>
     <File Include="Views/CustomerSales/ViewCustomerSales.cshtml">
-      <publishTime>05/18/2023 01:58:51</publishTime>
+      <publishTime>05/25/2023 11:28:46</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>05/03/2023 17:34:49</publishTime>
@@ -9148,7 +9157,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/03/2023 17:34:49</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/18/2023 02:39:34</publishTime>
+      <publishTime>05/25/2023 11:53:40</publishTime>
     </File>
   </ItemGroup>
 </Project>
